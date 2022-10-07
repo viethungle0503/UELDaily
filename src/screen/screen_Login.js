@@ -1,37 +1,35 @@
 import {
-    SafeAreaView,
-    StyleSheet,
-    ScrollView,
-    View,
-    Text,
-    StatusBar,
-    Button,
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  View,
+  Text,
+  StatusBar,
+  Button,
+  Image,
 } from 'react-native';
 
 import {
-    Header,
-    LearnMoreLinks,
-    Colors,
-    DebugInstructions,
-    ReloadInstructions,
-  } from 'react-native/Libraries/NewAppScreen';
+  Colors,
+
+} from 'react-native/Libraries/NewAppScreen';
 
 import {
-    GoogleSignin,
-    GoogleSigninButton,
-    statusCodes,
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import react, {useState, useEffect} from 'react';
+import react, { useState, useEffect } from 'react';
 
-export default function Login() {
-    const [loggedIn, setloggedIn] = useState(false);
+export default function Login({navigation}) {
+
+  const [loggedIn, setloggedIn] = useState(false);
   const [user, setUser] = useState([]);
-
   _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const {accessToken, idToken} = await GoogleSignin.signIn();
+      const { accessToken, idToken } = await GoogleSignin.signIn();
       setloggedIn(true);
 
       const credential = auth.GoogleAuthProvider.credential(
@@ -54,6 +52,19 @@ export default function Login() {
       }
     }
   };
+  signOut = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      auth()
+        .signOut()
+        .then(() => alert('Your are signed out!'));
+      setloggedIn(false);
+      // setuserInfo([]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   function onAuthStateChanged(user) {
     setUser(user);
     console.log(user);
@@ -70,19 +81,7 @@ export default function Login() {
     return subscriber; // unsubscribe on unmount
   }, []);
 
-  signOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      auth()
-        .signOut()
-        .then(() => alert('Your are signed out!'));
-      setloggedIn(false);
-      // setuserInfo([]);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -90,13 +89,23 @@ export default function Login() {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-          <Header />
-
           <View style={styles.body}>
+            <Image
+              source={require('../../assets/logo.png')}
+              style={styles.logo} />
+              <Image
+              source={require('../../assets/illustration.png')}
+              style={styles.logo}/>
+              <Text>
+                Tối ưu và tiện lợi
+              </Text>
+              <Text>
+                Tích hợp những tính năng cần thiết giúp việc học trở nên tối ưu
+              </Text>
             <View style={styles.sectionContainer}>
               {!loggedIn && (
                 <GoogleSigninButton
-                  style={{width: 192, height: 48}}
+                  style={{ width: 192, height: 48 }}
                   size={GoogleSigninButton.Size.Wide}
                   color={GoogleSigninButton.Color.Dark}
                   onPress={this._signIn}
@@ -105,7 +114,7 @@ export default function Login() {
             </View>
             <View style={styles.buttonContainer}>
               {!user && <Text>You are currently logged out</Text>}
-              {user && (
+              {user && 
                 <View>
                   <Text>Welcome {user.displayName}</Text>
                   <Button
@@ -113,7 +122,7 @@ export default function Login() {
                     title="LogOut"
                     color="red"></Button>
                 </View>
-              )}
+              }
             </View>
           </View>
         </ScrollView>
@@ -123,46 +132,53 @@ export default function Login() {
 };
 
 const styles = StyleSheet.create({
-    scrollView: {
-      backgroundColor: Colors.lighter,
-    },
-    engine: {
-      position: 'absolute',
-      right: 0,
-    },
-    body: {
-      backgroundColor: Colors.white,
-    },
-    sectionContainer: {
-      marginTop: 32,
-      paddingHorizontal: 24,
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignSelf: 'center',
-    },
-    buttonContainer: {
-      alignSelf: 'center',
-    },
-    sectionTitle: {
-      fontSize: 24,
-      fontWeight: '600',
-      color: Colors.black,
-    },
-    sectionDescription: {
-      marginTop: 8,
-      fontSize: 18,
-      fontWeight: '400',
-      color: Colors.dark,
-    },
-    highlight: {
-      fontWeight: '700',
-    },
-    footer: {
-      color: Colors.dark,
-      fontSize: 12,
-      fontWeight: '600',
-      padding: 4,
-      paddingRight: 12,
-      textAlign: 'right',
-    },
-  });
+  scrollView: {
+    backgroundColor: Colors.lighter,
+  },
+  engine: {
+    position: 'absolute',
+    right: 0,
+  },
+  body: {
+    backgroundColor: Colors.white,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: Colors.black,
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+    color: Colors.dark,
+  },
+  highlight: {
+    fontWeight: '700',
+  },
+  footer: {
+    color: Colors.dark,
+    fontSize: 12,
+    fontWeight: '600',
+    padding: 4,
+    paddingRight: 12,
+    textAlign: 'right',
+  },
+  logo: {
+    marginTop: 20,
+    resizeMode: 'stretch',
+  }
+});

@@ -27,15 +27,15 @@ function Tabs() {
               iconName = 'clipboard-list';
               size = focused ? 25 : 20;
             } else if (route.name === 'Services') {
-              iconName = 'clipboard-check';
+              iconName = 'hand-holding-heart';
               size = focused ? 25 : 20;
             }
             else if (route.name === 'News') {
-              iconName = 'clipboard-check';
+              iconName = 'newspaper';
               size = focused ? 25 : 20;
             }
             else if (route.name === 'Information') {
-              iconName = 'clipboard-check';
+              iconName = 'info';
               size = focused ? 25 : 20;
             }
             return (
