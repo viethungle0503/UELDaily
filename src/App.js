@@ -3,14 +3,12 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {
-  Text,
-} from 'react-native';
 import Home from './screen/screen_Home';
 import Servies from './screen/screen_Services'
 import News from './screen/screen_News';
 import Information from './screen/screen_Information';
 import Login from './screen/screen_Login';
+import Help from './screen/screen_Help';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Provider } from 'react-redux';
 import { Store } from './redux/store';
@@ -49,18 +47,19 @@ function Tabs() {
               />
             );
           }
-        })
+        }
+        )
       }
       tabBarOptions={{
         activeTintColor: '#0080ff',
         inactiveTintColor: '#777777',
-        labelStyle: { fontSize: 15, fontWeight: 'bold' }
+        labelStyle: { fontSize: 15, fontWeight: 'bold' },
       }}
     >
-      <Tab.Screen name={'Home'} component={Home} />
-      <Tab.Screen name={'Services'} component={Servies} />
-      <Tab.Screen name={'News'} component={News} />
-      <Tab.Screen name={'Information'} component={Information} />
+      <Tab.Screen name={'Home'} component={Home} options={{headerShown:false}}/>
+      <Tab.Screen name={'Services'} component={Servies} options={{headerShown:false}}/>
+      <Tab.Screen name={'News'} component={News} options={{headerShown:false}}/>
+      <Tab.Screen name={'Information'} component={Information} options={{headerShown:false}}/>
     </Tab.Navigator>
   );
 }
@@ -85,20 +84,21 @@ function App() {
         }}
       >
         {
-          !loggedIn ?
-            <RootStack.Screen
-              name="Login"
-              component={Login}
-              options={{
-                headerShown: false,
-              }}
-            />
-            :
-            <RootStack.Screen
-              name="Tabs"
-              component={Tabs}
-            />
-        }
+          !loggedIn ? (
+            // Screens for logged in users
+              <RootStack.Screen
+                name="Login"
+                component={Login}
+                options={{headerShown:false}}
+              />
+          ) : (
+            // Auth screens           
+              <RootStack.Screen
+                name="UEL Daily"
+                component={Tabs}
+                options={{headerShown:false}}
+              />
+          )}
       </RootStack.Navigator>
     </NavigationContainer>
 
@@ -106,10 +106,9 @@ function App() {
 };
 
 const AppWrapper = () => {
-  const store = Store;
   return (
-    <Provider store={store}>
-      <App/>
+    <Provider store={Store}>
+      <App />
     </Provider>
   )
 };

@@ -4,15 +4,9 @@ import {
   ScrollView,
   View,
   Text,
-  StatusBar,
   Button,
   Image,
 } from 'react-native';
-
-import {
-  Colors,
-
-} from 'react-native/Libraries/NewAppScreen';
 
 import {
   GoogleSignin,
@@ -24,8 +18,8 @@ import react, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser, setloggedIn } from '../redux/actions';
 
-export default function Login({navigation}) {
-  const {user, loggedIn} = useSelector(state => state.userReducer);
+export default function Login({ navigation }) {
+  const { user, loggedIn } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
   // const [loggedIn, setloggedIn] = useState(false);
   // const [user, setUser] = useState([]);
@@ -58,23 +52,11 @@ export default function Login({navigation}) {
       }
     }
   };
-  signOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      auth()
-        .signOut()
-        .then(() => alert('Your are signed out!'));
-      dispatch(setloggedIn(false));
-      // setuserInfo([]);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
   function onAuthStateChanged(user) {
-    dispatch(setUser(user)) ;
+    dispatch(setUser(user));
     console.log(user);
-    if (user) dispatch(setloggedIn(true)) ;
+    if (user) dispatch(setloggedIn(true));
   }
   useEffect(() => {
     GoogleSignin.configure({
@@ -86,64 +68,47 @@ export default function Login({navigation}) {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, []);
-
-
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <View style={styles.body}>
-            <Image
-              source={require('../assets/logo.png')}
-              style={styles.logo} />
-              <Image
-              source={require('../assets/illustration.png')}
-              style={styles.logo}/>
-              <Text style={styles.sectionTitle}>
-                Tối ưu và tiện lợi 
-              </Text>
-              <Text style={styles.sectionDescription}>
-                Tích hợp những tính năng cần thiết giúp việc học trở nên tối ưu
-              </Text>
-            <View style={styles.sectionContainer}>
-              {!loggedIn && (
-                <GoogleSigninButton
-                  style={{ width: 192, height: 48 }}
-                  size={GoogleSigninButton.Size.Wide}
-                  color={GoogleSigninButton.Color.Dark}
-                  onPress={this._signIn}
-                />
-              )}
-            </View>
-            <View style={styles.buttonContainer}>
-              {!user && <Text>You are currently logged out</Text>}
-              {user && 
-                <View>
-                  <Text>Welcome {user.displayName}</Text>
-                  <Button
-                    onPress={this.signOut}
-                    title="LogOut"
-                    color="red"></Button>
-                </View>
-              }
-            </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <View style={styles.body}>
+        <Image
+          source={require('../assets/logo.png')}
+          style={styles.logo} />
+        <Image
+          source={require('../assets/illustration.png')}
+          style={styles.logo} />
+        <Text style={styles.sectionTitle}>
+          <Text style={{ color: '#19a5ff', fontWeight: 'bold' }}>Tối ưu </Text>
+          <Text style={{ fontWeight: 'bold', color: 'black' }}>và</Text>
+          <Text style={{ color: '#19a5ff', fontWeight: 'bold' }}> tiện lợi</Text>
+
+        </Text>
+        <Text style={styles.sectionDescription}>
+          Tích hợp những tính năng cần thiết
+        </Text>
+        <Text style={styles.sectionDescription}>
+          giúp việc học trở nên tối ưu  
+        </Text>
+        <View style={styles.sectionContainer}>
+          {!loggedIn && (
+            <GoogleSigninButton
+              style={{ alignSelf: 'flex-start' }}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={this._signIn}
+            />
+          )}
+        </View>
+        <View style={styles.buttonContainer}>
+          {!user && <Text>You are currently logged out</Text>}
+        </View>
+      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
   body: {
-    backgroundColor: Colors.white,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -159,15 +124,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '600',
-    color: Colors.black,
+    marginBottom: 10,
   },
   sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
+    color: '#344161',
+    fontSize: 15,
     fontWeight: '400',
-    color: Colors.dark,
   },
   logo: {
     marginTop: 20,

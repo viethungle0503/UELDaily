@@ -3,11 +3,11 @@ import { SET_LOGGED_IN,
 } from "./actions";
 
 const initialState = {
-    loggedIn: false,
     user: [],
+    loggedIn: false
 }
 
-function userReducer(state =  initialState, action) {
+function userReducer(state = initialState, action) {
     switch(action.type) {
         case SET_USER:
             return {...state, user: action.payload};
