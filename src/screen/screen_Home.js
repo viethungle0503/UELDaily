@@ -4,7 +4,9 @@ import {
     StyleSheet,
 } from 'react-native';
 
-export default function Home() {
+export default function Home({navigation, route}) {
+
+
     <View>
         <Text>
             Hello 

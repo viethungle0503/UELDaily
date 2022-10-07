@@ -21,21 +21,26 @@ import {
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import react, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, setloggedIn } from '../redux/actions';
 
 export default function Login({navigation}) {
-
-  const [loggedIn, setloggedIn] = useState(false);
-  const [user, setUser] = useState([]);
+  const {user, loggedIn} = useSelector(state => state.userReducer);
+  const dispatch = useDispatch();
+  // const [loggedIn, setloggedIn] = useState(false);
+  // const [user, setUser] = useState([]);
   _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
+      //Get the user ID token
       const { accessToken, idToken } = await GoogleSignin.signIn();
-      setloggedIn(true);
-
+      dispatch(setloggedIn(true));
+      //Create a Google credential with the token
       const credential = auth.GoogleAuthProvider.credential(
         idToken,
         accessToken,
       );
+      //Sign-in the user with the credential
       await auth().signInWithCredential(credential);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -48,6 +53,7 @@ export default function Login({navigation}) {
         alert('PLAY_SERVICES_NOT_AVAILABLE');
         // play services not available or outdated
       } else {
+        alert('Some other error happened:' + error);
         // some other error happened
       }
     }
@@ -59,22 +65,22 @@ export default function Login({navigation}) {
       auth()
         .signOut()
         .then(() => alert('Your are signed out!'));
-      setloggedIn(false);
+      dispatch(setloggedIn(false));
       // setuserInfo([]);
     } catch (error) {
       console.error(error);
     }
   };
   function onAuthStateChanged(user) {
-    setUser(user);
+    dispatch(setUser(user)) ;
     console.log(user);
-    if (user) setloggedIn(true);
+    if (user) dispatch(setloggedIn(true)) ;
   }
   useEffect(() => {
     GoogleSignin.configure({
       scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
       webClientId:
-        '418977770929-g9ou7r9eva1u78a3anassoqreas466p0.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+        '204536961808-0an6jvkhbjt7q5u2upeo0ff9g81400us.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
     });
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
@@ -85,21 +91,22 @@ export default function Login({navigation}) {
   return (
     <>
       <StatusBar barStyle="dark-content" />
+      
       <SafeAreaView>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
           <View style={styles.body}>
             <Image
-              source={require('../../assets/logo.png')}
+              source={require('../assets/logo.png')}
               style={styles.logo} />
               <Image
-              source={require('../../assets/illustration.png')}
+              source={require('../assets/illustration.png')}
               style={styles.logo}/>
-              <Text>
-                Tối ưu và tiện lợi
+              <Text style={styles.sectionTitle}>
+                Tối ưu và tiện lợi 
               </Text>
-              <Text>
+              <Text style={styles.sectionDescription}>
                 Tích hợp những tính năng cần thiết giúp việc học trở nên tối ưu
               </Text>
             <View style={styles.sectionContainer}>
@@ -135,10 +142,6 @@ const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
   body: {
     backgroundColor: Colors.white,
     flex: 1,
@@ -165,17 +168,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
   },
   logo: {
     marginTop: 20,

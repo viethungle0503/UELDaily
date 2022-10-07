@@ -6,12 +6,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   Text,
 } from 'react-native';
-import Home from './src/screen/screen_Home';
-import Servies from './src/screen/screen_Services'
-import News from './src/screen/screen_News';
-import Information from './src/screen/screen_Information';
-import Login from './src/screen/screen_Login';
+import Home from './screen/screen_Home';
+import Servies from './screen/screen_Services'
+import News from './screen/screen_News';
+import Information from './screen/screen_Information';
+import Login from './screen/screen_Login';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { Provider } from 'react-redux';
+import { Store } from './redux/store';
+import { useSelector, useDispatch } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -63,36 +66,52 @@ function Tabs() {
 }
 
 function App() {
-  return(
+  const dispatch = useDispatch();
+  const { user, loggedIn } = useSelector(state => state.userReducer);
+  return (
     <NavigationContainer>
-        <RootStack.Navigator
-          initialRouteName="Login"
-          screenOptions={{
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: '#0080ff'
-            },
-            headerTintColor: '#ffffff',
-            headerTitleStyle: {
-              fontSize: 25,
-              fontWeight: 'bold'
-            }
-          }}
-        >
-          <RootStack.Screen
-            name="Login"
-            component={Login}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <RootStack.Screen
-            name="Tabs"
-            component={Tabs}
-          />
-        </RootStack.Navigator>
-      </NavigationContainer>
+      <RootStack.Navigator
+        initialRouteName="Login"
+        screenOptions={{
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: '#0080ff'
+          },
+          headerTintColor: '#ffffff',
+          headerTitleStyle: {
+            fontSize: 25,
+            fontWeight: 'bold'
+          }
+        }}
+      >
+        {
+          !loggedIn ?
+            <RootStack.Screen
+              name="Login"
+              component={Login}
+              options={{
+                headerShown: false,
+              }}
+            />
+            :
+            <RootStack.Screen
+              name="Tabs"
+              component={Tabs}
+            />
+        }
+      </RootStack.Navigator>
+    </NavigationContainer>
+
   )
 };
 
-export default App;
+const AppWrapper = () => {
+  const store = Store;
+  return (
+    <Provider store={store}>
+      <App/>
+    </Provider>
+  )
+};
+
+export default AppWrapper;
