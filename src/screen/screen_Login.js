@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
   },
   textDescription: {
     fontSize: 20,
+    color:'#344161CC',
   },
   logo: {
     width:60,
