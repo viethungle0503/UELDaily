@@ -22,6 +22,9 @@ function Tabs() {
     <Tab.Navigator
       screenOptions={
         ({ route }) => ({
+          activeTintColor: '#0080ff',
+        inactiveTintColor: '#777777',
+        labelStyle: { fontSize: 15, fontWeight: 'bold' },
           tabBarIcon: ({ focused, size, color }) => {
             let iconName;
             if (route.name === 'Home') {
@@ -50,11 +53,6 @@ function Tabs() {
         }
         )
       }
-      tabBarOptions={{
-        activeTintColor: '#0080ff',
-        inactiveTintColor: '#777777',
-        labelStyle: { fontSize: 15, fontWeight: 'bold' },
-      }}
     >
       <Tab.Screen name={'Home'} component={Home} options={{headerShown:false}}/>
       <Tab.Screen name={'Services'} component={Servies} options={{headerShown:false}}/>

@@ -28,7 +28,7 @@ export default function Login({ navigation }) {
       await GoogleSignin.hasPlayServices();
       //Get the user ID token
       const { accessToken, idToken } = await GoogleSignin.signIn();
-      dispatch(setloggedIn(true));
+
       //Create a Google credential with the token
       const credential = auth.GoogleAuthProvider.credential(
         idToken,
@@ -36,6 +36,7 @@ export default function Login({ navigation }) {
       );
       //Sign-in the user with the credential
       await auth().signInWithCredential(credential);
+      dispatch(setloggedIn(true));
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -69,72 +70,108 @@ export default function Login({ navigation }) {
     return subscriber; // unsubscribe on unmount
   }, []);
   return (
-    <>
-      <View style={styles.body}>
+    <View style={styles.body}>
+      <View style={styles.sectionHeader}>
         <Image
+        style={styles.logo}
           source={require('../assets/logo.png')}
-          style={styles.logo} />
+        />
+      </View>
+      <View style={styles.sectionMain}>
         <Image
           source={require('../assets/illustration.png')}
-          style={styles.logo} />
-        <Text style={styles.sectionTitle}>
-          <Text style={{ color: '#19a5ff', fontWeight: 'bold' }}>Tối ưu </Text>
-          <Text style={{ fontWeight: 'bold', color: 'black' }}>và</Text>
-          <Text style={{ color: '#19a5ff', fontWeight: 'bold' }}> tiện lợi</Text>
+        />
+      </View>
 
+      <View style={styles.sectionFooter}>
+        <Text>
+          <Text style={styles.textTitleColor}>Tối ưu </Text>
+          <Text style={styles.textTitle}>và</Text>
+          <Text style={styles.textTitleColor}> tiện lợi</Text>
         </Text>
-        <Text style={styles.sectionDescription}>
+        <View style={styles.textDescriptionView}>
+        <Text style={styles.textDescription}>
           Tích hợp những tính năng cần thiết
         </Text>
-        <Text style={styles.sectionDescription}>
-          giúp việc học trở nên tối ưu  
+        <Text style={styles.textDescription}>
+          giúp việc học trở nên tối ưu
         </Text>
-        <View style={styles.sectionContainer}>
-          {!loggedIn && (
+        </View>
+        
+        {!loggedIn && (
+          <View style={styles.sectionContainer}>
             <GoogleSigninButton
               style={{ alignSelf: 'flex-start' }}
               size={GoogleSigninButton.Size.Wide}
               color={GoogleSigninButton.Color.Dark}
               onPress={this._signIn}
             />
-          )}
-        </View>
-        <View style={styles.buttonContainer}>
-          {!user && <Text>You are currently logged out</Text>}
-        </View>
+            {/* {!user && <Text style={{alignSelf:'center'}}>You are currently logged out</Text>} */}
+          </View>
+        )}
       </View>
-    </>
+
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-    flexDirection: 'row',
+  sectionHeader: {
+    flex: 2,
+  },
+  sectionMain: {
+    flex: 4,
+  },
+  sectionFooter: {
+    flex: 4,
     alignItems: 'center',
-    alignSelf: 'center',
+    
   },
-  buttonContainer: {
-    alignSelf: 'center',
+  textTitleColor: {
+    color: '#19a5ff',
+    fontWeight: 'bold',
+    fontSize: 25,
   },
-  sectionTitle: {
-    fontSize: 28,
-    fontWeight: '600',
-    marginBottom: 10,
+  textTitle: {
+    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 25,
   },
-  sectionDescription: {
+  textDescriptionView: {
     color: '#344161',
-    fontSize: 15,
-    fontWeight: '400',
+
+    alignItems:'center',
+    margin: 20
+  },
+  textDescription: {
+    fontSize: 20,
   },
   logo: {
-    marginTop: 20,
-    resizeMode: 'stretch',
+    width:60,
+    height:60,
+    margin:50
   }
+  // sectionContainer: {
+  //   marginTop: 32,
+  // },
+  // sectionTitle: {
+  //   fontSize: 28,
+  //   fontWeight: '600',
+  //   marginBottom: 10,
+  // },
+  // sectionDescription: {
+  //   color: '#344161',
+  //   fontSize: 15,
+  //   fontWeight: '400',
+  // },
+  // logo: {
+  //   marginTop: 20,
+  //   resizeMode: 'stretch',
+  // }
 });
