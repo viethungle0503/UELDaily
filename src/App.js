@@ -8,14 +8,15 @@ import Servies from './screen/screen_Services'
 import News from './screen/screen_News';
 import Information from './screen/screen_Information';
 import Login from './screen/screen_Login';
-import Help from './screen/screen_Help';
+
+
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Provider } from 'react-redux';
 import { Store } from './redux/store';
 import { useSelector, useDispatch } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
-const RootStack = createStackNavigator();
+const RootStack = createStackNavigator();  
 
 function Tabs() {
   return (
@@ -69,18 +70,18 @@ function App() {
     <NavigationContainer>
       <RootStack.Navigator
         initialRouteName="Login"
-        screenOptions={{
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: '#0080ff'
-          },
-          headerTintColor: '#ffffff',
-          headerTitleStyle: {
-            fontSize: 25,
-            fontWeight: 'bold'
-          }
-        }}
+        // screenOptions={{
+        //   headerTitleAlign: 'center',
+        //   headerStyle: {
+        //     backgroundColor: '#0080ff'
+        //   },
+        //   headerTintColor: '#ffffff',
+        //   headerTitleStyle: {
+        //     fontSize: 25,
+        //     fontWeight: 'bold'
+        //   }}}
       >
+     
         {
           !loggedIn ? (
             // Screens for logged in users
@@ -96,6 +97,7 @@ function App() {
                 component={Tabs}
                 options={{headerShown:false}}
               />
+            
           )}
       </RootStack.Navigator>
     </NavigationContainer>
