@@ -1,0 +1,15 @@
+git clone https://github.com/vatrixxonnis/UELDaily.git
+
+cd "nameofproject"
+
+npm install 
+
+npm run android
+react-native run-android
+
+.\gradlew clean
+
+cd ..
+
+// install icon
+npm install --save react-native-vector-icons
