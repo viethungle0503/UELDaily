@@ -8,27 +8,15 @@ import {
   ScrollView,
 
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  GoogleSignin,
-} from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
-import { setUser, setloggedIn } from '../redux/actions';
-import LogOutButton from '../components/Button_LogOut';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Home from './screen_Home';
-
 
 export default function Exam({navigation}) {
   return (
     <View style={styles.body}>
-
       {/* header lịch thi */}
       <View style={styles.fixItem}>
         <View style={styles.lichthiHeader}>
-          <TouchableOpacity  onPress={() => navigation.navigate('Home')}> 
-            <Image source={require('../assets/btnBack.png')}/>
+          <TouchableOpacity  onPress={() => navigation.navigate('HomeDisplay')}> 
+            <Image source={require('../../assets/btnBack.png')}/>
           </TouchableOpacity>
           <Text style={styles.lichthiHeader_Text}>Lịch thi</Text>
         </View>
@@ -36,12 +24,12 @@ export default function Exam({navigation}) {
         <View style={styles.lichthiHeader_Sort}>
           <TouchableOpacity style={styles.btnSort}>
             <Text style={styles.btnSort_Text}>Năm học</Text>
-            <Image source={require('../assets/btnSortIcon.png')}/>
+            <Image source={require('../../assets/btnSortIcon.png')}/>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.btnSort}>
             <Text style={styles.btnSort_Text}>Học kỳ</Text>
-            <Image source={require('../assets/btnSortIcon.png')}/>
+            <Image source={require('../../assets/btnSortIcon.png')}/>
           </TouchableOpacity>
         </View>
       </View>
@@ -56,19 +44,19 @@ export default function Exam({navigation}) {
         </Text>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/ngaythi.png')}></Image> 
+          <Image source={require('../../assets/ngaythi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Ngày thi: </Text>
           <Text style={styles.monthi_Item__DetailData}>20/12/2022</Text>
         </View>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/thoigianthi.png')}></Image> 
+          <Image source={require('../../assets/thoigianthi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Thời gian: </Text>
           <Text style={styles.monthi_Item__DetailData}>08:20</Text>
         </View>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/phongthi.png')}></Image> 
+          <Image source={require('../../assets/phongthi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Phòng thi: </Text>
           <Text style={styles.monthi_Item__DetailData}>A305</Text>
         </View>
@@ -81,19 +69,19 @@ export default function Exam({navigation}) {
         </Text>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/ngaythi.png')}></Image> 
+          <Image source={require('../../assets/ngaythi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Ngày thi: </Text>
           <Text style={styles.monthi_Item__DetailData}>22/12/2022</Text>
         </View>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/thoigianthi.png')}></Image> 
+          <Image source={require('../../assets/thoigianthi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Thời gian: </Text>
           <Text style={styles.monthi_Item__DetailData}>09:30</Text>
         </View>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/phongthi.png')}></Image> 
+          <Image source={require('../../assets/phongthi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Phòng thi: </Text>
           <Text style={styles.monthi_Item__DetailData}>A707</Text>
         </View>
@@ -106,19 +94,19 @@ export default function Exam({navigation}) {
         </Text>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/ngaythi.png')}></Image> 
+          <Image source={require('../../assets/ngaythi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Ngày thi: </Text>
           <Text style={styles.monthi_Item__DetailData}>20/12/2022</Text>
         </View>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/thoigianthi.png')}></Image> 
+          <Image source={require('../../assets/thoigianthi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Thời gian: </Text>
           <Text style={styles.monthi_Item__DetailData}>14:30</Text>
         </View>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/phongthi.png')}></Image> 
+          <Image source={require('../../assets/phongthi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Phòng thi: </Text>
           <Text style={styles.monthi_Item__DetailData}>A503</Text>
         </View>
@@ -132,19 +120,19 @@ export default function Exam({navigation}) {
         </Text>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/ngaythi.png')}></Image> 
+          <Image source={require('../../assets/ngaythi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Ngày thi: </Text>
           <Text style={styles.monthi_Item__DetailData}>24/12/2022</Text>
         </View>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/thoigianthi.png')}></Image> 
+          <Image source={require('../../assets/thoigianthi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Thời gian: </Text>
           <Text style={styles.monthi_Item__DetailData}>09:30</Text>
         </View>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/phongthi.png')}></Image> 
+          <Image source={require('../../assets/phongthi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Phòng thi: </Text>
           <Text style={styles.monthi_Item__DetailData}>A503</Text>
         </View>
@@ -157,21 +145,20 @@ export default function Exam({navigation}) {
         Tích hợp qui trình K/Doanh với các hệ thống 
 ERP 1	 - 221IS4602 
         </Text>
-
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/ngaythi.png')}></Image> 
+          <Image source={require('../../assets/ngaythi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Ngày thi: </Text>
           <Text style={styles.monthi_Item__DetailData}>25/12/2022</Text>
         </View>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/thoigianthi.png')}></Image> 
+          <Image source={require('../../assets/thoigianthi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Thời gian: </Text>
           <Text style={styles.monthi_Item__DetailData}>09:30</Text>
         </View>
 
         <View style={styles.monthi_Item__Detail} >
-          <Image source={require('../assets/phongthi.png')}></Image> 
+          <Image source={require('../../assets/phongthi.png')}></Image> 
           <Text style={styles.monthi_Item__DetailTitle}>  Phòng thi: </Text>
           <Text style={styles.monthi_Item__DetailData}>A503</Text>
         </View>
@@ -182,9 +169,6 @@ ERP 1	 - 221IS4602
 
 
     </View>
-
-
-
 );};
 
 const styles = StyleSheet.create({

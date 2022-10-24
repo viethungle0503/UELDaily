@@ -3,7 +3,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from './screen/screen_Home';
+import Home from './screen/HomeScreen/screen_Home'
 import Servies from './screen/screen_Services'
 import News from './screen/screen_News';
 import Information from './screen/screen_Information';
@@ -81,7 +81,6 @@ function App() {
         //     fontWeight: 'bold'
         //   }}}
       >
-     
         {
           !loggedIn ? (
             // Screens for logged in users
