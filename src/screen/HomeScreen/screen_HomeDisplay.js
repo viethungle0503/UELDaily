@@ -69,7 +69,7 @@ export default function HomeDisplay({navigation}) {
               <View style={styles.tienichIcon}>
                 <TouchableOpacity style={styles.tienichIcon_Item}
                 onPress={() => navigation.navigate('Schedule')}>
-                  <Image source={require('../../assets/tkbIcon.png')} />
+                  <Image style={styles.tienichIcon_ItemIcon} source={require('../../assets/tkbIcon.png')} />
                   <Text style={styles.tienichIcon__ItemText}>Thời khóa biểu</Text>
                 </TouchableOpacity>
 
@@ -238,51 +238,36 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between'
     },
-    hoatdong: {
-      flex: 4,
-      backgroundColor: '#FFF',
-      marginTop: 10,
-      paddingTop: 30,
-      paddingLeft: 30,
-      paddingRight: 110,
-      paddingBottom: 30
-    },
-    hoatdongHeader: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: '#252525',
-      paddingVertical: 3,
-      
-    },
-    hoatdongTitle: {
-      fontSize: 15,
-      fontWeight: 'bold',
-      color: '#252525',
-    },
-    hoatdongImage: {
-      borderRadius: 4,
-      marginRight: 10 //cách hình 
-    },
+
     tienichIcon: {
+      
       display: 'flex',
       flexDirection: 'row',
-      marginHorizontal: 10,
-      // justifyContent: 'flex-start',
-      // marginVertical: 20,
-      // marginHorizontal: 20,
+      // marginHorizontal: 10,
+      // justifyContent: 'center',
+      marginVertical: 20,
+      marginHorizontal: 20,
       // width: 100,
-    
+      textAlign: 'center',
       alignContent: 'center',
-      justifyContent: 'space-around'
+      justifyContent: 'space-evenly',
     },
     tienichIcon__Item: {
       display: 'flex',
     
-      width: 80,
+      paddingHorizontal: 5,
       // flexWrap: 'wrap',
       // maxWidth: 80,
-      textAlign: 'center',
+     
       justifyContent: 'center'
+    },
+    tienichIcon__ItemIcon: {
+      display: 'flex',
+      justifyContent: 'center',
+      // width: '100%',
+      textAlignVertical: 'center',
+
+
     },
     tienichIcon__ItemText: {
       fontSize: 18,
@@ -309,6 +294,30 @@ const styles = StyleSheet.create({
       color: '#252525'
     },
    
-    
+    hoatdong: {
+      flex: 4,
+      backgroundColor: '#FFF',
+      marginTop: 10,
+      paddingTop: 30,
+      paddingLeft: 30,
+      paddingRight: 110,
+      paddingBottom: 30
+    },
+    hoatdongHeader: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#252525',
+      paddingVertical: 3,
+      
+    },
+    hoatdongTitle: {
+      fontSize: 15,
+      fontWeight: 'bold',
+      color: '#252525',
+    },
+    hoatdongImage: {
+      borderRadius: 4,
+      marginRight: 10 //cách hình 
+    },
     
   });
