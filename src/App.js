@@ -3,13 +3,16 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 import Home from './screen/HomeScreen/screen_Home';
-import Servies from './screen/screen_Services';
+import Services from './screen/screen_Services';
 import News from './screen/screen_News';
 import Information from './screen/screen_Information';
 import Login from './screen/screen_Login';
-
+// Font awesome
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+// font Materials
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Provider} from 'react-redux';
 import {Store} from './redux/store';
 import {useSelector, useDispatch} from 'react-redux';
@@ -19,48 +22,111 @@ const RootStack = createStackNavigator();
 
 function Tabs() {
   return (
+    // <Tab.Navigator
+    //   screenOptions={({route}) => ({
+    //     activeTintColor: '#0080ff',
+    //     inactiveTintColor: '#777777',
+    //     labelStyle: {fontSize: 15, fontWeight: 'bold'},
+    //     tabBarIcon: ({focused, size, color}) => {
+    //       let iconName;
+    //       if (route.name === 'Home') {
+    //         iconName = 'medal';
+    //         size = focused ? 25 : 20;
+    //       } else if (route.name === 'Services') {
+    //         iconName = 'hand-holding-heart';
+    //         size = focused ? 25 : 20;
+    //       } else if (route.name === 'News') {
+    //         iconName = 'newspaper';
+    //         size = focused ? 25 : 20;
+    //       } else if (route.name === 'Information') {
+    //         iconName = 'info';
+    //         size = focused ? 25 : 20;
+    //       }
+    //       return <FontAwesome5 name={iconName} size={size} color={color} />;
+    //     },
+    //   })}>
+    //   <Tab.Screen
+    //     name={'Home'}
+    //     component={Home}
+    //     options={{headerShown: false}}
+    //   />
+    //   <Tab.Screen
+    //     name={'Services'}
+    //     component={Servies}
+    //     options={{headerShown: false}}
+    //   />
+    //   <Tab.Screen
+    //     name={'News'}
+    //     component={News}
+    //     options={{headerShown: false}}
+    //   />
+    //   <Tab.Screen
+    //     name={'Information'}
+    //     component={Information}
+    //     options={{headerShown: false}}
+    //   />
+    // </Tab.Navigator>
     <Tab.Navigator
-      screenOptions={({route}) => ({
-        activeTintColor: '#0080ff',
-        inactiveTintColor: '#777777',
-        labelStyle: {fontSize: 15, fontWeight: 'bold'},
-        tabBarIcon: ({focused, size, color}) => {
-          let iconName;
-          if (route.name === 'Home') {
-            iconName = 'home';
-            size = focused ? 25 : 20;
-          } else if (route.name === 'Services') {
-            iconName = 'hand-holding-heart';
-            size = focused ? 25 : 20;
-          } else if (route.name === 'News') {
-            iconName = 'newspaper';
-            size = focused ? 25 : 20;
-          } else if (route.name === 'Information') {
-            iconName = 'info';
-            size = focused ? 25 : 20;
-          }
-          return <FontAwesome5 name={iconName} size={size} color={color} />;
-        },
-      })}>
+      initialRouteName="Home"
+      tabBarOptions={{
+        activeTintColor: '#0065FF',
+      }}>
       <Tab.Screen
-        name={'Home'}
+        name="Home"
         component={Home}
-        options={{headerShown: false}}
+        options={{
+          tabBarLabel: 'Trang chủ',
+          tabBarIcon: ({color, size}) => (
+            <MaterialCommunityIcons
+              name="home-variant-outline"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
       />
       <Tab.Screen
-        name={'Services'}
-        component={Servies}
-        options={{headerShown: false}}
+        name="Services"
+        component={Services}
+        options={{
+          tabBarLabel: 'Cập nhật',
+          tabBarIcon: ({color, size}) => (
+            <MaterialCommunityIcons
+              name="email-outline"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
       />
       <Tab.Screen
-        name={'News'}
-        component={News}
-        options={{headerShown: false}}
-      />
-      <Tab.Screen
-        name={'Information'}
+        name="Information"
         component={Information}
-        options={{headerShown: false}}
+        options={{
+          tabBarLabel: 'Thông báo',
+          tabBarIcon: ({color, size}) => (
+            <MaterialCommunityIcons
+              name="bell-outline"
+              color={color}
+              size={size}
+            />
+          ),
+          tabBarBadge: 2,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={News}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color, size}) => (
+            <MaterialCommunityIcons
+              name="account-outline"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
