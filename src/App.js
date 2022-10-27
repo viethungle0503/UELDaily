@@ -67,7 +67,8 @@ function Tabs() {
     //   />
     // </Tab.Navigator>
     <Tab.Navigator
-      initialRouteName="Home"
+      // initialRouteName="Home"
+      options={{headerShown: false}}
       tabBarOptions={{
         activeTintColor: '#0065FF',
       }}>
@@ -83,6 +84,7 @@ function Tabs() {
               size={size}
             />
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -97,6 +99,7 @@ function Tabs() {
               size={size}
             />
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
