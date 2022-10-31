@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -67,9 +68,9 @@ function Tabs() {
     //   />
     // </Tab.Navigator>
     <Tab.Navigator
-      // initialRouteName="Home"
-      options={{headerShown: false}}
-      tabBarOptions={{
+      style={styles.navBottom_container}
+      initialRouteName="Home"
+      screenOptions={{
         activeTintColor: '#0065FF',
       }}>
       <Tab.Screen
@@ -79,7 +80,7 @@ function Tabs() {
           tabBarLabel: 'Trang chủ',
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons
-              name="home-variant-outline"
+              name={'home-variant-outline'}
               color={color}
               size={size}
             />
@@ -93,11 +94,7 @@ function Tabs() {
         options={{
           tabBarLabel: 'Cập nhật',
           tabBarIcon: ({color, size}) => (
-            <MaterialCommunityIcons
-              name="email-outline"
-              color={color}
-              size={size}
-            />
+            <MaterialCommunityIcons name="earth" color={color} size={size} />
           ),
           headerShown: false,
         }}
@@ -114,7 +111,7 @@ function Tabs() {
               size={size}
             />
           ),
-          tabBarBadge: 2,
+          tabBarBadge: 4,
         }}
       />
       <Tab.Screen
@@ -180,5 +177,9 @@ const AppWrapper = () => {
     </Provider>
   );
 };
-
+const styles = StyleSheet.create({
+  navBottom_container: {
+    padding: 5,
+  },
+});
 export default AppWrapper;
