@@ -1,6 +1,5 @@
 import {useSelector, useDispatch} from 'react-redux';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
 import {setUser, setloggedIn} from '../../redux/actions';
 import {
   Image,
