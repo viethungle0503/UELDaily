@@ -111,7 +111,8 @@ function Tabs() {
               size={size}
             />
           ),
-          tabBarBadge: 2,
+          tabBarBadge: 3,
+          headerShown: false,
         }}
       />
       <Tab.Screen
