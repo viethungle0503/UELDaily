@@ -104,6 +104,7 @@ function Tabs() {
       />
       <Tab.Screen
         name="Information"
+        
         component={Information}
         options={{
           tabBarLabel: 'Thông báo',
@@ -115,6 +116,7 @@ function Tabs() {
             />
           ),
           tabBarBadge: 2,
+          headerShown: false
         }}
       />
       <Tab.Screen
@@ -129,6 +131,7 @@ function Tabs() {
               size={size}
             />
           ),
+          headerShown: false
         }}
       />
     </Tab.Navigator>
@@ -142,16 +145,16 @@ function App() {
     <NavigationContainer>
       <RootStack.Navigator
         initialRouteName="Login"
-        // screenOptions={{
-        //   headerTitleAlign: 'center',
-        //   headerStyle: {
-        //     backgroundColor: '#0080ff'
-        //   },
-        //   headerTintColor: '#ffffff',
-        //   headerTitleStyle: {
-        //     fontSize: 25,
-        //     fontWeight: 'bold'
-        //   }}}
+        screenOptions={{
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: '#0080ff'
+          },
+          headerTintColor: '#ffffff',
+          headerTitleStyle: {
+            fontSize: 25,
+            fontWeight: 'bold'
+          }}}
       >
         {!loggedIn ? (
           // Screens for logged in users
