@@ -1,6 +1,5 @@
 import {useSelector, useDispatch} from 'react-redux';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
 import {setUser, setloggedIn} from '../../redux/actions';
 import {
   Image,
@@ -10,6 +9,8 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- import styles to be used
 
 export default function HomeDisplay({navigation}) {
   const dispatch = useDispatch();
@@ -33,10 +34,12 @@ export default function HomeDisplay({navigation}) {
       {loggedIn && (
         <View style={styles.studentwelcome}>
           <Image source={require('../../assets/user.png')} />
+          
           <View>
             {user ? (
               <Text style={styles.studentName}>{user.displayName}</Text>
             ) : null}
+            
             <Text>K204060305</Text>
           </View>
 
@@ -105,7 +108,7 @@ export default function HomeDisplay({navigation}) {
 
             <TouchableOpacity
               style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Exam')}>
+              onPress={() => navigation.navigate('Ctxh')}>
               <Image source={require('../../assets/lichthiIcon.png')} />
               <Text style={styles.tienichIcon__ItemText}>Ngày CTXH</Text>
             </TouchableOpacity>

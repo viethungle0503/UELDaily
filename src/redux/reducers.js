@@ -1,10 +1,14 @@
 import { SET_LOGGED_IN,
-    SET_USER
+    SET_USER,
+    GET_INFORMATION,
+    GET_CREDENTIAL,
 } from "./actions";
 
 const initialState = {
     user: [],
-    loggedIn: false
+    loggedIn: false,
+    information:[],
+    credential: [],
 }
 
 function userReducer(state = initialState, action) {
@@ -13,6 +17,10 @@ function userReducer(state = initialState, action) {
             return {...state, user: action.payload};
         case SET_LOGGED_IN:
             return {...state, loggedIn: action.payload};
+        case GET_INFORMATION:
+            return {...state, information: action.payload};
+        case GET_CREDENTIAL:
+            return {...state, credential: action.payload};
         default: 
             return state;
     }

@@ -18,6 +18,9 @@ import react, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser, setloggedIn } from '../redux/actions';
 
+import { Icon } from 'react-native-elements'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 export default function Login({ navigation }) {
   const { user, loggedIn } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
@@ -100,6 +103,7 @@ export default function Login({ navigation }) {
         
         {!loggedIn && (
           <View style={styles.sectionContainer}>
+            {/* <FontAwesomeIcon icon={('fa-brands fa-google')} style={{color: '#fff'}} /> */}
             <GoogleSigninButton
               style={{ alignSelf: 'flex-start' }}
               size={GoogleSigninButton.Size.Wide}
@@ -117,6 +121,7 @@ export default function Login({ navigation }) {
 
 const styles = StyleSheet.create({
   body: {
+    backgroundColor: '#fff',
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
