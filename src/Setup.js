@@ -1,11 +1,16 @@
+import React from 'react';
+// import ReactDOM from 'react-dom/client';
 import App from './App';
 import Auth from '@react-native-firebase/auth';
-
-
+import { Provider } from 'react-redux';
+import Store from './redux_toolkit/store';
 const Setup = () => {
     global.auth = Auth;
-    // global.reference = DataBase.app().database("https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/")
-    return <App/>
+    return (
+        <Provider store={Store}>
+                <App/>
+        </Provider>
+    )
 };
 
 export default Setup;
