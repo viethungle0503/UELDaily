@@ -100,7 +100,6 @@ function Tabs() {
       />
       <Tab.Screen
         name="Information"
-        
         component={Information}
         options={{
           tabBarLabel: 'Thông báo',
@@ -127,7 +126,7 @@ function Tabs() {
               size={size}
             />
           ),
-          headerShown: false
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
@@ -144,14 +143,14 @@ function App() {
         screenOptions={{
           headerTitleAlign: 'center',
           headerStyle: {
-            backgroundColor: '#0080ff'
+            backgroundColor: '#0080ff',
           },
           headerTintColor: '#ffffff',
           headerTitleStyle: {
             fontSize: 25,
-            fontWeight: 'bold'
-          }}}
-      >
+            fontWeight: 'bold',
+          },
+        }}>
         {!loggedIn ? (
           // Screens for logged in users
           <RootStack.Screen
