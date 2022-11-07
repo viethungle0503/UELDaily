@@ -7,34 +7,33 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import {FlatList} from 'react-native-gesture-handler';
 
-export default function Exam({ navigation }) {
+export default function Exam({navigation}) {
   let temp = currentUser.data.test_schedules;
   const exam_schedule = [];
-  for(key in temp) {
+  for (key in temp) {
     exam_schedule.push(temp[key]);
   }
   console.log(exam_schedule);
   return (
     <View style={styles.body}>
       <View style={styles.fixItem}>
-        <View style={styles.lichthiHeader}>
-          <TouchableOpacity onPress={() => navigation.navigate('HomeDisplay')}>
-            <Image source={require('../../assets/btnBack.png')} />
-          </TouchableOpacity>
-          <Text style={styles.lichthiHeader_Text}>Lịch thi</Text>
-        </View>
-
         <View style={styles.lichthiHeader_Sort}>
           <TouchableOpacity style={styles.btnSort}>
             <Text style={styles.btnSort_Text}>Năm học</Text>
-            <Image source={require('../../assets/btnSortIcon.png')} />
+            <Image
+              style={styles.examIcon}
+              source={require('../../assets/btnSortIcon.png')}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.btnSort}>
             <Text style={styles.btnSort_Text}>Học kỳ</Text>
-            <Image source={require('../../assets/btnSortIcon.png')} />
+            <Image
+              style={styles.examIcon}
+              source={require('../../assets/btnSortIcon.png')}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -42,7 +41,7 @@ export default function Exam({ navigation }) {
       <FlatList
         style={styles.monthi}
         data={exam_schedule}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <View style={styles.monthi_Item}>
             <View style={styles.monthi_Item_Markup}></View>
             <Text style={styles.monthi_Item__SubjectName}>
@@ -50,26 +49,32 @@ export default function Exam({ navigation }) {
             </Text>
 
             <View style={styles.monthi_Item__Detail}>
-              <Image source={require('../../assets/ngaythi.png')}></Image>
+              <Image
+                style={styles.examIcon}
+                source={require('../../assets/ngaythi.png')}></Image>
               <Text style={styles.monthi_Item__DetailTitle}> Ngày thi: </Text>
               <Text style={styles.monthi_Item__DetailData}>{item.date}</Text>
             </View>
 
             <View style={styles.monthi_Item__Detail}>
-              <Image source={require('../../assets/thoigianthi.png')}></Image>
+              <Image
+                style={styles.examIcon}
+                source={require('../../assets/thoigianthi.png')}></Image>
               <Text style={styles.monthi_Item__DetailTitle}> Thời gian: </Text>
               <Text style={styles.monthi_Item__DetailData}>{item.time}</Text>
             </View>
 
             <View style={styles.monthi_Item__Detail}>
-              <Image source={require('../../assets/phongthi.png')}></Image>
+              <Image
+                style={styles.examIcon}
+                source={require('../../assets/phongthi.png')}></Image>
               <Text style={styles.monthi_Item__DetailTitle}>Phòng thi: </Text>
               <Text style={styles.monthi_Item__DetailData}>{item.room}</Text>
             </View>
           </View>
-
         )}
-        keyExtractor={(item, index) => index.toString()} />
+        keyExtractor={(item, index) => index.toString()}
+      />
     </View>
   );
 }
@@ -93,6 +98,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingHorizontal: 10,
     marginBottom: 0,
+  },
+  examIcon: {
+    width: 16,
+    height: 16,
   },
   monthi_Item: {
     backgroundColor: '#fff',

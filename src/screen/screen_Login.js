@@ -14,18 +14,19 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import react, { useState, useEffect } from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { setUser, setLoggedIn, setUID, setCurrentUser } from '../redux_toolkit/userSlice';
+import react, {useState, useEffect} from 'react';
+import {useSelector, useDispatch, shallowEqual} from 'react-redux';
+import {
+  setUser,
+  setLoggedIn,
+  setUID,
+  setCurrentUser,
+} from '../redux_toolkit/userSlice';
 
-import { Icon } from 'react-native-elements'
+import {Icon} from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { Icon } from 'react-native-elements'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-export default function Login({ navigation }) {
-
+export default function Login({navigation}) {
   // const database_app = useSelector((state) => state.database.db_app);
   const dispatch = useDispatch();
 
@@ -33,24 +34,21 @@ export default function Login({ navigation }) {
     dispatch(setUser(user));
     if (user) {
       if (user.email.search(/@st.uel.edu.vn/i) == -1) {
-        alert("Vui lòng sử mail email trường cấp");
+        alert('Vui lòng sử mail email trường cấp');
         signOut();
-      }
-      else {
+      } else {
         let i = 0;
         for (let element of database_app) {
-
           if (element.data.email == user.email) {
             i = 1;
           }
         }
         if (i == 0) {
-          alert("Tài khoản không tồn tại");
+          alert('Tài khoản không tồn tại');
           signOut();
-        }
-        else {
-          for(let element of database_uel) {
-            if(element.data.email == user.email) {
+        } else {
+          for (let element of database_uel) {
+            if (element.data.email == user.email) {
               dispatch(setCurrentUser(element));
             }
           }
@@ -58,7 +56,7 @@ export default function Login({ navigation }) {
         }
       }
     }
-  };
+  }
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -91,7 +89,7 @@ export default function Login({ navigation }) {
     try {
       await GoogleSignin.hasPlayServices();
       //Get the user ID token
-      const { accessToken, idToken } = await GoogleSignin.signIn();
+      const {accessToken, idToken} = await GoogleSignin.signIn();
 
       //Create a Google credential with the token
       const credential = auth.GoogleAuthProvider.credential(
@@ -120,15 +118,10 @@ export default function Login({ navigation }) {
   return (
     <View style={styles.body}>
       <View style={styles.sectionHeader}>
-        <Image
-          style={styles.logo}
-          source={require('../assets/logo.png')}
-        />
+        <Image style={styles.logo} source={require('../assets/logo.png')} />
       </View>
       <View style={styles.sectionMain}>
-        <Image
-          source={require('../assets/illustration.png')}
-        />
+        <Image source={require('../assets/illustration.png')} />
       </View>
 
       <View style={styles.sectionFooter}>
@@ -150,7 +143,7 @@ export default function Login({ navigation }) {
           <View style={styles.sectionContainer}>
             {/* <FontAwesomeIcon icon={('fa-brands fa-google')} style={{color: '#fff'}} /> */}
             <GoogleSigninButton
-              style={{ alignSelf: 'flex-start' }}
+              style={{alignSelf: 'flex-start'}}
               size={GoogleSigninButton.Size.Wide}
               color={GoogleSigninButton.Color.Dark}
               onPress={this._signIn}
@@ -159,10 +152,9 @@ export default function Login({ navigation }) {
           </View>
         )}
       </View>
-
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   body: {
@@ -181,7 +173,6 @@ const styles = StyleSheet.create({
   sectionFooter: {
     flex: 4,
     alignItems: 'center',
-
   },
   textTitleColor: {
     color: '#19a5ff',
@@ -197,7 +188,7 @@ const styles = StyleSheet.create({
     color: '#344161',
 
     alignItems: 'center',
-    margin: 20
+    margin: 20,
   },
   textDescription: {
     fontSize: 20,
@@ -206,8 +197,8 @@ const styles = StyleSheet.create({
   logo: {
     width: 60,
     height: 60,
-    margin: 50
-  }
+    margin: 50,
+  },
   // sectionContainer: {
   //   marginTop: 32,
   // },

@@ -1,6 +1,12 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { setUser, setLoggedIn, setUID, setCurrentUser } from '../../redux_toolkit/userSlice';
+import {useSelector, useDispatch} from 'react-redux';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+
+import {
+  setUser,
+  setLoggedIn,
+  setUID,
+  setCurrentUser,
+} from '../../redux_toolkit/userSlice';
 import {
   Image,
   View,
@@ -9,10 +15,8 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- import styles to be used
-
-export default function HomeDisplay({ navigation }) {
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+export default function HomeDisplay({navigation}) {
   const dispatch = useDispatch();
   const signOut = async () => {
     try {
@@ -32,17 +36,23 @@ export default function HomeDisplay({ navigation }) {
     <ScrollView style={styles.body}>
       {loggedIn && (
         <View style={styles.studentwelcome}>
-          <Image style={{width:40, height:40, borderRadius: 100 ,marginRight:10}} source={{uri: user.photoURL}} />
-          
+          <Image style={styles.studentAvatar} source={{uri: user.photoURL}} />
+
           <View>
             {user ? (
-              <Text style={styles.studentName}>{currentUser.data.lastName + ` ${currentUser.data.firstName}`}</Text>
+              <Text style={styles.studentName}>
+                {currentUser.data.lastName + ` ${currentUser.data.firstName}`}
+              </Text>
             ) : null}
             <Text>{currentUser.key}</Text>
           </View>
 
           <TouchableOpacity style={styles.btnLanguage}>
-            <Image source={require('../../assets/btnChangeLanguage.png')} />
+            <MaterialCommunityIcons
+              style={styles.svgLanguage}
+              name={'web'}
+              size={25}
+            />
           </TouchableOpacity>
         </View>
       )}
@@ -51,14 +61,13 @@ export default function HomeDisplay({ navigation }) {
         source={require('../../assets/effectRound.png')}
       />
 
-
       <View style={styles.tienich}>
         <View style={styles.tienichHeader}>
           <Text style={styles.tienichText}>Tiện ích</Text>
 
           <TouchableOpacity style={styles.btnAllTienich}>
-            <Image source={require('../../assets/btnAllTienich.png')} />
-            <Text>Tất cả</Text>
+            <MaterialCommunityIcons name={'tune-variant'} size={12} />
+            <Text style={{color: 'black', marginLeft: 5}}>Tất cả</Text>
           </TouchableOpacity>
         </View>
 
@@ -68,7 +77,7 @@ export default function HomeDisplay({ navigation }) {
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Schedule')}>
               <Image
-                style={styles.tienichIcon_ItemIcon}
+                style={styles.tienichIcon__ItemImg}
                 source={require('../../assets/tkbIcon.png')}
               />
               <Text style={styles.tienichIcon__ItemText}>Thời khóa biểu</Text>
@@ -77,14 +86,20 @@ export default function HomeDisplay({ navigation }) {
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('ScoreBoard')}>
-              <Image source={require('../../assets/xemdiemIcon.png')} />
+              <Image
+                style={styles.tienichIcon__ItemImg}
+                source={require('../../assets/xemdiemIcon.png')}
+              />
               <Text style={styles.tienichIcon__ItemText}>Xem điểm</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Exam')}>
-              <Image source={require('../../assets/lichthiIcon.png')} />
+              <Image
+                style={styles.tienichIcon__ItemImg}
+                source={require('../../assets/lichthiIcon.png')}
+              />
               <Text style={styles.tienichIcon__ItemText}>Lịch thi</Text>
             </TouchableOpacity>
           </View>
@@ -93,21 +108,30 @@ export default function HomeDisplay({ navigation }) {
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Homework')}>
-              <Image source={require('../../assets/baitapIcon.png')} />
+              <Image
+                style={styles.tienichIcon__ItemImg}
+                source={require('../../assets/baitapIcon.png')}
+              />
               <Text style={styles.tienichIcon__ItemText}>Bài tập</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Tuition')}>
-              <Image source={require('../../assets/hocphiIcon.png')} />
+              <Image
+                style={styles.tienichIcon__ItemImg}
+                source={require('../../assets/hocphiIcon.png')}
+              />
               <Text style={styles.tienichIcon__ItemText}>Học phí</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Ctxh')}>
-              <Image source={require('../../assets/lichthiIcon.png')} />
+              <Image
+                style={styles.tienichIcon__ItemImg}
+                source={require('../../assets/ctxhIcon.png')}
+              />
               <Text style={styles.tienichIcon__ItemText}>Ngày CTXH</Text>
             </TouchableOpacity>
           </View>
@@ -189,7 +213,6 @@ export default function HomeDisplay({ navigation }) {
             </View>
           </View>
         </View>
-
       </View>
     </ScrollView>
   );
@@ -234,11 +257,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#252525',
   },
+  studentAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    marginRight: 10,
+  },
   btnLanguage: {
     position: 'absolute',
     right: 30,
     top: 35,
     zIndex: 2,
+  },
+  svgLanguage: {
+    color: 'black',
   },
   effect: {
     position: 'absolute',
@@ -254,7 +286,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     paddingTop: 32,
     paddingBottom: 20,
-    paddingHorizontal: 32,
+    paddingHorizontal: 30,
     backgroundColor: '#fff',
     zIndex: 3,
     marginTop: -50,
@@ -264,14 +296,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-
+  tienichIcon__ItemImg: {
+    height: 32,
+    width: 32,
+  },
   tienichIcon: {
     display: 'flex',
     flexDirection: 'row',
     // marginHorizontal: 10,
     // justifyContent: 'center',
     marginVertical: 15,
-    marginHorizontal: 5,
+    // marginHorizontal: 5,
     marginBottom: 0,
     // width: 100,
     textAlign: 'center',
@@ -298,9 +333,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     // flexWrap: 'wrap',
     textAlignVertical: 'top',
-  },
-  tienichIcon_ItemIcon: {
-    textAlign: 'center',
+    color: '#000000',
   },
   btnAllTienich: {
     borderWidth: 1,
