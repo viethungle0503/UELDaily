@@ -39,14 +39,14 @@ return(
 
     <ScrollView style={styles.noti}>
 
-      <View style={styles.notiItem}>
+      <TouchableOpacity style={styles.notiItem} onPress={() => navigation.navigate('Homework')}>
         
 
         <View style={styles.notiItem_Icon}>
           <Image source={require('../assets/notiNhacnho.png')}/>
         </View>
 
-        <View style={styles.notiItem_Content}>
+        <View style={styles.notiItem_Content}  >
           <Text style={styles.notiItem_Content_Title}>
             Sắp đến hạn Bài tập 3, môn Phát triển web kinh doanh
           </Text>
@@ -75,9 +75,9 @@ return(
           </View>
         </View>
           
-      </View>
+      </TouchableOpacity>
 
-      <View style={styles.notiItem} >
+      <TouchableOpacity style={styles.notiItem} onPress={() => navigation.navigate('Homework')}>
         <View style={styles.fadeItem}></View>
 
         <View style={styles.notiItem_Icon}>
@@ -113,9 +113,9 @@ return(
           </View>
         </View>
           
-      </View>
+      </TouchableOpacity>
 
-      <View style={styles.notiItem}>
+      <TouchableOpacity style={styles.notiItem} onPress={() => navigation.navigate('Homework')}>
         <View style={styles.fadeItem}></View>
 
         <View style={styles.notiItem_Icon}>
@@ -151,7 +151,7 @@ return(
           </View>
         </View>
           
-      </View>
+      </TouchableOpacity>
 
 
       <View style={styles.notiItem}>
@@ -199,7 +199,7 @@ return(
           
       </View>
 
-      <View style={styles.notiItem}>
+      <TouchableOpacity style={styles.notiItem} onPress={() => navigation.navigate('Scoreboard')}>
         <View style={styles.fadeItem}></View>
         <View style={styles.notiItem_Icon}>
           <Image source={require('../assets/notiNhacnho.png')}/>
@@ -233,7 +233,7 @@ return(
           </View>
         </View>
         
-      </View>
+      </TouchableOpacity>
 
 
       <View style={styles.notiItem}>

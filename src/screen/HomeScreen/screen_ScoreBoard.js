@@ -9,7 +9,7 @@ import {
   
   } from 'react-native';
 
-export default function ScoreBoard() {
+export default function ScoreBoard({navigation}) {
     return(
         <>
         <Text>Scoreboard</Text>

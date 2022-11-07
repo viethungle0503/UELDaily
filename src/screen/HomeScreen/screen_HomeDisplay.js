@@ -1,6 +1,6 @@
-import {useSelector, useDispatch} from 'react-redux';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {setUser, setloggedIn} from '../../redux/actions';
+import { useSelector, useDispatch } from 'react-redux';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { setUser, setLoggedIn, setUID, setCurrentUser } from '../../redux_toolkit/userSlice';
 import {
   Image,
   View,
@@ -12,9 +12,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- import styles to be used
 
-export default function HomeDisplay({navigation}) {
+export default function HomeDisplay({ navigation }) {
   const dispatch = useDispatch();
-  const {user, loggedIn} = useSelector(state => state.userReducer);
   const signOut = async () => {
     try {
       await GoogleSignin.revokeAccess();
@@ -22,9 +21,9 @@ export default function HomeDisplay({navigation}) {
       auth()
         .signOut()
         .then(() => {
-          dispatch(setloggedIn(false));
+          dispatch(setLoggedIn(false));
         });
-      // setuserInfo([]);
+      dispatch(setUser([]));
     } catch (error) {
       console.error(error);
     }
@@ -33,14 +32,13 @@ export default function HomeDisplay({navigation}) {
     <ScrollView style={styles.body}>
       {loggedIn && (
         <View style={styles.studentwelcome}>
-          <Image source={require('../../assets/user.png')} />
+          <Image style={{width:40, height:40, borderRadius: 100 ,marginRight:10}} source={{uri: user.photoURL}} />
           
           <View>
             {user ? (
-              <Text style={styles.studentName}>{user.displayName}</Text>
+              <Text style={styles.studentName}>{currentUser.data.lastName + ` ${currentUser.data.firstName}`}</Text>
             ) : null}
-            
-            <Text>K204060305</Text>
+            <Text>{currentUser.key}</Text>
           </View>
 
           <TouchableOpacity style={styles.btnLanguage}>
@@ -48,11 +46,11 @@ export default function HomeDisplay({navigation}) {
           </TouchableOpacity>
         </View>
       )}
-
       <Image
         style={styles.effect}
         source={require('../../assets/effectRound.png')}
       />
+
 
       <View style={styles.tienich}>
         <View style={styles.tienichHeader}>
@@ -137,6 +135,7 @@ export default function HomeDisplay({navigation}) {
             </View>
           </View>
         </View>
+
         <View style={styles.row}>
           <Image
             style={styles.hoatdongImage}
@@ -154,6 +153,7 @@ export default function HomeDisplay({navigation}) {
             </View>
           </View>
         </View>
+
         <View style={styles.row}>
           <Image
             style={styles.hoatdongImage}
@@ -171,6 +171,7 @@ export default function HomeDisplay({navigation}) {
             </View>
           </View>
         </View>
+
         <View style={styles.row}>
           <Image
             style={styles.hoatdongImage}
@@ -188,6 +189,7 @@ export default function HomeDisplay({navigation}) {
             </View>
           </View>
         </View>
+
       </View>
     </ScrollView>
   );
@@ -316,6 +318,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   tienichText: {
+    // color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
     color: '#252525',

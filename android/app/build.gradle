@@ -264,6 +264,9 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
+    // Add the dependency for the Realtime Database library
+    implementation 'com.google.firebase:firebase-database'
+
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

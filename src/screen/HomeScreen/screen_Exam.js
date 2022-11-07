@@ -7,8 +7,15 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 
-export default function Exam({navigation}) {
+export default function Exam({ navigation }) {
+  let temp = currentUser.data.test_schedules;
+  const exam_schedule = [];
+  for(key in temp) {
+    exam_schedule.push(temp[key]);
+  }
+  console.log(exam_schedule);
   return (
     <View style={styles.body}>
       {/* header lịch thi */}
@@ -34,136 +41,37 @@ export default function Exam({navigation}) {
       </View>
       {/* row lịch thi */}
 
-      <ScrollView style={styles.monthi}>
-        <View style={styles.monthi_Item}>
-          <View style={styles.monthi_Item_Markup}></View>
+      <FlatList
+        style={styles.monthi}
+        data={exam_schedule}
+        renderItem={({ item }) => (
+          <View style={styles.monthi_Item}>
+            <View style={styles.monthi_Item_Markup}></View>
+            <Text style={styles.monthi_Item__SubjectName}>
+              {item.course_name}
+            </Text>
 
-          <Text style={styles.monthi_Item__SubjectName}>
-            Phân tích thiết kế HTTT quản lý - 221IS4204
-          </Text>
+            <View style={styles.monthi_Item__Detail}>
+              <Image source={require('../../assets/ngaythi.png')}></Image>
+              <Text style={styles.monthi_Item__DetailTitle}> Ngày thi: </Text>
+              <Text style={styles.monthi_Item__DetailData}>{item.date}</Text>
+            </View>
 
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/ngaythi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Ngày thi: </Text>
-            <Text style={styles.monthi_Item__DetailData}>20/12/2022</Text>
+            <View style={styles.monthi_Item__Detail}>
+              <Image source={require('../../assets/thoigianthi.png')}></Image>
+              <Text style={styles.monthi_Item__DetailTitle}> Thời gian: </Text>
+              <Text style={styles.monthi_Item__DetailData}>{item.time}</Text>
+            </View>
+
+            <View style={styles.monthi_Item__Detail}>
+              <Image source={require('../../assets/phongthi.png')}></Image>
+              <Text style={styles.monthi_Item__DetailTitle}>Phòng thi: </Text>
+              <Text style={styles.monthi_Item__DetailData}>{item.room}</Text>
+            </View>
           </View>
 
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/thoigianthi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Thời gian: </Text>
-            <Text style={styles.monthi_Item__DetailData}>08:20</Text>
-          </View>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/phongthi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Phòng thi: </Text>
-            <Text style={styles.monthi_Item__DetailData}>A305</Text>
-          </View>
-        </View>
-
-        <View style={styles.monthi_Item}>
-          <View style={styles.monthi_Item_Markup}></View>
-
-          <Text style={styles.monthi_Item__SubjectName}>
-            Phát triển web kinh doanh - 221MI2602
-          </Text>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/ngaythi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Ngày thi: </Text>
-            <Text style={styles.monthi_Item__DetailData}>22/12/2022</Text>
-          </View>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/thoigianthi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Thời gian: </Text>
-            <Text style={styles.monthi_Item__DetailData}>09:30</Text>
-          </View>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/phongthi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Phòng thi: </Text>
-            <Text style={styles.monthi_Item__DetailData}>A707</Text>
-          </View>
-        </View>
-
-        <View style={styles.monthi_Item}>
-          <View style={styles.monthi_Item_Markup}></View>
-
-          <Text style={styles.monthi_Item__SubjectName}>
-            Hệ quản trị cơ sở dữ liệu - 221MI6602
-          </Text>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/ngaythi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Ngày thi: </Text>
-            <Text style={styles.monthi_Item__DetailData}>20/12/2022</Text>
-          </View>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/thoigianthi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Thời gian: </Text>
-            <Text style={styles.monthi_Item__DetailData}>14:30</Text>
-          </View>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/phongthi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Phòng thi: </Text>
-            <Text style={styles.monthi_Item__DetailData}>A503</Text>
-          </View>
-        </View>
-
-        <View style={styles.monthi_Item}>
-          <View style={styles.monthi_Item_Markup}></View>
-
-          <Text style={styles.monthi_Item__SubjectName}>
-            Quản trị nguồn nhân lực - 221QT0402
-          </Text>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/ngaythi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Ngày thi: </Text>
-            <Text style={styles.monthi_Item__DetailData}>24/12/2022</Text>
-          </View>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/thoigianthi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Thời gian: </Text>
-            <Text style={styles.monthi_Item__DetailData}>09:30</Text>
-          </View>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/phongthi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Phòng thi: </Text>
-            <Text style={styles.monthi_Item__DetailData}>A503</Text>
-          </View>
-        </View>
-
-        <View style={styles.monthi_Item}>
-          <View style={styles.monthi_Item_Markup}></View>
-
-          <Text style={styles.monthi_Item__SubjectName}>
-            Tích hợp qui trình K/Doanh với các hệ thống ERP 1 - 221IS4602
-          </Text>
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/ngaythi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Ngày thi: </Text>
-            <Text style={styles.monthi_Item__DetailData}>25/12/2022</Text>
-          </View>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/thoigianthi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Thời gian: </Text>
-            <Text style={styles.monthi_Item__DetailData}>09:30</Text>
-          </View>
-
-          <View style={styles.monthi_Item__Detail}>
-            <Image source={require('../../assets/phongthi.png')}></Image>
-            <Text style={styles.monthi_Item__DetailTitle}> Phòng thi: </Text>
-            <Text style={styles.monthi_Item__DetailData}>A503</Text>
-          </View>
-        </View>
-      </ScrollView>
+        )}
+        keyExtractor={(item, index) => index.toString()} />
     </View>
   );
 }
