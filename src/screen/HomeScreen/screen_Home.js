@@ -18,7 +18,14 @@ export default function Home() {
         options={{headerShown: false}}
       />
       <HomeStack.Screen name="Schedule" component={Schedule} />
-      <HomeStack.Screen name="ScoreBoard" component={ScoreBoard} />
+      <HomeStack.Screen 
+        name="ScoreBoard" 
+        component={ScoreBoard} 
+        options={
+        {
+          title: 'Xem điểm'
+        }
+      } />
       <HomeStack.Screen
         name="Exam"
         component={Exam}
