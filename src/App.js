@@ -4,12 +4,17 @@ import {StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import SplashScreen from 'react-native-splash-screen'
+
 // Screen
 import Home from './screen/HomeScreen/screen_Home';
 import Services from './screen/screen_Services';
 import News from './screen/screen_News';
 import Information from './screen/screen_Information';
 import Login from './screen/screen_Login';
+import PreLogin1 from './screen/screen_PreLogin1';
+import PreLogin2 from './screen/screen_PreLogin2';
+
 // Font awesome
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 // font Materials
@@ -142,25 +147,28 @@ function App() {
   return (
     <NavigationContainer>
       <RootStack.Navigator
-        initialRouteName="Login"
-        // screenOptions={{
-        //   headerTitleAlign: 'center',
-        //   headerStyle: {
-        //     backgroundColor: '#0080ff'
-        //   },
-        //   headerTintColor: '#ffffff',
-        //   headerTitleStyle: {
-        //     fontSize: 25,
-        //     fontWeight: 'bold'
-        //   }}}
-      >
+        initialRouteName="PreLogin1"
+        >
         {!loggedIn ? (
-          // Screens for logged in users
-          <RootStack.Screen
-            name="Login"
-            component={Login}
-            options={{headerShown: false}}
-          />
+          <RootStack.Group>
+            <RootStack.Screen
+              name="PreLogin1"
+              component={PreLogin1}
+              options={{headerShown: false}}
+            />
+            <RootStack.Screen
+              name="PreLogin2"
+              component={PreLogin2}
+              options={{headerShown: false}}
+            />
+            <RootStack.Screen
+              name="Login"
+              component={Login}
+              options={{headerShown: false}}
+            />
+
+          </RootStack.Group>
+          
         ) : (
           // Auth screens
           <RootStack.Screen
@@ -177,6 +185,8 @@ function App() {
 const AppWrapper = () => {
   const dispatch = useDispatch();
   useEffect(() => {
+    SplashScreen.hide();
+
     firebase
       .app()
       .database(

@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 export default function Information({navigation}) {
   return (
     <View style={styles.body}>
