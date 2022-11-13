@@ -53,6 +53,7 @@ export default function HomeDisplay({navigation}) {
               name={'web'}
               size={25}
             />
+            
           </TouchableOpacity>
         </View>
       )}
