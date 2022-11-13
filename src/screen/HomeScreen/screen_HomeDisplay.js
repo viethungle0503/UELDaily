@@ -154,7 +154,11 @@ export default function HomeDisplay({navigation}) {
               Trường ĐH Kinh tế - Luật khai giảng năm học 2022 - 2023
             </Text>
             <View style={styles.row}>
-              <Image source={require('../../assets/clock.png')} />
+              <MaterialCommunityIcons
+                style={styles.hoatdongTime}
+                name={'clock-outline'}
+                size={18}
+              />
               <Text> 30/09/2022</Text>
             </View>
           </View>
@@ -172,7 +176,11 @@ export default function HomeDisplay({navigation}) {
               (EY Việt Nam)
             </Text>
             <View style={styles.row}>
-              <Image source={require('../../assets/clock.png')} />
+              <MaterialCommunityIcons
+                style={styles.hoatdongTime}
+                name={'clock-outline'}
+                size={18}
+              />
               <Text> 20/09/2022</Text>
             </View>
           </View>
@@ -190,7 +198,11 @@ export default function HomeDisplay({navigation}) {
               (phương thức 3)
             </Text>
             <View style={styles.row}>
-              <Image source={require('../../assets/clock.png')} />
+              <MaterialCommunityIcons
+                style={styles.hoatdongTime}
+                name={'clock-outline'}
+                size={18}
+              />
               <Text> 15/09/2022</Text>
             </View>
           </View>
@@ -208,7 +220,11 @@ export default function HomeDisplay({navigation}) {
               (phương thức 3)
             </Text>
             <View style={styles.row}>
-              <Image source={require('../../assets/clock.png')} />
+              <MaterialCommunityIcons
+                style={styles.hoatdongTime}
+                name={'clock-outline'}
+                size={18}
+              />
               <Text> 15/09/2022</Text>
             </View>
           </View>
@@ -374,7 +390,7 @@ const styles = StyleSheet.create({
   },
   hoatdongTitle: {
     fontSize: 15,
-    fontWeight: 'bold',
+    fontWeight: '500',
     color: '#252525',
   },
   hoatdongImage: {
