@@ -166,16 +166,18 @@ function App() {
               component={Login}
               options={{headerShown: false}}
             />
-
           </RootStack.Group>
           
         ) : (
           // Auth screens
-          <RootStack.Screen
-            name="UEL Daily"
-            component={Tabs}
-            options={{headerShown: false}}
-          />
+            <RootStack.Screen
+              name="UEL Daily"
+              component={Tabs}
+              options={{headerShown: false}}
+            />
+            
+
+          
         )}
       </RootStack.Navigator>
     </NavigationContainer>
