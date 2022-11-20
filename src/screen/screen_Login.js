@@ -1,11 +1,9 @@
 import {
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
   Text,
-  Button,
   Image,
+  TouchableOpacity
 } from 'react-native';
 
 import {
@@ -13,21 +11,16 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
-import react, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { setUser, setloggedIn } from '../redux/actions';
 
-export default function Login({ navigation }) {
-  const { user, loggedIn } = useSelector(state => state.userReducer);
-  const dispatch = useDispatch();
-  // const [loggedIn, setloggedIn] = useState(false);
-  // const [user, setUser] = useState([]);
+import auth from '@react-native-firebase/auth';
+
+export default function Login({navigation}) {
+
   _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       //Get the user ID token
-      const { accessToken, idToken } = await GoogleSignin.signIn();
+      const {accessToken, idToken} = await GoogleSignin.signIn();
 
       //Create a Google credential with the token
       const credential = auth.GoogleAuthProvider.credential(
@@ -36,7 +29,7 @@ export default function Login({ navigation }) {
       );
       //Sign-in the user with the credential
       await auth().signInWithCredential(credential);
-      dispatch(setloggedIn(true));
+
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -53,126 +46,171 @@ export default function Login({ navigation }) {
       }
     }
   };
-
-  function onAuthStateChanged(user) {
-    dispatch(setUser(user));
-    console.log(user);
-    if (user) dispatch(setloggedIn(true));
-  }
-  useEffect(() => {
-    GoogleSignin.configure({
-      scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
-      webClientId:
-        '204536961808-0an6jvkhbjt7q5u2upeo0ff9g81400us.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-    });
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
   return (
-    <View style={styles.body}>
-      <View style={styles.sectionHeader}>
-        <Image
-        style={styles.logo}
-          source={require('../assets/logo.png')}
-        />
-      </View>
-      <View style={styles.sectionMain}>
-        <Image
-          source={require('../assets/illustration.png')}
-        />
-      </View>
+<View style={styles.body}>
+    <View style={styles.sectionHeader}>
+      <Image style={styles.sectionIllustration_EffectLeft} source={require('../assets/preLoginEffectLeft.png')} />
+      <Image style={styles.sectionIllustration_EffectRight} source={require('../assets/preLoginEffectRight.png')} />
+    </View>
 
-      <View style={styles.sectionFooter}>
-        <Text>
-          <Text style={styles.textTitleColor}>Tối ưu </Text>
-          <Text style={styles.textTitle}>và</Text>
-          <Text style={styles.textTitleColor}> tiện lợi</Text>
-        </Text>
-        <View style={styles.textDescriptionView}>
-        <Text style={styles.textDescription}>
-          Tích hợp những tính năng cần thiết
-        </Text>
-        <Text style={styles.textDescription}>
-          giúp việc học trở nên tối ưu
-        </Text>
-        </View>
+    <View style={styles.sectionIllustration}>
+        <Image style={styles.sectionIllustration_Image} source={require('../assets/preLogin3.png')} />
+    </View>
+
+    <View style={styles.sectionText}>
+
+        <Text style={styles.sectionText_Title}>Đa tiện ích</Text>
         
-        {!loggedIn && (
-          <View style={styles.sectionContainer}>
-            <GoogleSigninButton
-              style={{ alignSelf: 'flex-start' }}
-              size={GoogleSigninButton.Size.Wide}
-              color={GoogleSigninButton.Color.Dark}
-              onPress={this._signIn}
-            />
-            {/* {!user && <Text style={{alignSelf:'center'}}>You are currently logged out</Text>} */}
-          </View>
-        )}
-      </View>
+        <View style={styles.sectionText_DescriptionView}>
+
+            <Text style={styles.sectionText_DescriptionText}>
+            Tích hợp những tiện ích khác hỗ trợ việc học tốt hơn
+            </Text>
+
+        </View>
+
+        <View style={styles.readProgressView}> 
+            <View
+                style={styles.readProgress}>
+            </View>
+            <View
+                style={styles.readProgress}>
+            </View>
+            <View
+                style={[
+                    styles.readProgress,
+                    {
+                    backgroundColor: '#0065FF',
+                    },
+                ]}>
+            </View>
+            
+        </View>
+
+        <View style={styles.btnStartView}>
+          {!loggedIn && (
+            <TouchableOpacity style={styles.btnStart} onPress={this._signIn}>
+              <MaterialCommunityIcons
+                style={[
+                  {
+                    color: '#fff',
+                  }
+                ]}
+                name={'google'}
+                size={25}
+              />
+              <Text style={styles.btnStartText}>Đăng nhập bằng tài khoản Google</Text>
+            </TouchableOpacity>
+            )}
+        </View>
 
     </View>
+
+    <View style={styles.sectionFooter}>
+      <Image style={styles.sectionIllustration_EffectRightBottom} source={require('../assets/preLoginEffectRightBottom.png')} />
+    </View>
+
+</View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   body: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+      backgroundColor: '#fff',
+      flex: 1,
+      flexDirection: 'column',
   },
-  sectionHeader: {
-    flex: 2,
+  sectionHeader:{
+      flex: 1
   },
-  sectionMain: {
-    flex: 4,
+  sectionIllustration: {
+      flex: 5,
+      alignItems: 'center',
+  },
+  sectionText: {
+      flex: 3,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginHorizontal: 30,
   },
   sectionFooter: {
-    flex: 4,
-    alignItems: 'center',
-    
+      flex: 1,
+      justifyContent: 'flex-start',
+      position: 'relative'
+      
   },
-  textTitleColor: {
-    color: '#19a5ff',
-    fontWeight: 'bold',
-    fontSize: 25,
+  sectionIllustration_Image: {
+      aspectRatio: 0.8,
+      flex: 1,
+      resizeMode: 'contain',
   },
-  textTitle: {
-    fontWeight: 'bold',
-    color: 'black',
-    fontSize: 25,
+  sectionIllustration_EffectLeft: {
+    position: 'absolute',
+    top: 50,
+    left: 0,
   },
-  textDescriptionView: {
-    color: '#344161',
+  sectionIllustration_EffectRight: {
+    position: 'absolute',
+    top: 110,
+    right: 0,
+  },
+  sectionIllustration_EffectRightBottom: {
+    position: 'absolute',
+    right: 0,
+    bottom: -10
+  },
+  sectionText_Title: {
+      fontWeight: 'bold',
+      color: 'black',
+      fontSize: 25,
+  },
+  sectionText_DescriptionView: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+  },
+  sectionText_DescriptionText: {
+      flex: 1,
+      textAlign: 'center',
+      fontSize: 18,
+      color: '#344161CC',
+  },
+  readProgressView: {
+      width: 45,
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+  },
+  readProgress: {
+      opacity: 1,
+      width: 10,
+      height: 10,
+      borderRadius: 100,
+      backgroundColor: '#D9D9D9',
+  },
+  btnStartView: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      // marginHorizontal: 40,
+  },
 
-    alignItems:'center',
-    margin: 20
+  btnStart: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+      alignItems: 'center',
+  
+      borderRadius: 8,
+      backgroundColor: '#0065FF',
+      paddingVertical: 12,
+      paddingHorizontal: 20
   },
-  textDescription: {
-    fontSize: 20,
-    color:'#344161CC',
+  btnStartText: {
+      color: '#fff',
+      fontSize: 16,
+      fontWeight: 'bold',
   },
-  logo: {
-    width:60,
-    height:60,
-    margin:50
-  }
-  // sectionContainer: {
-  //   marginTop: 32,
-  // },
-  // sectionTitle: {
-  //   fontSize: 28,
-  //   fontWeight: '600',
-  //   marginBottom: 10,
-  // },
-  // sectionDescription: {
-  //   color: '#344161',
-  //   fontSize: 15,
-  //   fontWeight: '400',
-  // },
-  // logo: {
-  //   marginTop: 20,
-  //   resizeMode: 'stretch',
-  // }
 });
+

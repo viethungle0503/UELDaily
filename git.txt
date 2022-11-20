@@ -1,0 +1,43 @@
+git clone https://github.com/vatrixxonnis/UELDaily.git
+
+cd "nameofproject"
+
+
+
+
+react-native run-android
+
+1) cd ./android
+
+2) ./gradlew.bat installDebug ( with dot at the beggining )
+
+Once it's successfully finished
+
+3) cd ../ ( go back to root folder )
+
+4) react-native run-android
+
+// install icon
+npm install --save react-native-vector-icons
+
+npm i --save @fortawesome/fontawesome-svg-core
+
+
+//> Task :app:installDebug FAILED Skipping device 'emulator-5554' (emulator-5554): Device is OFFLINE.
+Wipe data
+
+
+thêm vào stages git, đưa vào workspace:
+git add . 
+
+đưa vào git local ở máy mình:
+git commit -m "noidungcomment"
+
+git remote:
+git push -u origin Home-Ngan 
+
+clone về là clone main, vào brand
+git checkout Home-Ngan
+
+tạo brand mới 
+git checkout -b ten_brand

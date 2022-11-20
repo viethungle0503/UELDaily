@@ -1,21 +1,38 @@
-import { SET_LOGGED_IN,
-    SET_USER
+import {
+    SET_LOGGED_IN,
+    SET_USER,
+    SET_CREDENTIAL,
+    GET_TABLEDATA,
 } from "./actions";
 
-const initialState = {
+const initialLoginState = {    
     user: [],
-    loggedIn: false
-}
+    loggedIn: false,
+    credential: [],                      
+};
+const initialDatabaseState = {
+    tableData : [],
+};
 
-function userReducer(state = initialState, action) {
-    switch(action.type) {
+export function userReducer(state = initialLoginState, action) {
+    switch (action.type) {
         case SET_USER:
-            return {...state, user: action.payload};
+            return { ...state, user: action.payload };
         case SET_LOGGED_IN:
-            return {...state, loggedIn: action.payload};
-        default: 
+            return { ...state, loggedIn: action.payload };
+        case SET_CREDENTIAL:
+            return { ...state, credential: action.payload };
+        default:
             return state;
     }
-}
+};
 
-export default userReducer;
+ export function databaseReducer(state = initialDatabaseState, action) {
+    switch (action.type) {
+        case GET_TABLEDATA:
+            return {...state, tableData : action.payload}
+        default:
+            return state;
+    }
+ }
+
