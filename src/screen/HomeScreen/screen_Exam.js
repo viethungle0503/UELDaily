@@ -94,7 +94,7 @@ export default function Exam({navigation}) {
               <Image
                 style={styles.examIcon}
                 source={require('../../assets/phongthi.png')}></Image>
-              <Text style={styles.monthi_Item__DetailTitle}>Phòng thi: </Text>
+              <Text style={styles.monthi_Item__DetailTitle}> Phòng thi: </Text>
               <Text style={styles.monthi_Item__DetailData}>{item.room}</Text>
             </View>
           </View>

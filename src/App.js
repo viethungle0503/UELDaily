@@ -11,7 +11,13 @@ import Services from './screen/screen_Services';
 import News from './screen/screen_News';
 import Information from './screen/screen_Information';
 import Login from './screen/screen_Login';
+import PreLogin1 from './screen/screen_PreLogin1';
+import PreLogin2 from './screen/screen_PreLogin2';
 
+// Font awesome
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+// font Materials
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { getDatabaseAccount, getStudent } from './redux_toolkit/databaseSlice';
@@ -118,32 +124,37 @@ function App() {
   return (
     <NavigationContainer>
       <RootStack.Navigator
-        initialRouteName="Login"
-      // screenOptions={{
-      //   headerTitleAlign: 'center',
-      //   headerStyle: {
-      //     backgroundColor: '#0080ff'
-      //   },
-      //   headerTintColor: '#ffffff',
-      //   headerTitleStyle: {
-      //     fontSize: 25,
-      //     fontWeight: 'bold'
-      //   }}}
-      >
+        initialRouteName="PreLogin1"
+        >
         {!loggedIn ? (
-          // Screens for logged in users
-          <RootStack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
+          <RootStack.Group>
+            <RootStack.Screen
+              name="PreLogin1"
+              component={PreLogin1}
+              options={{headerShown: false}}
+            />
+            <RootStack.Screen
+              name="PreLogin2"
+              component={PreLogin2}
+              options={{headerShown: false}}
+            />
+            <RootStack.Screen
+              name="Login"
+              component={Login}
+              options={{headerShown: false}}
+            />
+          </RootStack.Group>
+          
         ) : (
           // Auth screens
-          <RootStack.Screen
-            name="UEL Daily"
-            component={Tabs}
-            options={{ headerShown: false }}
-          />
+            <RootStack.Screen
+              name="UEL Daily"
+              component={Tabs}
+              options={{headerShown: false}}
+            />
+            
+
+          
         )}
       </RootStack.Navigator>
     </NavigationContainer>

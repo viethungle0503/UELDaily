@@ -4,11 +4,64 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TouchableHighlight,
   ScrollView,
+  Dimensions,
+  Animated
 } from 'react-native';
+import React from 'react';
+import { PanGestureHandler, PanGestureHandlerGestureEvent, Swipeable, TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import TouchableSwipe from 'react-native-touchable-swipe';
+// import Animated from 'react-native-reanimated';
+
+const {width, height} = Dimensions.get('screen');
+const deleteItem = () => {
+  alert('Xóa thông báo?')
+}
+const renderRight = (progress, dragX) => {
+  const scale = dragX.interpolate({
+    inputRange: [-50, 0.5],
+    outputRange: [1, 0.1]
+  });
+  const Style = {
+    transform: [
+      {
+        scale
+      }
+    ]
+  };
+  return(
+    <View style={
+      {
+        width: 80,
+        backgroundColor: 'red',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderTopRightRadius: 5,
+        borderBottomRightRadius: 5,
+      }
+    } onPress={deleteItem}>
+      <Animated.Text style={[Style,{
+          color: '#FFF',
+          fontWeight: 'bold',
+          fontSize: 12,
+          
+        }
+        ]}>Xóa</Animated.Text>
+    </View>
+  )
+};
+
+const setStatusToRead = () => {
+  return(
+    <View style={styles.fadeItem}></View>
+  )
+}
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function Information({navigation}) {
+  
+
+
   return (
     <View style={styles.body}>
       <View style={styles.fixItem}>
@@ -34,92 +87,95 @@ export default function Information({navigation}) {
       </View>
 
       <ScrollView style={styles.noti}>
-        <TouchableOpacity
-          style={styles.notiItem}
-          onPress={() => navigation.navigate('Homework')}>
-          <View style={styles.notiItem_Icon}>
-            <Image source={require('../assets/notiNhacnho.png')} />
-          </View>
 
-          <View style={styles.notiItem_Content}>
-            <Text style={styles.notiItem_Content_Title}>
-              Sắp đến hạn Bài tập 3, môn Phát triển web kinh doanh
-            </Text>
-            <TouchableOpacity
-              style={styles.notiItem_Content_Action}
-              onPress={() => navigation.navigate('Homework')}>
-              <Text
-                style={[
-                  styles.notiItem_Content_ActionText,
-                  {
-                    color: '#FF6E35',
-                  },
-                ]}>
-                Xem ngay
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.notiItem_Status}>
-            <View
-              style={[
-                styles.notiItem_Status_ReadIcon,
-                {
-                  backgroundColor: '#FF6E35',
-                },
-              ]}></View>
-
-            <View style={styles.row}>
-              <Image source={require('../assets/notiHistory.png')} />
-              <Text>&nbsp;9h</Text>
+        <Swipeable overshootRight={false} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
+          <Animated.View style={styles.notiItem}
+            onPress={() => navigation.navigate('Homework')}>
+            <View style={styles.notiItem_Icon}>
+              <Image source={require('../assets/notiNhacnho.png')} />
             </View>
-          </View>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.notiItem}
-          onPress={() => navigation.navigate('Homework')}>
-          <View style={styles.fadeItem}></View>
-
-          <View style={styles.notiItem_Icon}>
-            <Image source={require('../assets/notiNhacnho.png')} />
-          </View>
-
-          <View style={styles.notiItem_Content}>
-            <Text style={styles.notiItem_Content_Title}>
-              Sắp đến hạn Bài tập 2, môn Phát triển web kinh doanh
-            </Text>
-            <TouchableOpacity
-              style={styles.notiItem_Content_Action}
-              onPress={() => navigation.navigate('Homework')}>
-              <Text
-                style={[
-                  styles.notiItem_Content_ActionText,
-                  {
-                    color: '#FF6E35',
-                  },
-                ]}>
-                Xem ngay
+            <TouchableOpacity style={styles.notiItem_Content} onPress={() => navigation.navigate('Homework')}>
+              <Text style={styles.notiItem_Content_Title}>
+                Sắp đến hạn Bài tập 3, môn Phát triển web kinh doanh
               </Text>
+
+              <TouchableOpacity
+                style={styles.notiItem_Content_Action}
+                onPress={() => navigation.navigate('Homework')}>
+                <Text
+                  style={[
+                    styles.notiItem_Content_ActionText,
+                    {
+                      color: '#FF6E35',
+                    },
+                  ]}>
+                  Xem ngay
+                </Text>
+              </TouchableOpacity>
             </TouchableOpacity>
-          </View>
 
-          <View style={styles.notiItem_Status}>
-            <View
-              style={[
-                styles.notiItem_Status_ReadIcon,
-                {
-                  backgroundColor: '#FF6E35',
-                  opacity: 0,
-                },
-              ]}></View>
+            <View style={styles.notiItem_Status}>
+              <View
+                style={[
+                  styles.notiItem_Status_ReadIcon,
+                  {
+                    backgroundColor: '#FF6E35',
+                  },
+                ]}></View>
 
-            <View style={styles.row}>
-              <Image source={require('../assets/notiHistory.png')} />
-              <Text>&nbsp;20h</Text>
+              <View style={styles.row}>
+                <Image source={require('../assets/notiHistory.png')} />
+                <Text>&nbsp;9h</Text>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </Animated.View>
+        </Swipeable>
+
+        <Swipeable overshootRight={false} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
+
+          <TouchableOpacity style={styles.notiItem} onPress={setStatusToRead}>
+          
+            <View style={styles.notiItem_Icon}>
+              <Image source={require('../assets/notiNhacnho.png')} />
+            </View>
+
+            <View style={styles.notiItem_Content}>
+              <Text style={styles.notiItem_Content_Title}>
+                Sắp đến hạn Bài tập 2, môn Phát triển web kinh doanh
+              </Text>
+              <TouchableOpacity
+                style={styles.notiItem_Content_Action}
+                onPress={() => navigation.navigate('Homework')}>
+                <Text
+                  style={[
+                    styles.notiItem_Content_ActionText,
+                    {
+                      color: '#FF6E35',
+                    },
+                  ]}>
+                  Xem ngay
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.notiItem_Status}>
+              <View
+                style={[
+                  styles.notiItem_Status_ReadIcon,
+                  {
+                    backgroundColor: '#FF6E35',
+                    opacity: 0,
+                  },
+                ]}></View>
+
+              <View style={styles.row}>
+                <Image source={require('../assets/notiHistory.png')} />
+                <Text>&nbsp;20h</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </Swipeable>
 
         <TouchableOpacity
           style={styles.notiItem}
