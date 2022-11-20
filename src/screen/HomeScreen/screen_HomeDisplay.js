@@ -1,12 +1,3 @@
-import {useSelector, useDispatch} from 'react-redux';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
-import {
-  setUser,
-  setLoggedIn,
-  setUID,
-  setCurrentUser,
-} from '../../redux_toolkit/userSlice';
 import {
   Image,
   View,
@@ -16,37 +7,41 @@ import {
   ScrollView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-export default function HomeDisplay({navigation}) {
-  const dispatch = useDispatch();
-  const signOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      auth()
-        .signOut()
-        .then(() => {
-          dispatch(setLoggedIn(false));
-        });
-      dispatch(setUser([]));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+import {render, WebView} from 'react-native-webview';
+
+export default function HomeDisplay({ navigation }) {
+  const news = news_UEL.map((item, index) =>(
+    <TouchableOpacity style={styles.row} key={index} onPress={() => {
+      navigation.navigate('NewsDetail',{link: item.link})
+    }}>
+      <Image
+        style={styles.hoatdongImage}
+        source={{uri: item.imageURL}}
+      />
+      <View>
+        <Text style={styles.hoatdongTitle}>
+          {item.title}
+        </Text>
+        <View style={styles.row}>
+          <Image source={require('../../assets/clock.png')} />
+          <Text style={styles.hoatdongTitle}> {item.time}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  ));
   return (
     <ScrollView style={styles.body}>
       {loggedIn && (
         <View style={styles.studentwelcome}>
-          <Image style={styles.studentAvatar} source={{uri: user.photoURL}} />
-
+          <Image style={styles.studentAvatar} source={{ uri: currentUser.data.profileImage }} />
           <View>
-            {user ? (
+            {currentUser ? (
               <Text style={styles.studentName}>
                 {currentUser.data.lastName + ` ${currentUser.data.firstName}`}
               </Text>
             ) : null}
             <Text>{currentUser.key}</Text>
           </View>
-
           <TouchableOpacity style={styles.btnLanguage}>
             <MaterialCommunityIcons
               style={styles.svgLanguage}
@@ -60,17 +55,14 @@ export default function HomeDisplay({navigation}) {
         style={styles.effect}
         source={require('../../assets/effectRound.png')}
       />
-
       <View style={styles.tienich}>
         <View style={styles.tienichHeader}>
           <Text style={styles.tienichText}>Tiện ích</Text>
-
           <TouchableOpacity style={styles.btnAllTienich}>
             <MaterialCommunityIcons name={'tune-variant'} size={12} />
-            <Text style={{color: 'black', marginLeft: 5}}>Tất cả</Text>
+            <Text style={{ color: 'black', marginLeft: 5 }}>Tất cả</Text>
           </TouchableOpacity>
         </View>
-
         <View style={styles.col}>
           <View style={styles.tienichIcon}>
             <TouchableOpacity
@@ -82,7 +74,6 @@ export default function HomeDisplay({navigation}) {
               />
               <Text style={styles.tienichIcon__ItemText}>Thời khóa biểu</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('ScoreBoard')}>
@@ -92,7 +83,6 @@ export default function HomeDisplay({navigation}) {
               />
               <Text style={styles.tienichIcon__ItemText}>Xem điểm</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Exam')}>
@@ -103,7 +93,6 @@ export default function HomeDisplay({navigation}) {
               <Text style={styles.tienichIcon__ItemText}>Lịch thi</Text>
             </TouchableOpacity>
           </View>
-
           <View style={styles.tienichIcon}>
             <TouchableOpacity
               style={styles.tienichIcon_Item}
@@ -114,7 +103,6 @@ export default function HomeDisplay({navigation}) {
               />
               <Text style={styles.tienichIcon__ItemText}>Bài tập</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Tuition')}>
@@ -124,7 +112,6 @@ export default function HomeDisplay({navigation}) {
               />
               <Text style={styles.tienichIcon__ItemText}>Học phí</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Ctxh')}>
@@ -137,81 +124,10 @@ export default function HomeDisplay({navigation}) {
           </View>
         </View>
       </View>
-
-      <View style={styles.hoatdong}>
-        <View>
-          <Text style={styles.hoatdongHeader}>Hoạt động gần đây</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Image
-            style={styles.hoatdongImage}
-            source={require('../../assets/hoatdong1.png')}
-          />
-
-          <View>
-            <Text style={styles.hoatdongTitle}>
-              Trường ĐH Kinh tế - Luật khai giảng năm học 2022 - 2023
-            </Text>
-            <View style={styles.row}>
-              <Image source={require('../../assets/clock.png')} />
-              <Text> 30/09/2022</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <Image
-            style={styles.hoatdongImage}
-            source={require('../../assets/hoatdong2.png')}
-          />
-
-          <View>
-            <Text style={styles.hoatdongTitle}>
-              UEL ký thỏa thuận hợp tác chiến lược với Ernst & Young Việt Nam
-              (EY Việt Nam)
-            </Text>
-            <View style={styles.row}>
-              <Image source={require('../../assets/clock.png')} />
-              <Text> 20/09/2022</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <Image
-            style={styles.hoatdongImage}
-            source={require('../../assets/hoatdong3.png')}
-          />
-
-          <View>
-            <Text style={styles.hoatdongTitle}>
-              UEL công bố kết quả trúng tuyển đại học hệ chính quy năm 2022
-              (phương thức 3)
-            </Text>
-            <View style={styles.row}>
-              <Image source={require('../../assets/clock.png')} />
-              <Text> 15/09/2022</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <Image
-            style={styles.hoatdongImage}
-            source={require('../../assets/hoatdong4.png')}
-          />
-
-          <View style={styles.col}>
-            <Text style={styles.hoatdongTitle}>
-              UEL công bố kết quả trúng tuyển đại học hệ chính quy năm 2022
-              (phương thức 3)
-            </Text>
-            <View style={styles.row}>
-              <Image source={require('../../assets/clock.png')} />
-              <Text> 15/09/2022</Text>
-            </View>
-          </View>
+      <View>
+        <Text style={styles.hoatdongHeader}>Hoạt động gần đây</Text>
+        <View style={styles.hoatdong}>
+          {news}
         </View>
       </View>
     </ScrollView>
@@ -378,6 +294,8 @@ const styles = StyleSheet.create({
     color: '#252525',
   },
   hoatdongImage: {
+    width: 50,
+    height: 50,
     borderRadius: 4,
     marginRight: 10, //cách hình
   },
