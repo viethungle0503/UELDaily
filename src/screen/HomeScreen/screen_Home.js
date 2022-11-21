@@ -1,5 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import Ctxh from './screen_Ctxh';
+import NewsDetail from './screen_NewsDetail';
 import Exam from './screen_Exam';
 import HomeDisplay from './screen_HomeDisplay';
 import Tuition from './screen_Tuition';
@@ -38,6 +39,11 @@ export default function Home() {
       />
       <HomeStack.Screen name="Homework" component={Homework} />
       <HomeStack.Screen name="Tuition" component={Tuition} />
+      <HomeStack.Screen
+        name="NewsDetail"
+        component={NewsDetail}
+        options={{title: 'Thông tin chi tiết'}}
+      />
     </HomeStack.Navigator>
   );
 }

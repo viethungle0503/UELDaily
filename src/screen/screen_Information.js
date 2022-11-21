@@ -4,8 +4,9 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TouchableHighlight,
   ScrollView,
+  Dimensions,
+  Animated
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';

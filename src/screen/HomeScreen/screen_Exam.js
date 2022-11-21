@@ -8,14 +8,40 @@ import {
   ScrollView,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
+import { TimestampTrigger, TriggerType } from '@notifee/react-native';
 
 export default function Exam({navigation}) {
+
+  async function onCreateTriggerNotification() {
+    const date = new Date(Date.now());
+    date.setHours(11);
+    date.setMinutes(10);
+
+    // Create a time-based trigger
+    const trigger = {
+      type: TriggerType.TIMESTAMP,
+      timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
+    };
+
+    // Create a trigger notification
+    await notifee.createTriggerNotification(
+      {
+        title: 'Meeting with Jane',
+        body: 'Today at 11:20am',
+        android: {
+          channelId: 'your-channel-id',
+        },
+      },
+      trigger,
+    );
+  }
+
+
   let temp = currentUser.data.test_schedules;
   const exam_schedule = [];
   for (key in temp) {
     exam_schedule.push(temp[key]);
   }
-  console.log(exam_schedule);
   return (
     <View style={styles.body}>
       <View style={styles.fixItem}>

@@ -1,12 +1,3 @@
-import {useSelector, useDispatch} from 'react-redux';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
-import {
-  setUser,
-  setLoggedIn,
-  setUID,
-  setCurrentUser,
-} from '../../redux_toolkit/userSlice';
 import {
   Image,
   View,
@@ -16,37 +7,42 @@ import {
   ScrollView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {render, WebView} from 'react-native-webview';
+
 export default function HomeDisplay({navigation}) {
-  const dispatch = useDispatch();
-  const signOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      auth()
-        .signOut()
-        .then(() => {
-          dispatch(setLoggedIn(false));
-        });
-      dispatch(setUser([]));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const news = news_UEL.map((item, index) => (
+    <TouchableOpacity
+      style={styles.row}
+      key={index}
+      onPress={() => {
+        navigation.navigate('NewsDetail', {link: item.link});
+      }}>
+      <Image style={styles.hoatdongImage} source={{uri: item.imageURL}} />
+      <View style={styles.contentMain}>
+        <Text style={styles.hoatdongTitle}>{item.title}</Text>
+        <View style={styles.timeBlock}>
+          <Image source={require('../../assets/clock.png')} />
+          <Text style={styles.hoatdongTime}>{item.time.slice(1, 11)}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  ));
   return (
     <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
       {loggedIn && (
         <View style={styles.studentwelcome}>
-          <Image style={styles.studentAvatar} source={{uri: user.photoURL}} />
-
+          <Image
+            style={styles.studentAvatar}
+            source={{uri: currentUser.data.profileImage}}
+          />
           <View>
-            {user ? (
+            {currentUser ? (
               <Text style={styles.studentName}>
                 {currentUser.data.lastName + ` ${currentUser.data.firstName}`}
               </Text>
             ) : null}
             <Text>{currentUser.key}</Text>
           </View>
-
           <TouchableOpacity style={styles.btnLanguage}>
             <MaterialCommunityIcons
               style={styles.svgLanguage}
@@ -60,17 +56,14 @@ export default function HomeDisplay({navigation}) {
         style={styles.effect}
         source={require('../../assets/effectRound.png')}
       />
-
       <View style={styles.tienich}>
         <View style={styles.tienichHeader}>
           <Text style={styles.tienichText}>Tiện ích</Text>
-
           <TouchableOpacity style={styles.btnAllTienich}>
             <MaterialCommunityIcons name={'tune-variant'} size={12} />
             <Text style={{color: 'black', marginLeft: 5}}>Tất cả</Text>
           </TouchableOpacity>
         </View>
-
         <View style={styles.col}>
           <View style={styles.tienichIcon}>
             <TouchableOpacity
@@ -82,7 +75,6 @@ export default function HomeDisplay({navigation}) {
               />
               <Text style={styles.tienichIcon__ItemText}>Thời khóa biểu</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('ScoreBoard')}>
@@ -92,7 +84,6 @@ export default function HomeDisplay({navigation}) {
               />
               <Text style={styles.tienichIcon__ItemText}>Xem điểm</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Exam')}>
@@ -103,7 +94,6 @@ export default function HomeDisplay({navigation}) {
               <Text style={styles.tienichIcon__ItemText}>Lịch thi</Text>
             </TouchableOpacity>
           </View>
-
           <View style={styles.tienichIcon}>
             <TouchableOpacity
               style={styles.tienichIcon_Item}
@@ -114,7 +104,6 @@ export default function HomeDisplay({navigation}) {
               />
               <Text style={styles.tienichIcon__ItemText}>Bài tập</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Tuition')}>
@@ -124,7 +113,6 @@ export default function HomeDisplay({navigation}) {
               />
               <Text style={styles.tienichIcon__ItemText}>Học phí</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.tienichIcon_Item}
               onPress={() => navigation.navigate('Ctxh')}>
@@ -137,98 +125,10 @@ export default function HomeDisplay({navigation}) {
           </View>
         </View>
       </View>
-
-      <View style={styles.hoatdong}>
-        <View>
-          <Text style={styles.hoatdongHeader}>Hoạt động gần đây</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Image
-            style={styles.hoatdongImage}
-            source={require('../../assets/hoatdong1.png')}
-          />
-
-          <View>
-            <Text style={styles.hoatdongTitle}>
-              Trường ĐH Kinh tế - Luật khai giảng năm học 2022 - 2023
-            </Text>
-            <View style={styles.row}>
-              <MaterialCommunityIcons
-                style={styles.hoatdongTime}
-                name={'clock-outline'}
-                size={18}
-              />
-              <Text> 30/09/2022</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <Image
-            style={styles.hoatdongImage}
-            source={require('../../assets/hoatdong2.png')}
-          />
-
-          <View>
-            <Text style={styles.hoatdongTitle}>
-              UEL ký thỏa thuận hợp tác chiến lược với Ernst & Young Việt Nam
-              (EY Việt Nam)
-            </Text>
-            <View style={styles.row}>
-              <MaterialCommunityIcons
-                style={styles.hoatdongTime}
-                name={'clock-outline'}
-                size={18}
-              />
-              <Text> 20/09/2022</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <Image
-            style={styles.hoatdongImage}
-            source={require('../../assets/hoatdong3.png')}
-          />
-
-          <View>
-            <Text style={styles.hoatdongTitle}>
-              UEL công bố kết quả trúng tuyển đại học hệ chính quy năm 2022
-              (phương thức 3)
-            </Text>
-            <View style={styles.row}>
-              <MaterialCommunityIcons
-                style={styles.hoatdongTime}
-                name={'clock-outline'}
-                size={18}
-              />
-              <Text> 15/09/2022</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <Image
-            style={styles.hoatdongImage}
-            source={require('../../assets/hoatdong4.png')}
-          />
-
-          <View style={styles.col}>
-            <Text style={styles.hoatdongTitle}>
-              UEL công bố kết quả trúng tuyển đại học hệ chính quy năm 2022
-              (phương thức 3)
-            </Text>
-            <View style={styles.row}>
-              <MaterialCommunityIcons
-                style={styles.hoatdongTime}
-                name={'clock-outline'}
-                size={18}
-              />
-              <Text> 15/09/2022</Text>
-            </View>
-          </View>
-        </View>
+      <View style={styles.shape}></View>
+      <View>
+        <Text style={styles.hoatdongHeader}>Hoạt động gần đây</Text>
+        <View style={styles.hoatdong}>{news}</View>
       </View>
     </ScrollView>
   );
@@ -246,15 +146,19 @@ const styles = StyleSheet.create({
     // alignItems: 'flex-start',
     justifyContent: 'space-around',
   },
+  timeBlock: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'flex-start',
+    marginTop: 5,
+  },
   row: {
     display: 'flex',
-    // flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'flex-start',
     marginTop: 12,
-    marginRight: 10,
-    // overflow: 'hidden'
   },
 
   studentwelcome: {
@@ -376,24 +280,42 @@ const styles = StyleSheet.create({
   hoatdong: {
     flex: 4,
     backgroundColor: '#FFF',
-    marginTop: 10,
-    paddingTop: 30,
-    paddingLeft: 30,
-    paddingRight: 110,
+    // marginTop: 10,
+    // paddingTop: 30,
+    paddingHorizontal: 32,
     paddingBottom: 30,
   },
+
+  shape: {
+    height: 8,
+  },
   hoatdongHeader: {
+    // display: block,
     fontSize: 20,
     fontWeight: 'bold',
     color: '#252525',
-    paddingVertical: 3,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    backgroundColor: 'white',
   },
   hoatdongTitle: {
+    display: 'flex',
     fontSize: 15,
     fontWeight: '500',
     color: '#252525',
+    marginRight: 32,
+    textAlign: 'justify',
+  },
+  contentMain: {
+    paddingRight: 32,
+    marginRight: 52,
+  },
+  hoatdongTime: {
+    marginLeft: 5,
   },
   hoatdongImage: {
+    width: 110,
+    height: 75,
     borderRadius: 4,
     marginRight: 10, //cách hình
   },

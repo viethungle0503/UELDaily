@@ -12,12 +12,11 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import LogOutButton from '../components/Button_LogOut';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {setUser, setLoggedIn, setUID} from '../redux_toolkit/userSlice';
+import { setLoggedIn, setCurrentUser} from '../redux_toolkit/userSlice';
+import auth from '@react-native-firebase/auth';
 
 export default function News() {
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user.user);
-  const loggedIn = useSelector(state => state.user.loggedIn);
   const signOut = async () => {
     try {
       await GoogleSignin.revokeAccess();
@@ -26,7 +25,7 @@ export default function News() {
         .signOut()
         .then(() => {
           dispatch(setLoggedIn(false));
-          dispatch(setUser([]));
+          dispatch(setCurrentUser({}))
         });
     } catch (error) {
       console.error(error);
@@ -38,14 +37,14 @@ export default function News() {
       {loggedIn && (
         <View style={styles.buttonContainer}>
           <Text style={{color: 'red'}}>{currentUser.data.email}</Text>
-          {user && <Text style={styles.text}>Welcome {user.displayName}</Text>}
+          {currentUser && <Text style={styles.text}>Welcome {currentUser.data.firstName}</Text>}
           <LogOutButton
             onPressFunction={signOut}
             title={loggedIn ? 'Log out' : 'You are logged in'}
             color="#FFF6D5"></LogOutButton>
           <Image
             style={{width: 150, height: 150}}
-            source={{uri: user.photoURL}}
+            source={{uri: currentUser.data.profileImage}}
           />
         </View>
       )}
