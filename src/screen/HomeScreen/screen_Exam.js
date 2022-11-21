@@ -39,6 +39,7 @@ export default function Exam({navigation}) {
       </View>
 
       <FlatList
+        showsVerticalScrollIndicator={false}
         style={styles.monthi}
         data={exam_schedule}
         renderItem={({item}) => (

@@ -33,7 +33,7 @@ export default function HomeDisplay({navigation}) {
     }
   };
   return (
-    <ScrollView style={styles.body}>
+    <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
       {loggedIn && (
         <View style={styles.studentwelcome}>
           <Image style={styles.studentAvatar} source={{uri: user.photoURL}} />
@@ -53,7 +53,6 @@ export default function HomeDisplay({navigation}) {
               name={'web'}
               size={25}
             />
-            
           </TouchableOpacity>
         </View>
       )}
