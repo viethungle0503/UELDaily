@@ -38,7 +38,7 @@ export default function Home() {
         options={{title: 'Kiểm tra ngày CTXH'}}
       />
       <HomeStack.Screen name="Homework" component={Homework} />
-      <HomeStack.Screen name="Tuition" component={Tuition} />
+      <HomeStack.Screen name="Tuition" component={Tuition} options={{title: 'Học phí'}} />
       <HomeStack.Screen
         name="NewsDetail"
         component={NewsDetail}
