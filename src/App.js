@@ -14,8 +14,6 @@ import Login from './screen/screen_Login';
 import PreLogin1 from './screen/screen_PreLogin1';
 import PreLogin2 from './screen/screen_PreLogin2';
 
-// Font awesome
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 // font Materials
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // Redux
@@ -26,7 +24,6 @@ import { setNews_UEL } from './redux_toolkit/newsSlice';
 // Firebase
 import { firebase } from '@react-native-firebase/database';
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import auth from '@react-native-firebase/auth';
 import {
   GoogleSignin,

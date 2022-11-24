@@ -13,6 +13,8 @@ import {
 } from '@react-native-google-signin/google-signin';
 
 import auth from '@react-native-firebase/auth';
+// font Materials
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function Login({navigation}) {
 
