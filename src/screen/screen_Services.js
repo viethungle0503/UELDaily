@@ -90,7 +90,7 @@ export default function Services({navigation}) {
             </TouchableOpacity>
 
             <Text style={styles.modalHeader_DepartmentName}>
-              PHÒNG Tuyển sinh và Công tác sinh viên UEL
+              Phòng Tuyển sinh và CTSV UEL
             </Text>
           </View>
 
@@ -137,7 +137,7 @@ export default function Services({navigation}) {
       </Modal>
 
       <ScrollView style={{ flex: 1, }}>
-      
+
         <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 20}}>
           Sự kiện
         </Text>
