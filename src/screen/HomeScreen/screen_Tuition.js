@@ -89,7 +89,7 @@ export default function Tuition() {
                     <TouchableOpacity
                         style={styles.listItem_ViewDetail}
                         onPress={() => settingModel()}>
-                        <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
+                        <Text style={[styles.listItem_ViewDetail_Text,(subItem.totalPaid < subItem.totalAmount) ? {color:'#FF502D'} : {color:'#fff'}]}>Chi tiết</Text>
                         <MaterialCommunityIcons
                             name={'arrow-right-thin'}
                             size={22}
@@ -332,7 +332,6 @@ const styles = StyleSheet.create({
 
     },
     listItem_ViewDetail_Text: {
-        color: '#fff',
         fontSize: 13
     },
 
