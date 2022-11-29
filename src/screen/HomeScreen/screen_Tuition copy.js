@@ -15,37 +15,110 @@ import { useState } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Picker } from '@react-native-picker/picker';
 import { useEffect } from 'react';
-import { color } from 'react-native-reanimated';
 
 export default function Tuition() {
 
     const [open, setOpen] = React.useState(false);
-    const [modalTitle, setModalTitle] = useState();
-    const [modalContent, setModalContent] = useState();
-    const tuition = currentUser.data.tuition.map((item, index) => {
-        const subTuition = item.semester.map((subItem, subIndex) => {
-            function settingModel() {
-                const title = (() => (
-                    <View style={styles.modalHeader}>
-                        <Text style={styles.modalHeaderText}>Học phí HK{subItem.semester_type} {item.start_year}-{item.end_year}</Text>
-                    </View>
-                ));
-                const content = (() => {
-                    const section = subItem.fee.map((lastItem, lastIndex) => (
-                        <View style={styles.modalDetail_RowData} key={lastIndex}>
-                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>{lastItem.typeName}</Text>
-                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>{lastItem.amount}</Text>
-                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPaid]}>{lastItem.paid}</Text>
+    const [year,setYear] = useState(currentUser.data.currentYear);
+    const [tuition, setTuition] = useState(setSelectedSchoolYear(year));
+    function setSelectedSchoolYear(year) {
+        const temp = currentUser.data.tuition.filter(function (item) {
+            return item.school_year == year;
+        }).map((item, index) => (
+            <TouchableOpacity style={styles.listItem} onPress={() => {
+                console.log(this);
+                setOpen(true);
+            }} key={index}>
+                <View style={styles.listItem_Markup}></View>
+                <Text style={styles.listItem_SemesterTitle}>Học kỳ: {item.semester}</Text>
+                <View style={styles.listItem_Content}>
+                    <Text style={styles.listItem_ContentTitle}>Tổng tiền:&nbsp;</Text>
+                    <Text style={styles.listItem_ContentData}>{item.amount}</Text>
+                </View>
+
+                <View style={styles.listItem_Content}>
+                    <Text style={styles.listItem_ContentTitle}>Tình trạng:&nbsp;</Text>
+                    {
+                        (item.amountPaid < item.amount) ?
+                            (<Text style={styles.listItem_ContentData}>Chưa đóng</Text>)
+                            :
+                            (<Text style={styles.listItem_ContentData}>Đã đóng</Text>)
+                    }
+                </View>
+                <TouchableOpacity
+                    style={styles.listItem_ViewDetail}
+                    onPress={() => setOpen(true)}
+                >
+                    <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
+                    <MaterialCommunityIcons
+                        name={'arrow-right-thin'}
+                        size={22}
+                        color={'#fff'}
+                    />
+                </TouchableOpacity>
+            </TouchableOpacity>
+        ));
+        return temp;
+    }
+    const pickerRef = useRef();
+
+    function openPicker() {
+        pickerRef.current.focus();
+    }
+
+    function closePicker() {
+        pickerRef.current.blur();
+    }
+    return (
+        <View style={styles.body}>
+            <Modal
+                visible={open}
+                transparent={true}>
+
+                <View style={styles.modalBackground} >
+
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalIconContainer}>
+                            <MaterialCommunityIcons
+                                style={styles.modalIcon}
+                                name={'clipboard-text-outline'}
+                                size={35}
+                                color={'#FFF'}
+                            />
+
                         </View>
-                    ))
-                    return (
+
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalHeaderText}>Học phí HK01 2020-2021</Text>
+
+                        </View>
+
                         <View style={styles.modalDetail}>
                             <View style={styles.modalDetail_Header}>
                                 <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colContent]}>Nội dung</Text>
                                 <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colPayAmount]}>Số tiền</Text>
                                 <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colPaid]}>Đã trả</Text>
                             </View>
-                            {section}
+
+
+                            <View style={styles.modalDetail_RowData}>
+                                <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>Học phí</Text>
+                                <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>13,900,000đ</Text>
+                                <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPaid]}>0đ</Text>
+                            </View>
+
+                            <View style={styles.modalDetail_RowData}>
+                                <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>Bảo hiểm y tế</Text>
+                                <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>540,000đ</Text>
+                                <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPaid]}>540,000đ</Text>
+                            </View>
+
+                            <View style={styles.modalDetail_RowData}>
+                                <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>Khám sức khỏe</Text>
+                                <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>100,000đ</Text>
+                                <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPaid]}>100,000đ</Text>
+                            </View>
+
                             <View style={styles.modalTotalPay}>
                                 <Text style={
                                     {
@@ -57,86 +130,55 @@ export default function Tuition() {
                                         color: '#FF6E35',
                                         fontWeight: 'bold'
                                     }
-                                }>{(subItem.totalAmount) - (subItem.totalPaid)}đ</Text>
+                                }>14,540,000đ</Text>
 
                             </View>
 
                         </View>
-                    )
-                });
-                setModalTitle(title);
-                setModalContent(content);
-                setOpen(true);
-            }
-            return (
-                <TouchableOpacity style={styles.listItem} onPress={() => settingModel()} key={subIndex}>
-                    <View style={[styles.listItem_Markup, (subItem.totalPaid < subItem.totalAmount) ? { backgroundColor: '#FF967C' } : { backgroundColor: '#E3ECFF' }]}></View>
-                    <Text style={styles.listItem_SemesterTitle}>Học kỳ: {subItem.semester_type}</Text>
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Tổng tiền:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>{subItem.totalAmount}</Text>
-                    </View>
 
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Tình trạng:&nbsp;</Text>
-                        {
-                            (subItem.totalPaid < subItem.totalAmount) ?
-                                (<Text style={styles.listItem_ContentData}>Chưa đóng</Text>)
-                                :
-                                (<Text style={styles.listItem_ContentData}>Đã đóng</Text>)
-                        }
-                    </View>
-                    <TouchableOpacity
-                        style={styles.listItem_ViewDetail}
-                        onPress={() => settingModel()}>
-                        <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-                        <MaterialCommunityIcons
-                            name={'arrow-right-thin'}
-                            size={22}
-                            color={'#fff'}
-                        />
-                    </TouchableOpacity>
-                </TouchableOpacity>
-            )
-        });
-        return (
-            <View style={styles.list} key={index}>
-                <Text style={styles.listSemester}>{item.name}</Text>
-                {subTuition}
-            </View>
-
-        )
-    }
-    );
-    return (
-        <ScrollView style={styles.body}>
-            <Modal
-                visible={open}
-                transparent={true}>
-                <View style={styles.modalBackground} >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalIconContainer}>
-                            <MaterialCommunityIcons
-                                style={styles.modalIcon}
-                                name={'clipboard-text-outline'}
-                                size={35}
-                                color={'#FFF'}
-                            />
-                        </View>
-                        {modalTitle}
-                        {modalContent}
                         <TouchableOpacity
                             style={styles.modalFooter_ButtonClose}
-                            onPress={() => setOpen(false)}>
+                            onPress={() => setOpen(false)}
+                        >
                             <Text style={styles.modalFooter_ButtonCloseText}>Close</Text>
                         </TouchableOpacity>
+
+                        {/* <MaterialCommunityIcons 
+                        style={styles.modalFooterButtonClose}
+                        name={'close'}
+                        size={20}
+                        color={'#252525'}
+                        onPress={() => setOpen(false)}
+                    /> */}
+
+
+
                     </View>
                 </View>
+
                 <View style={{ alignItems: 'center' }}>
+
                 </View>
             </Modal>
-            {tuition}
-        </ScrollView>
+
+            <View style={styles.list}>
+                <Picker style={styles.listSemester}
+                    mode='dropdown'
+                    ref={pickerRef}
+                    selectedValue={year}
+                    onValueChange={(itemValue) => {
+                        setYear(itemValue);
+                        setTuition(setSelectedSchoolYear(itemValue))
+                    }
+                    }>
+                    <Picker.Item label='Năm học 2020 - 2021' value={1} />
+                    <Picker.Item label='Năm học 2021 - 2022' value={2} />
+                    <Picker.Item label='Năm học 2022 - 2023' value={3} />
+                </Picker>
+                {tuition}
+            </View>
+
+        </View>
     )
 }
 
@@ -247,8 +289,7 @@ const styles = StyleSheet.create({
         color: '#FFF',
     },
     list: {
-        marginBottom: 15,
-        height: 350
+        flex: 6,
     },
 
     listSemester: {
@@ -284,6 +325,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         width: 6,
+        backgroundColor: '#E3ECFF',
         borderBottomLeftRadius: 5,
         borderTopLeftRadius: 5,
     },

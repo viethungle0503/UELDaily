@@ -44,17 +44,6 @@ const RootStack = createStackNavigator();
 function Tabs() {
   return (
     <Tab.Navigator
-      tabBarOptions={{
-        style: {
-          position: 'absolute',
-          top: 50,
-          // display: 'flex',
-          alignItems: 'center',
-          height: 100,
-          paddingBottom: 10,
-          color: 'red',
-        },
-      }}
       initialRouteName="Home"
       screenOptions={({route}) => ({
         tabBarLabel: ({focused, size, tintColor}) => {
@@ -108,6 +97,13 @@ function Tabs() {
           );
         },
         headerShown: false,
+        tabBarStyle: {
+          position: 'absolute',
+          bottom: 0,
+          alignItems: 'center',
+          height: 50,
+          color: 'red'
+        }
       })}>
       <Tab.Screen name="Home" component={Home} options={{}} />
       <Tab.Screen name="Services" component={Services} options={{}} />
