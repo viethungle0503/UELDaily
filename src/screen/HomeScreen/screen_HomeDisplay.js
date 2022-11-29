@@ -126,6 +126,7 @@ export default function HomeDisplay({navigation}) {
         </View>
       </View>
       <View style={styles.shape}></View>
+      
       <View>
         <Text style={styles.hoatdongHeader}>Hoạt động gần đây</Text>
         <View style={styles.hoatdong}>{news}</View>
