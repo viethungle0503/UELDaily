@@ -1,3 +1,4 @@
+import { current } from '@reduxjs/toolkit';
 import {
   Image,
   View,
@@ -7,36 +8,110 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import { useState, useRef } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-export default function ScoreBoard({navigation}) {
+import { useEffect,  } from 'react';
+import {useDispatch} from 'react-redux';
+import { Picker } from '@react-native-picker/picker';
+import {
+  setScoreBoard,
+  setScoreBoardByYear,
+  setScoreBoardBySemester
+} from '../../redux_toolkit/userSlice';
+export default function ScoreBoard({ navigation }) {
+  const dispatch = useDispatch();
+  const [mediumScore, setMediumScore] = useState(0);
+  const [passedCredit, setPassedCredit] = useState(0);
+  const [credit, setCredit] = useState(0);
+  const [year, setYear] = useState(0)
+  const [semester, setSemester] = useState(0);
+  function changeView(xyear = 0, xsemester = 0) {
+    dispatch(setScoreBoard(currentUser.data.scoreboard));
+    if (xyear != 0) {
+      dispatch(setScoreBoardByYear(xyear));
+    }
+    if (xsemester != 0) {
+      dispatch(setScoreBoardBySemester(xsemester));
+    }
+  };
+  const pickerRef = useRef();
+  function openPicker() {
+    pickerRef.current.focus();
+  }
+  function closePicker() {
+    pickerRef.current.blur();
+  }
+  var temp1 = 0;
+  var temp2 = 0;
+  var temp3 = 0;
+  useEffect(() => {
+    setCredit(temp1);
+    setPassedCredit(temp2);
+  if(temp1 != 0) {
+    setMediumScore((temp3 / temp1).toFixed(2));
+  }
+  else setMediumScore(0);
+    
+    temp1 = 0;
+    temp2 = 0;
+    temp3 = 0;
+  },[scoreBoard])
   return (
     <View style={styles.body}>
+      {/* Selection */}
       <View style={styles.fixItem}>
         <View style={styles.scoreHeader_Sort}>
-          <TouchableOpacity style={styles.btnSort}>
-            <Text style={styles.btnSort_Text}>Năm học</Text>
-            <Image
-              style={styles.examIcon}
-              source={require('../../assets/btnSortIcon.png')}
-            />
-          </TouchableOpacity>
+          <View style={styles.btnSort}>
+            <Picker
+              style={styles.btnSort_Text}
+              dropdownIconColor='#0065FF'
+              prompt="Chọn năm học"
+              mode='dropdown'
+              ref={pickerRef}
+              selectedValue={year}
+              onValueChange={(itemValue) => {
+                setYear(itemValue);
+                changeView(itemValue,semester);
+              }
+              }>
+              <Picker.Item label='Tất cả' value={0} />
+              <Picker.Item label='Năm nhất' value={1} />
+              <Picker.Item label='Năm hai' value={2} />
+              <Picker.Item label='Năm ba' value={3} />
+              <Picker.Item label='Năm bốn' value={4} />
+            </Picker>
+          </View>
 
-          <TouchableOpacity style={styles.btnSort}>
-            <Text style={styles.btnSort_Text}>Học kỳ</Text>
-            <Image
-              style={styles.examIcon}
-              source={require('../../assets/btnSortIcon.png')}
-            />
-          </TouchableOpacity>
+          <View style={styles.btnSort}>
+            <Picker
+              style={styles.btnSort_Text}
+              prompt="Chọn học kỳ"
+              dropdownIconColor='#0065FF'
+              mode='dropdown'
+              ref={pickerRef}
+              selectedValue={semester}
+              onValueChange={(itemValue) => {
+                setSemester(itemValue);
+                changeView(year,itemValue);
+              }
+              }>
+              <Picker.Item label='Tất cả' value={0} />
+              <Picker.Item label='Học kỳ 1' value={1} />
+              <Picker.Item label='Học kỳ 2' value={2} />
+              <Picker.Item label='Học kỳ hè' value={3} />
+            </Picker>
+          </View>
         </View>
       </View>
+      {/* Selection */}
 
+      {/* Main Content */}
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.dashboard}>
           <Text style={styles.dashboardHeader}>Điểm trung bình toàn khóa</Text>
 
           <View style={styles.dashboardItemView}>
+            {/* Credit */}
             <View
               style={[
                 styles.dashboardItem,
@@ -54,10 +129,13 @@ export default function ScoreBoard({navigation}) {
                   source={require('../../assets/scoreboard_tinchi.png')}
                 />
                 <Text style={styles.dashboardItem_IndicatorResult}>
-                  72/72tc
+                  {passedCredit}/{credit}
                 </Text>
               </View>
             </View>
+            {/* Credit */}
+
+            {/* Medium Score */}
             <View
               style={[
                 styles.dashboardItem,
@@ -75,10 +153,13 @@ export default function ScoreBoard({navigation}) {
                   source={require('../../assets/scoreboard_GPA.png')}
                 />
                 <Text style={styles.dashboardItem_IndicatorResult}>
-                  7.99/10
+                  {mediumScore}/10
                 </Text>
               </View>
             </View>
+            {/* Medium Score */}
+
+            {/* academic capacity */}
             <View
               style={[
                 styles.dashboardItem,
@@ -95,151 +176,74 @@ export default function ScoreBoard({navigation}) {
                   style={styles.dashboardItem_IndicatorImage}
                   source={require('../../assets/scoreboard_tinchi.png')}
                 />
-                <Text style={styles.dashboardItem_IndicatorResult}>Khá</Text>
+                <Text style={styles.dashboardItem_IndicatorResult}>
+                  {
+                    (mediumScore > 9) ? "Xuất sắc" :
+                      (mediumScore > 8) ? "Giỏi" :
+                        (mediumScore > 7) ? "Khá" :
+                          (mediumScore > 6) ? "Trung bình - Khá" :
+                            (mediumScore > 5) ? "Trung bình" : "Nghỉ học đi"
+                  }
+                </Text>
               </View>
             </View>
+            {/* academic capacity */}
           </View>
         </View>
-
-        <View style={styles.list}>
-          <Text style={styles.listSemester}>Học kỳ 1/ 2021 - 2022</Text>
-
-          <View style={styles.listItem}>
-            <View style={styles.listItem_Markup}></View>
-
-            <Text style={styles.listItem_SubjectName}>
-              Phân tích thiết kế HTTT quản lý - 221IS4204 (3TC)
-            </Text>
-
-            <View style={styles.listItem_Content}>
-              <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-              <Text style={styles.listItem_ContentData}>8.0 (A)</Text>
-            </View>
-
-            <View style={styles.listItem_Content}>
-              <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-              <Text style={styles.listItem_ContentData}>Đạt</Text>
-            </View>
-
-            <TouchableOpacity style={styles.listItem_ViewDetail}>
-              <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-              <MaterialCommunityIcons
-                name={'arrow-right-thin'}
-                size={22}
-                color={'#fff'}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.listItem}>
-            <View style={styles.listItem_Markup}></View>
-
-            <Text style={styles.listItem_SubjectName}>
-              Phân tích thiết kế HTTT quản lý - 221IS4204 (3TC)
-            </Text>
-
-            <View style={styles.listItem_Content}>
-              <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-              <Text style={styles.listItem_ContentData}>8.0 (A)</Text>
-            </View>
-
-            <View style={styles.listItem_Content}>
-              <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-              <Text style={styles.listItem_ContentData}>Đạt</Text>
-            </View>
-
-            <TouchableOpacity style={styles.listItem_ViewDetail}>
-              <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-              <MaterialCommunityIcons
-                name={'arrow-right-thin'}
-                size={22}
-                color={'#fff'}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.listItem}>
-            <View style={styles.listItem_Markup}></View>
-
-            <Text style={styles.listItem_SubjectName}>
-              Phân tích thiết kế HTTT quản lý - 221IS4204 (3TC)
-            </Text>
-
-            <View style={styles.listItem_Content}>
-              <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-              <Text style={styles.listItem_ContentData}>8.0 (A)</Text>
-            </View>
-
-            <View style={styles.listItem_Content}>
-              <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-              <Text style={styles.listItem_ContentData}>Đạt</Text>
-            </View>
-
-            <TouchableOpacity style={styles.listItem_ViewDetail}>
-              <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-              <MaterialCommunityIcons
-                name={'arrow-right-thin'}
-                size={22}
-                color={'#fff'}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.listItem}>
-            <View style={styles.listItem_Markup}></View>
-
-            <Text style={styles.listItem_SubjectName}>
-              Phân tích thiết kế HTTT quản lý - 221IS4204 (3TC)
-            </Text>
-
-            <View style={styles.listItem_Content}>
-              <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-              <Text style={styles.listItem_ContentData}>8.0 (A)</Text>
-            </View>
-
-            <View style={styles.listItem_Content}>
-              <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-              <Text style={styles.listItem_ContentData}>Đạt</Text>
-            </View>
-
-            <TouchableOpacity style={styles.listItem_ViewDetail}>
-              <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-              <MaterialCommunityIcons
-                name={'arrow-right-thin'}
-                size={22}
-                color={'#fff'}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.listItem}>
-            <View style={styles.listItem_Markup}></View>
-
-            <Text style={styles.listItem_SubjectName}>
-              Phân tích thiết kế HTTT quản lý - 221IS4204 (3TC)
-            </Text>
-
-            <View style={styles.listItem_Content}>
-              <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-              <Text style={styles.listItem_ContentData}>8.0 (A)</Text>
-            </View>
-
-            <View style={styles.listItem_Content}>
-              <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-              <Text style={styles.listItem_ContentData}>Đạt</Text>
-            </View>
-
-            <TouchableOpacity style={styles.listItem_ViewDetail}>
-              <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-              <MaterialCommunityIcons
-                name={'arrow-right-thin'}
-                size={22}
-                color={'#fff'}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        {
+          scoreBoard.map((item,index) => {
+            return(
+              <View style={styles.list} key={index}>
+                          {item.semester.map((subItem, subIndex) => {
+              return (
+                <View key={subIndex}>
+                  <Text style={styles.listSemester}>Học kỳ {subItem.semester_type} {item.name}</Text>
+                  {subItem.courses.map((finalItem, finalIndex) => {
+                    temp1 += finalItem.credit;
+                    if (finalItem.overallScore >= 5) {
+                      temp2 += finalItem.credit;
+                    }
+                    temp3 += (finalItem.overallScore * finalItem.credit)
+                    return (
+                      <View style={styles.listItem} key={finalIndex}>
+                        <View style={[styles.listItem_Markup, (finalItem.overallScore >= 5) ? { backgroundColor: '#E3ECFF' } : { backgroundColor: '#FF967C' }]}></View>
+  
+                        <Text style={styles.listItem_SubjectName}>
+                          {finalItem.courseName}
+                        </Text>
+  
+                        <View style={styles.listItem_Content}>
+                          <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
+                          <Text style={styles.listItem_ContentData}>{finalItem.overallScore}</Text>
+                        </View>
+  
+                        <View style={styles.listItem_Content}>
+                          <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
+                          <Text style={styles.listItem_ContentData}>{((finalItem.overallScore) >= 5) ? "Đạt" : "Chưa đạt"}</Text>
+                        </View>
+  
+                        <TouchableOpacity style={styles.listItem_ViewDetail}>
+                          <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
+                          <MaterialCommunityIcons
+                            name={'arrow-right-thin'}
+                            size={22}
+                            color={'#fff'}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    )
+                  })}
+  
+                </View>
+  
+              )
+            })}
+              </View>
+            )
+          })
+        }
       </ScrollView>
+      {/* Main Content */}
     </View>
   );
 }
@@ -362,7 +366,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     width: 6,
-    backgroundColor: '#E3ECFF',
     borderBottomLeftRadius: 5,
     borderTopLeftRadius: 5,
   },
@@ -448,22 +451,15 @@ const styles = StyleSheet.create({
   },
   btnSort: {
     borderColor: '#0065FF',
-    borderRadius: 8,
-
-    borderWidth: 1,
     borderStyle: 'solid',
+    borderRadius: 8,
+    borderWidth: 1,
     backgroundColor: 'transparent',
-    paddingHorizontal: 12,
-    paddingVertical: 5,
     marginLeft: 10,
-
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: 150,
   },
   btnSort_Text: {
     color: '#0065FF',
-    paddingRight: 7,
   },
 
   effect: {
@@ -473,4 +469,104 @@ const styles = StyleSheet.create({
 
     zIndex: 2,
   },
+  modalBackground: {
+    flex: 1,
+    // backgroundColor: 'rbga(0,0,0,0.5)',
+    backgroundColor: '#000000aa',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalContainer: {
+    width: '92%',
+    backgroundColor: '#FFF',
+    padding: 20,
+    borderRadius: 20,
+    elevation: 20,
+  },
+
+  modalIconContainer: {
+    backgroundColor: '#0065FF',
+    borderWidth: 2.5,
+    borderColor: '#FFF',
+    borderRadius: 50,
+    position: 'absolute',
+    left: '50%',
+    top: -30,
+    width: 55,
+    height: 55,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 20,
+  },
+  modalHeaderText: {
+    fontSize: 20,
+    color: '#252525',
+    fontWeight: 'bold'
+  },
+  modalDetail: {
+    borderRadius: 10,
+    backgroundColor: '#F7F9FE',
+    paddingHorizontal: 15,
+    paddingVertical: 20
+  },
+
+  modalDetail_Header: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#EDEDED',
+    paddingBottom: 5,
+    marginBottom: 5,
+  },
+  modalDetail_RowData: {
+    flexDirection: 'row',
+    paddingBottom: 5
+  },
+  modalDetail_RowDataText: {
+    color: '#252525'
+  },
+  modalDetail_HeaderText: {
+    fontWeight: 'bold',
+    color: '#252525',
+  },
+  modalDetail_colContent: {
+    minWidth: 120,
+  },
+  modalDetail_colPayAmount: {
+    minWidth: 85,
+    textAlign: 'right',
+  },
+  modalDetail_colPaid: {
+    minWidth: 85,
+    textAlign: 'right',
+  },
+  modalTotalPay: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderTopColor: '#EDEDED',
+    paddingTop: 10,
+    marginVertical: 5
+  },
+
+  modalFooter_ButtonClose: {
+    backgroundColor: '#0065FF',
+
+    color: '#0065FF',
+    borderRadius: 8,
+    width: '100%',
+    height: 35,
+
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 15,
+  },
+  modalFooter_ButtonCloseText: {
+    color: '#FFF',
+  }
 });

@@ -25,6 +25,7 @@ import {
   setLoggedIn,
   setCurrentUser,
   setCurrentUserProfileImage,
+  setScoreBoard,
 } from './redux_toolkit/userSlice';
 import {setNews_UEL} from './redux_toolkit/newsSlice';
 // Firebase
@@ -164,6 +165,7 @@ const AppWrapper = () => {
   // User
   global.loggedIn = useSelector(state => state.user.loggedIn);
   global.currentUser = useSelector(state => state.user.currentUser);
+  global.scoreBoard = useSelector(state => state.user.scoreBoard)
   const dispatch = useDispatch();
   const cheerio = require('cheerio');
   async function loadGraphicCards(
@@ -197,6 +199,7 @@ const AppWrapper = () => {
           if (element.data.email == account.email) {
             i = 1;
             dispatch(setCurrentUser(element));
+            dispatch(setScoreBoard(element.data.scoreboard));
             dispatch(setCurrentUserProfileImage(account.photoURL));
             dispatch(setLoggedIn(true));
             break;
@@ -218,6 +221,7 @@ const AppWrapper = () => {
         .then(() => {
           dispatch(setLoggedIn(false));
           dispatch(setCurrentUser({}));
+          dispatch(setScoreBoard({}));
         });
     } catch (error) {
       console.error(error);

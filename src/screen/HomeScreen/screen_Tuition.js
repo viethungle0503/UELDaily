@@ -24,7 +24,7 @@ export default function Tuition() {
     const [modalContent, setModalContent] = useState();
     const tuition = currentUser.data.tuition.map((item, index) => {
         const subTuition = item.semester.map((subItem, subIndex) => {
-            function settingModel() {
+            function settingModal() {
                 const title = (() => (
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalHeaderText}>Học phí HK{subItem.semester_type} {item.start_year}-{item.end_year}</Text>
@@ -69,7 +69,7 @@ export default function Tuition() {
                 setOpen(true);
             }
             return (
-                <TouchableOpacity style={styles.listItem} onPress={() => settingModel()} key={subIndex}>
+                <TouchableOpacity style={styles.listItem} onPress={() => settingModal()} key={subIndex}>
                     <View style={[styles.listItem_Markup, (subItem.totalPaid < subItem.totalAmount) ? { backgroundColor: '#FF967C' } : { backgroundColor: '#E3ECFF' }]}></View>
                     <Text style={styles.listItem_SemesterTitle}>Học kỳ: {subItem.semester_type}</Text>
                     <View style={styles.listItem_Content}>
@@ -88,7 +88,7 @@ export default function Tuition() {
                     </View>
                     <TouchableOpacity
                         style={styles.listItem_ViewDetail}
-                        onPress={() => settingModel()}>
+                        onPress={() => settingModal()}>
                         <Text style={[styles.listItem_ViewDetail_Text,(subItem.totalPaid < subItem.totalAmount) ? {color:'#FF502D'} : {color:'#fff'}]}>Chi tiết</Text>
                         <MaterialCommunityIcons
                             name={'arrow-right-thin'}

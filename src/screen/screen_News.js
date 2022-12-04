@@ -12,7 +12,7 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import LogOutButton from '../components/Button_LogOut';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import { setLoggedIn, setCurrentUser} from '../redux_toolkit/userSlice';
+import { setLoggedIn, setCurrentUser, setScoreBoard} from '../redux_toolkit/userSlice';
 import auth from '@react-native-firebase/auth';
 
 export default function News() {
@@ -26,6 +26,7 @@ export default function News() {
         .then(() => {
           dispatch(setLoggedIn(false));
           dispatch(setCurrentUser({}))
+          dispatch(setScoreBoard({}));
         });
     } catch (error) {
       console.error(error);
