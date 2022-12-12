@@ -33,42 +33,71 @@ export default function News() {
     }
   };
   return (
-    <View>
-      {/* <Text>UEL LMS</Text> */}
-      {loggedIn && (
-        <View style={styles.buttonContainer}>
-          <Text style={{color: 'red'}}>{currentUser.data.email}</Text>
-          {currentUser && <Text style={styles.text}>Welcome {currentUser.data.firstName}</Text>}
-          <LogOutButton
-            onPressFunction={signOut}
-            title={loggedIn ? 'Log out' : 'You are logged in'}
-            color="#FFF6D5"></LogOutButton>
+  <View style={styles.body}>
+
+    {loggedIn && (
+      <View style={styles.accountHeader}>
+        <Image source={require={}} />
+
+        <View>
           <Image
-            style={{width: 150, height: 150}}
+            style={styles.studentAvatar}
             source={{uri: currentUser.data.profileImage}}
           />
+          {currentUser ? (
+            <Text style={styles.studentName}>
+              {currentUser.data.lastName + ` ${currentUser.data.firstName}`}
+            </Text>
+            ) : null}
+          {/* <Text style={{color: 'red'}}>{currentUser.data.email}</Text> */}
+          
+          
         </View>
-      )}
-      {/* <FlatList
-              data={tableData}
-              renderItem={({ item }) => (
-                  <View>
-                      <Text>{item.key}s</Text>
-                      <Text>{item.data.email}</Text>
-                      <Text>{item.data.fullName}</Text>
-                  </View>
-              )}
-              keyExtractor={(item, index) => index.toString()} /> */}
+      </View>
+    )}
+    
+
+    <View style={styles.accountPolicy}>
+      <LogOutButton
+        onPressFunction={signOut}
+        title={loggedIn ? 'Dang xuat' : 'You are logged in'}
+        color="#FFF6D5">
+
+      </LogOutButton>
+
     </View>
+    
+  </View>
   );
 }
 const styles = StyleSheet.create({
-  buttonContainer: {
-    alignSelf: 'center',
-    marginTop: 20,
-  },
-  text: {
-    fontSize: 25,
-    color: '#21D463',
-  },
+ body:{
+  flex: 1,
+  flexDirection: 'column',
+
+
+ },
+ accountHeader:{
+  flex: 3,
+  backgroundColor: 'red',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+accountPolicy:{
+  backgroundColor: 'blue',
+  flex: 4,
+
+ },
+studentName: {
+  fontWeight: 'bold',
+  fontSize: 18,
+  color: '#252525',
+},
+studentAvatar: {
+  width: 100,
+  aspectRatio: 1,
+  borderRadius: 100,
+  // marginRight: 10,
+
+},
 });

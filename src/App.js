@@ -178,6 +178,7 @@ const AppWrapper = () => {
     const $ = cheerio.load(htmlString); // parse HTML string
     $('.PageColumns').remove();
     $('#ctl08_ctl01_RadListView1_ClientState').remove();
+    $('#ctl08_ctl01_RadListView1').remove();
     $('.nd_news > div').each(function (i, div) {
       let title = $('h4 > a', div).text();
       let time = $('h4 > span', div).text();

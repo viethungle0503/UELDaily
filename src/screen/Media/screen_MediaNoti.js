@@ -13,11 +13,38 @@ import LinearGradient from 'react-native-linear-gradient';
 import { FlatList } from 'react-native';
 
 export default function MediaNoti({navigation}) {
+  const cheerio = require('cheerio');
+  async function loadGraphicCards(
+    searchUrl = `https://ctsv.uel.edu.vn/thong-bao-chung-5`,
+    page = 1,
+  ) {
+    let bigPicture = [];
+    let smallPicture =[];
+    const baseURL = `https://ctsv.uel.edu.vn`;
+    const response = await fetch(searchUrl); // fetch page
+    const htmlString = await response.text(); // get response text
+    const $ = cheerio.load(htmlString); // parse HTML string
+    $('.PageColumns').remove();
+    $('#ctl08_ctl01_RadListView1_ClientState').remove();
+    $('#ctl08_ctl01_RadListView1').remove();
+    $('.nd_news > div').each(function (i, div) {
+      let title = $('h4 > a', div).text();
+      let time = $('h4 > span', div).text();
+      let imageURL = baseURL + $('img', div).attr('src');
+      let link = baseURL + $('h4 > a', div).attr('href');
+      if($('img',div).width() > 90) {
+        bigPicture.push({title: title, time: time, imageURL: imageURL, link: link});
+      }
+      else {
+        smallPicture.push({title: title, time: time, imageURL: imageURL, link: link});
+      }
+    });
+  }
   return (
     <ScrollView style={styles.body}>
 
       <ScrollView style={styles.mediaNoti_Lastest} horizontal={true} showsHorizontalScrollIndicator={false}>
-
+        {/* Slide 1 */}
         <TouchableOpacity style={styles.lastestItem}>
           <ImageBackground 
             imageStyle={{borderRadius: 10}}
@@ -53,7 +80,7 @@ export default function MediaNoti({navigation}) {
             </View>
           </ImageBackground>
         </TouchableOpacity>
-
+                {/* Slide 2 */}
         <TouchableOpacity style={styles.lastestItem}>
           <ImageBackground 
             imageStyle={{borderRadius: 10}}
@@ -89,7 +116,7 @@ export default function MediaNoti({navigation}) {
             </View>
           </ImageBackground>
         </TouchableOpacity>
-
+                {/* Slide 3 */}
         <TouchableOpacity style={styles.lastestItem}>
           <ImageBackground 
             imageStyle={{borderRadius: 10}}
@@ -130,7 +157,7 @@ export default function MediaNoti({navigation}) {
 
       <View style={styles.mediaNoti_All}>
         <Text style={styles.mediaNotiHeader}>Tổng hợp</Text>
-
+                {/* Tin 1 */}
         <TouchableOpacity
           style={styles.mediaNotiItem}
           onPress={() => {}}>
@@ -150,7 +177,7 @@ export default function MediaNoti({navigation}) {
 
           </View>
         </TouchableOpacity>
-
+                {/* Tin 2 */}
         <TouchableOpacity
           style={styles.mediaNotiItem}
           onPress={() => {}}>
@@ -169,7 +196,7 @@ export default function MediaNoti({navigation}) {
             </View>
           </View>
         </TouchableOpacity>
-
+                {/* Tin 3 */}
         <TouchableOpacity
           style={styles.mediaNotiItem}
           onPress={() => {}}>
@@ -188,6 +215,7 @@ export default function MediaNoti({navigation}) {
             </View>
           </View>
         </TouchableOpacity>
+        {/* Tin 4 */}
         <TouchableOpacity
           style={styles.mediaNotiItem}
           onPress={() => {}}>
@@ -206,8 +234,6 @@ export default function MediaNoti({navigation}) {
             </View>
           </View>
         </TouchableOpacity>
-
-        
       </View>
     </ScrollView>
   );
