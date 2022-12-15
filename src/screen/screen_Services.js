@@ -85,7 +85,9 @@ export default function Services({navigation}) {
               style={styles.modalHeader_btnBackContainer}  
               onPress={() => setOpen(false)}
             >
-              <Image source={require('../assets/btnBack.png')} style={styles.modalHeader_btnBack}/>
+              <Image 
+              source={require('../assets/btnBack.png')} 
+              style={styles.modalHeader_btnBack}/>
               
             </TouchableOpacity>
 

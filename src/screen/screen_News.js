@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Table,
+  Modal,
+
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import LogOutButton from '../components/Button_LogOut';
@@ -15,8 +17,12 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import { setLoggedIn, setCurrentUser, setScoreBoard} from '../redux_toolkit/userSlice';
 import auth from '@react-native-firebase/auth';
 import { abs } from 'react-native-reanimated';
+import {useState} from 'react';
 
 export default function News() {
+  const [openUserInfo, setOpenUserInfo] = React.useState(false);
+  const [openLanguage, setOpenLanguage] = React.useState(false);
+
   const dispatch = useDispatch();
   const signOut = async () => {
     try {
@@ -37,36 +43,195 @@ export default function News() {
   <View style={styles.body}>
 
     {loggedIn && (
-      <View style={styles.accountHeader}>
-        
+    <View style={styles.accountHeader}>
+      
+      <Image
+        style={styles.accountHeader_Illustration}
+        source={require('../assets/account_illustration.png')} 
+      />
+
+      <View style={styles.accountHeader_AvaNameContainer}>
+        <View style={styles.studentAvatarContainer}>
+          <Image
+            style={styles.studentAvatar}
+            source={{uri: currentUser.data.profileImage}}
+          />
+
+        </View>
+
+        {currentUser ? (
+          <Text style={styles.studentName}>
+            {currentUser.data.lastName + " " + currentUser.data.firstName}
+          </Text>
+          ) : null}
+      </View>
+
+      
+    </View>
+    )}
+
+    {/* trang thông tin sinh viên chi tiết */}
+    <Modal 
+      visible={openUserInfo}
+      transparent={true}>
+
+      <View style={styles.modalContainer}>
         <Image
-          style={styles.accountHeader_Illustration}
-          source={require('../assets/account_illustration.png')} 
+          style={styles.effectLeft}
+          source={require('../assets/preLoginEffectLeft.png')}
+        />
+        <Image
+          style={styles.modalEffect}
+          source={require('../assets/mediaEffect.png')}
         />
 
-        <View style={styles.accountHeader_AvaNameContainer}>
-          <View style={styles.studentAvatarContainer}>
-            <Image
-              style={styles.studentAvatar}
-              source={{uri: currentUser.data.profileImage}}
-            />
+        <View style={styles.modalHeader}> 
+          <TouchableOpacity 
+            style={styles.modalHeader_btnBackContainer}  
+            onPress={() => setOpenUserInfo(false)}
+          >
+            <Image 
+            source={require('../assets/btnBack.png')} 
+            style={styles.modalHeader_btnBack}/>
+            
+          </TouchableOpacity>
+
+          <Text style={styles.modalHeader_Title}>
+            Thông tin sinh viên
+          </Text>
+
+        </View>
+
+        <View style={styles.modalContent}>
+          <View style={[styles.modalContentItem, { }]}>
+            <View style={[styles.row,{marginBottom: 10}]}> 
+              <Image 
+                source={require('../assets/account_thongtin_coban.png')}
+                style={styles.modalContentItem_Icon}
+              />
+              <Text style={styles.accountHeading}>Thông tin cơ bản</Text>
+            </View>
+
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>Họ và tên</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              {currentUser.data.lastName + " " + currentUser.data.firstName}
+              </Text>
+            </View>
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>Email</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              {currentUser.data.email}
+              </Text>
+            </View>
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>MSSV</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              {currentUser.key}
+              </Text>
+            </View>
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>Ngày sinh</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              11/03/2002
+              </Text>
+            </View>
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>Nguyên quán</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              TPHCM
+              </Text>
+            </View>
 
           </View>
 
-          {currentUser ? (
-            <Text style={styles.studentName}>
-              {currentUser.data.lastName + " " + currentUser.data.firstName}
-            </Text>
-            ) : null}
-        </View>
+          <View style={[styles.modalContentItem, {marginVertical: 4 }]}>
+            <View style={[styles.row,{marginBottom: 10}]}>
+              <Image 
+                source={require('../assets/account_thongtin_lienhe.png')}
+                style={styles.modalContentItem_Icon}
+              />
+              <Text style={styles.accountHeading}>Thông tin liên hệ</Text>
+            </View>
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>Điện thoại</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              0969830296
+              </Text>
+            </View>
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>Email cá nhân</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              stngan32@gmail.com
+              </Text>
+            </View>
+
+
+          </View>
+
+          <View style={[styles.modalContentItem, {flex: 3 }]}>
+            <View  style={[styles.row,{marginBottom: 10}]}>
+              <Image 
+                source={require('../assets/account_thongtin_khoahoc.png')}
+                style={styles.modalContentItem_Icon}
+              />
+              <Text style={styles.accountHeading}>Thông tin khóa học</Text>
+            </View>
+
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>Khóa học</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              Khóa 20
+              </Text>
+            </View>
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>Niên khóa</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              2020-2024
+              </Text>
+            </View>
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>Chương trình đào tạo</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              Hệ thống thông tin quản lý Chất lượng cao Khóa 20
+              </Text>
+            </View>
+
+            <View style={styles.modalContentItem_RowInfo}>
+              <Text style={styles.modalContentItem_RowInfo_Title}>Lớp</Text>
+              <Text style={styles.modalContentItem_RowInfo_Data}>
+              K20406C
+              </Text>
+            </View>
+
+
+          </View>
 
         
+        </View>
+
       </View>
-    )}
+      
+    </Modal>
+    {/* trang thông tin sinh viên chi tiết */}
+
+
     <View style={styles.accountInfoContainer}>
       <Text style={styles.accountHeading}>Thông tin</Text>
 
-      <TouchableOpacity style={styles.accountListItem}>
+      <TouchableOpacity 
+        style={styles.accountListItem} 
+        onPress={()=> setOpenUserInfo(true)} >
 
         <View style={styles.row}>
           <Image 
@@ -96,7 +261,9 @@ export default function News() {
     <View style={styles.accountSettingContainer}>
       <Text style={styles.accountHeading}>Cài đặt</Text>
 
-      <TouchableOpacity style={styles.accountListItem}>
+      <TouchableOpacity 
+        style={styles.accountListItem} 
+        onPress={() => setOpenLanguage(true)}>
 
         <View style={styles.row}>
           <Image 
@@ -121,10 +288,56 @@ export default function News() {
 
       </TouchableOpacity>
 
+
+      <Modal
+        visible={openLanguage}
+        // visible={false}
+        transparent={true}>
+
+        <View style={styles.langBackground} onPress={() => setOpenLanguage(false)}>
+
+          <View style={styles.langContainer}>
+
+            <Text style={styles.accountHeading}>Chọn ngôn ngữ</Text>
+
+            <View style={styles.langNation}>
+              <Image 
+                source={require('../assets/account_lang_vie.png')}
+                style={styles.langNationIcon}
+              />
+
+              <Text style={styles.accountText}>Tiếng Việt</Text>
+
+            </View>
+
+            <View style={styles.langNation}>
+              <Image 
+                source={require('../assets/account_lang_eng.png')}
+                style={styles.langNationIcon}
+              />
+
+              <Text style={styles.accountText}>Tiếng Anh</Text>
+
+            </View>
+
+            <TouchableOpacity
+              style={styles.langFooter_ButtonClose}
+              onPress={() => setOpenLanguage(false)}>
+              <Text style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
+              Xác nhận
+              </Text>
+            </TouchableOpacity>
+
+          </View>
+        </View>
+
+    </Modal>
+      
+
     </View>
     {/* cài đặt section */}
 
-    <View style={styles.accountPolicy}>
+    <View style={styles.accountPolicyContainer}>
       <Text style={styles.accountHeading}>Điều khoản và sử dụng</Text>
 
       <TouchableOpacity style={styles.accountListItem}>
@@ -187,6 +400,142 @@ body:{
 
 
 },
+/*change language popup  */
+langBackground: {
+  flex: 1,
+  backgroundColor: '#000000aa',
+  justifyContent: 'center',
+  alignItems: 'center'
+},
+langContainer: {
+  width: '70%',
+  backgroundColor: '#FFF',
+  paddingHorizontal: 25,
+  paddingVertical: 20,
+
+  borderRadius: 20,
+  elevation: 20,
+},
+langNation:{
+  flexDirection: 'row',
+  alignItems: 'center',
+
+},  
+langNationIcon:{
+  height: 25,
+  aspectRatio: 0.9,
+  marginRight: 10
+},
+langFooter_ButtonClose: {
+  backgroundColor: '#0065FF',
+
+  color: '#0065FF',
+  borderRadius: 8,
+  width: '100%',
+  height: 35,
+
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginVertical: 15,
+},
+/*change language popup  */
+
+
+/* user info */
+modalContainer: {
+  flex: 1,
+  backgroundColor: '#F6F6F6',
+  position: 'relative'
+},
+modalEffect:{
+  position: 'absolute',
+  top: 30,
+  right: 0,
+  zIndex: 1
+  
+},
+effectLeft: {
+  position: 'absolute',
+  bottom: 40,
+  left: 0,
+  zIndex: 1,
+
+},
+modalHeader:{
+  flexDirection: 'row',
+  alignItems: 'center', 
+  paddingTop: 20,
+  paddingBottom: 10,
+  paddingHorizontal: 15, 
+  backgroundColor: '#FFF',
+},
+modalHeader_btnBackContainer: {
+  width: 25,
+},
+modalHeader_btnBack: {
+  width: '100%',
+  height: undefined,
+  aspectRatio: 1,
+  resizeMode: 'contain'
+},
+modalHeader_Title:{
+  fontSize: 19, 
+  fontWeight: '700', 
+  color: '#252525',
+  paddingHorizontal: 10,
+},
+modalContent:{
+  flex: 1,
+
+},
+modalContentItem:{
+  backgroundColor: '#FFF',
+  paddingHorizontal: 20,
+  paddingTop: 15,
+  paddingBottom: 25,
+
+},
+modalContentItem_Icon:{
+  width: 35,
+  aspectRatio: 1,
+  marginRight: 8
+},
+modalContentItem_RowInfo:{
+  flexDirection: 'row',
+  // alignItems: 'center',
+  paddingTop: 2,
+  paddingBottom: 10,
+  width: '100%',
+  
+
+
+},
+modalContentItem_RowInfo_Title:{
+  marginRight: 10,
+
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+
+  color: '#938F8F',
+  fontSize: 16,
+
+  width: '30%',
+ 
+  // backgroundColor: 'blue'
+},
+modalContentItem_RowInfo_Data:{
+  color: '#252525',
+  fontWeight: '500',
+  fontSize: 16,
+
+  // backgroundColor: 'red',
+  width: "70%",
+
+},
+/* user info */
+
+/* font  */
 accountHeading:{
   color: '#080B09',
   fontWeight:'600',
@@ -205,6 +554,7 @@ accountDataText:{
   fontSize: 16,
 },
 
+/* chia layout */
 accountHeader:{
   flex: 3,
   justifyContent: 'center',
@@ -230,7 +580,7 @@ accountSettingContainer:{
   marginVertical: 6,
 
 },
-accountPolicy:{
+accountPolicyContainer:{
   flex: 4,
   paddingVertical: 10,
   paddingHorizontal: 20,
@@ -238,8 +588,7 @@ accountPolicy:{
 
 },
 
-/* illustration and user info start*/
-
+/* phần đầu: illustration và hình tên user */
 accountHeader_Illustration:{
   width: "100%",
   height: "100%",
@@ -263,7 +612,7 @@ studentAvatarContainer:{
   padding: 5,
   borderWidth: 1,
   borderRadius: 100,
-  
+
   
 },
 studentAvatar: {
