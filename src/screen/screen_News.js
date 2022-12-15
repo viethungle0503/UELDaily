@@ -9,6 +9,8 @@ import {
   ScrollView,
   Table,
   Modal,
+  Pressable,
+
 
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
@@ -17,12 +19,27 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import { setLoggedIn, setCurrentUser, setScoreBoard} from '../redux_toolkit/userSlice';
 import auth from '@react-native-firebase/auth';
 import { abs } from 'react-native-reanimated';
+
+import { Picker } from '@react-native-picker/picker';
 import {useState} from 'react';
 
 export default function News() {
   const [openUserInfo, setOpenUserInfo] = React.useState(false);
+
   const [openLanguage, setOpenLanguage] = React.useState(false);
 
+  const [selectLanguageVie, setselectLanguageVie] = React.useState(false);
+  const clickLanguageVie = () => {
+    setselectLanguageVie(!selectLanguageVie);
+  };
+
+  const [selectLanguageEng, setselectLanguageEng] = React.useState(false);
+  const clickLanguageEng = () => {
+    setselectLanguageEng(!selectLanguageEng);
+  };
+
+
+  
   const dispatch = useDispatch();
   const signOut = async () => {
     try {
@@ -291,39 +308,97 @@ export default function News() {
 
       <Modal
         visible={openLanguage}
-        // visible={false}
         transparent={true}>
 
-        <View style={styles.langBackground} onPress={() => setOpenLanguage(false)}>
+        <View 
+          style={styles.langBackground} 
+          onPress={() => setOpenLanguage(false)}>
 
           <View style={styles.langContainer}>
 
             <Text style={styles.accountHeading}>Chọn ngôn ngữ</Text>
 
-            <View style={styles.langNation}>
+            <TouchableOpacity 
+                onPressIn={clickLanguageVie}
+                style={selectLanguageVie? 
+                  styles.langNation_Vie : 
+                  [styles.langNation_Vie,
+                    {
+                      backgroundColor: 'rgb(210, 230, 255)',
+                      borderColor: '#0065FF',
+                      borderWidth: 1,
+
+                      borderRadius: 5,
+                    }
+                  ]
+              }>
+              <View style={styles.row}>
+                <Image 
+                  source={require('../assets/account_lang_vie.png')}
+                  style={styles.langNationIcon}
+                />
+
+                <Text style={styles.accountText}>Tiếng Việt</Text>
+
+              </View>
               <Image 
-                source={require('../assets/account_lang_vie.png')}
-                style={styles.langNationIcon}
+                style={selectLanguageVie? 
+                    styles.langSelectNationIcon : 
+                    [styles.langSelectNationIcon,
+                      {
+                        opacity: 1,
+                      }
+                    ]}
+                source={require('../assets/account_lang_check.png')}
+                
               />
 
-              <Text style={styles.accountText}>Tiếng Việt</Text>
+            </TouchableOpacity>
 
-            </View>
+            <TouchableOpacity 
+                onPressIn={clickLanguageEng}
+                style={selectLanguageEng? 
+                  styles.langNation_Eng : 
+                  [styles.langNation_Eng,
+                    {
+                      backgroundColor: 'rgb(210, 230, 255)',
+                      borderColor: '#0065FF',
+                      borderWidth: 1,
+                      borderRadius: 5,
+                    }
+                  ]
+              }>
 
-            <View style={styles.langNation}>
+              <View style={styles.row}>
+                <Image 
+                  source={require('../assets/account_lang_eng.png')}
+                  style={styles.langNationIcon}
+                />
+
+                <Text style={styles.accountText}>Tiếng Anh</Text>
+
+              </View>
+
               <Image 
-                source={require('../assets/account_lang_eng.png')}
-                style={styles.langNationIcon}
+                style={selectLanguageEng? 
+                    styles.langSelectNationIcon : 
+                    [styles.langSelectNationIcon,
+                      {
+                        opacity: 1,
+                      }
+                    ]}
+                source={require('../assets/account_lang_check.png')}
+                
               />
+              
 
-              <Text style={styles.accountText}>Tiếng Anh</Text>
-
-            </View>
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.langFooter_ButtonClose}
               onPress={() => setOpenLanguage(false)}>
-              <Text style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
+              <Text 
+              style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
               Xác nhận
               </Text>
             </TouchableOpacity>
@@ -408,23 +483,38 @@ langBackground: {
   alignItems: 'center'
 },
 langContainer: {
-  width: '70%',
+  width: '75%',
   backgroundColor: '#FFF',
   paddingHorizontal: 25,
   paddingVertical: 20,
 
   borderRadius: 20,
   elevation: 20,
+  
 },
-langNation:{
+langNation_Vie:{
   flexDirection: 'row',
   alignItems: 'center',
+  paddingHorizontal: 15,
+  justifyContent: 'space-between',
 
+},  
+langNation_Eng:{
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingHorizontal: 15,
+  justifyContent: 'space-between',
 },  
 langNationIcon:{
   height: 25,
   aspectRatio: 0.9,
-  marginRight: 10
+  marginRight: 10,
+},
+langSelectNationIcon:{
+  width: 30,
+  aspectRatio: 1,
+  opacity: 0,
+
 },
 langFooter_ButtonClose: {
   backgroundColor: '#0065FF',
