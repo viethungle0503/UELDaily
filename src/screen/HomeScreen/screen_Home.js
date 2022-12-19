@@ -18,15 +18,20 @@ export default function Home() {
         component={HomeDisplay}
         options={{headerShown: false}}
       />
-      <HomeStack.Screen name="Schedule" component={Schedule} />
-      <HomeStack.Screen 
-        name="ScoreBoard" 
-        component={ScoreBoard} 
-        options={
-        {
-          title: 'Xem điểm'
-        }
-      } />
+      <HomeStack.Screen
+        name="Schedule"
+        component={Schedule}
+        options={{
+          title: 'Thời khoá biểu',
+        }}
+      />
+      <HomeStack.Screen
+        name="ScoreBoard"
+        component={ScoreBoard}
+        options={{
+          title: 'Xem điểm',
+        }}
+      />
       <HomeStack.Screen
         name="Exam"
         component={Exam}
@@ -38,7 +43,11 @@ export default function Home() {
         options={{title: 'Kiểm tra ngày CTXH'}}
       />
       <HomeStack.Screen name="Homework" component={Homework} />
-      <HomeStack.Screen name="Tuition" component={Tuition} options={{title: 'Học phí'}} />
+      <HomeStack.Screen
+        name="Tuition"
+        component={Tuition}
+        options={{title: 'Học phí'}}
+      />
       <HomeStack.Screen
         name="NewsDetail"
         component={NewsDetail}

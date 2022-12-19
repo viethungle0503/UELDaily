@@ -6,16 +6,15 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
-  Modal
+  Modal,
 } from 'react-native';
 
 import React from 'react';
-import {useState } from 'react';
+import {useState} from 'react';
 
-import { FlatList } from 'react-native-gesture-handler';
+import {FlatList} from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-
 
 import MediaNoti from './Media/screen_MediaNoti';
 import MediaContact from './Media/screen_MediaContact';
@@ -26,8 +25,6 @@ export default function Services({navigation}) {
   const [open, setOpen] = React.useState(false);
 
   async function onDisplayNotification() {
-
-
     // Create a channel (required for Android)
     const channelId = await notifee.createChannel({
       id: 'default',
@@ -36,7 +33,8 @@ export default function Services({navigation}) {
 
     // Display a notification
     await notifee.displayNotification({
-      title: '<p style="color: #4caf50;"><b>Styled HTMLTitle</span></p></b></p> &#128576;',
+      title:
+        '<p style="color: #4caf50;"><b>Styled HTMLTitle</span></p></b></p> &#128576;',
       subtitle: '&#129395;',
       body: 'The <p style="text-decoration: line-through">body can</p> also be <p style="color: #ffffff; background-color: #9c27b0"><i>styled too</i></p> &#127881;!',
       android: {
@@ -45,17 +43,17 @@ export default function Services({navigation}) {
         actions: [
           {
             title: '<b>Dance</b> &#128111;',
-            pressAction: { id: 'dance' },
+            pressAction: {id: 'dance'},
           },
           {
             title: '<p style="color: #f44336;"><b>Cry</b> &#128557;</p>',
-            pressAction: { id: 'cry' },
+            pressAction: {id: 'cry'},
           },
         ],
       },
     });
   }
-  return(
+  return (
     // <View style={{marginTop :250}}>
     //   <Button title="Display Notification" onPress={() => onDisplayNotification()} />
     // </View>
@@ -70,32 +68,27 @@ export default function Services({navigation}) {
         source={require('../assets/preLoginEffectRightBottom.png')}
       />
 
-      <Modal 
-        visible={open}
-        transparent={true}>
-
+      <Modal visible={open} transparent={true}>
         <View style={styles.modalContainer}>
           <Image
             style={styles.modalEffect}
             source={require('../assets/mediaEffect.png')}
           />
 
-          <View style={styles.modalHeader}> 
-            <TouchableOpacity 
-              style={styles.modalHeader_btnBackContainer}  
-              onPress={() => setOpen(false)}
-            >
-              <Image 
-              source={require('../assets/btnBack.png')} 
-              style={styles.modalHeader_btnBack}/>
-              
+          <View style={styles.modalHeader}>
+            <TouchableOpacity
+              style={styles.modalHeader_btnBackContainer}
+              onPress={() => setOpen(false)}>
+              <Image
+                source={require('../assets/btnBack.png')}
+                style={styles.modalHeader_btnBack}
+              />
             </TouchableOpacity>
 
             <Text style={styles.modalHeader_DepartmentName}>
               Phòng Tuyển sinh và CTSV UEL
             </Text>
           </View>
-
 
           <Tab.Navigator
             initialRouteName="MediaNoti"
@@ -131,73 +124,55 @@ export default function Services({navigation}) {
               component={MediaContact}
               options={{tabBarLabel: 'Liên hệ', headerShown: false}}
             />
-           
           </Tab.Navigator>
-
         </View>
-        
       </Modal>
 
-      <ScrollView style={{ flex: 1, }}>
-
-        <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 20}}>
+      <ScrollView style={{flex: 1}}>
+        <Text style={{padding: 20, fontWeight: 'bold', fontSize: 20}}>
           Sự kiện
         </Text>
 
-        <TouchableOpacity style={styles.mediaItem}   onPress={() => setOpen(true)}>
-          <Image style={styles.mediaItem_Image}
-          source={require('../assets/mediaItemImage.png')}>
-          </Image>
+        <TouchableOpacity
+          style={styles.mediaItem}
+          onPress={() => setOpen(true)}>
+          <Image
+            style={styles.mediaItem_Image}
+            source={require('../assets/mediaItemImage.png')}></Image>
 
           <View style={styles.mediaItem_Text}>
-
             <View style={styles.mediaDepartment}>
-
               <Text style={styles.mediaDepartmentName}>
                 PHÒNG Tuyển sinh và Công tác sinh viên UEL
               </Text>
 
-              <Text style={styles.mediaLastestTime}>
-                9h
-              </Text>
-
+              <Text style={styles.mediaLastestTime}>9h</Text>
             </View>
 
-            <Text>
-              Danh sách sinh viên được gia hạn đóng học phí
-            </Text>
+            <Text>Danh sách sinh viên được gia hạn đóng học phí</Text>
           </View>
         </TouchableOpacity>
 
         <View style={styles.mediaItem}>
-          <Image style={styles.mediaItem_Image}
-          source={require('../assets/mediaItemImage_phonghoptac.png')}>
-          </Image>
+          <Image
+            style={styles.mediaItem_Image}
+            source={require('../assets/mediaItemImage_phonghoptac.png')}></Image>
 
           <View style={styles.mediaItem_Text}>
-
             <View style={styles.mediaDepartment}>
-
               <Text style={styles.mediaDepartmentName}>
-              PHÒNG Hợp tác Phát triển UEL
+                PHÒNG Hợp tác Phát triển UEL
               </Text>
 
-              <Text style={styles.mediaLastestTime}>
-                9h
-              </Text>
-
+              <Text style={styles.mediaLastestTime}>9h</Text>
             </View>
 
-            <Text>
-            Chương trình Học bổng Chính phủ Australia...
-            </Text>
+            <Text>Chương trình Học bổng Chính phủ Australia...</Text>
           </View>
         </View>
-
-
       </ScrollView>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -207,25 +182,24 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     position: 'relative',
   },
-  // open item 
+  // open item
   modalContainer: {
     flex: 1,
     backgroundColor: '#FFF',
-    position: 'relative'
+    position: 'relative',
   },
-  modalEffect:{
+  modalEffect: {
     position: 'absolute',
     top: 30,
     right: 0,
-    zIndex: 1
-
+    zIndex: 1,
   },
-  modalHeader:{
+  modalHeader: {
     flexDirection: 'row',
-    alignItems: 'center', 
+    alignItems: 'center',
     paddingTop: 20,
     paddingBottom: 10,
-    paddingHorizontal: 15, 
+    paddingHorizontal: 15,
   },
   modalHeader_btnBackContainer: {
     width: 25,
@@ -234,15 +208,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: undefined,
     aspectRatio: 1,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
-  modalHeader_DepartmentName:{
-    fontSize: 19, 
-    fontWeight: '700', 
+  modalHeader_DepartmentName: {
+    fontSize: 19,
+    fontWeight: '700',
     color: '#252525',
     paddingHorizontal: 10,
   },
-  // open item 
+  // open item
 
   effectLeft: {
     position: 'absolute',
@@ -255,7 +229,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
 
-  mediaItem:{
+  mediaItem: {
     // height: 80,
     flexDirection: 'row',
     // flexWrap: 'wrap',
@@ -263,7 +237,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 10,
     paddingRight: 10,
-
   },
   mediaItem_Image: {
     width: 45,
@@ -282,12 +255,11 @@ const styles = StyleSheet.create({
   mediaDepartment: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
-  mediaDepartmentName:{
+  mediaDepartmentName: {
     width: '80%',
     fontWeight: '600',
-    fontSize: 16
-  }
+    fontSize: 16,
+  },
 });
-
