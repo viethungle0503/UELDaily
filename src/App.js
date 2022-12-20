@@ -188,7 +188,7 @@ const AppWrapper = () => {
         setNews_UEL({title: title, time: time, imageURL: imageURL, link: link}),
       );
     });
-  }
+  };
   function onAuthStateChanged(account) {
     if (account) {
       if (account.email.search(/@st.uel.edu.vn/i) == -1) {

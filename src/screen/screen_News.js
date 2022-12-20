@@ -37,8 +37,6 @@ export default function News() {
 
     {loggedIn && (
       <View style={styles.accountHeader}>
-        <Image source={require={}} />
-
         <View>
           <Image
             style={styles.studentAvatar}
