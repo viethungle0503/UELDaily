@@ -10,38 +10,10 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 export default function MediaNoti({navigation}) {
-  const cheerio = require('cheerio');
-    let tempBigPicture = [];
-    let tempSmallPicture =[];
-    const baseURL = `https://ctsv.uel.edu.vn`;
-    async function fetchNews() {
-      let searchUrl = 'https://ctsv.uel.edu.vn/thong-bao-chung-5';
-      const response = await fetch(searchUrl);
-      return response.text();
-    }
-    const htmlString = fetchNews(); // get response text
-    const $ = cheerio.load(htmlString); // parse HTML string
-      $('.PageColumns').remove();
-      $('#ctl08_ctl01_RadListView1_ClientState').remove();
-      $('#ctl08_ctl01_RadListView1').remove();
-      $('.nd_news > div').each(function (i, div) {
-        let title = $('h4 > a', div).text();
-        console.log(title);
-        let time = $('h4 > span', div).text();
-        let imageURL = baseURL + $('img', div).attr('src');
-        let link = baseURL + $('h4 > a', div).attr('href');
-        if($('img',div).width() > 90) {
-          tempBigPicture.push({title: title, time: time, imageURL: imageURL, link: link});
-        }
-        else {
-          tempSmallPicture.push({title: title, time: time, imageURL: imageURL, link: link});
-        }
-      });
       
-
-    const bigPicture = news_UEL.map((item,index) => {
+    var bigPictureHolder = bigPicture.map((item,index) => {
       return(
-        <TouchableOpacity style={styles.lastestItem}>
+        <TouchableOpacity style={styles.lastestItem} key={index}>
         <ImageBackground 
           imageStyle={{borderRadius: 10}}
           resizeMode='cover'
@@ -78,10 +50,10 @@ export default function MediaNoti({navigation}) {
       </TouchableOpacity>
       )
     });
-    const smallPicture = tempSmallPicture.map((item,index) => {
+    const smallPictureHolder = smallPicture.map((item,index) => {
       return(
         <TouchableOpacity
-        style={styles.mediaNotiItem}
+        style={styles.mediaNotiItem} key={index}
         onPress={() => {}}>
         <Image style={styles.mediaNotiItem_Image} source={{uri: item.imageURL}} />
 
@@ -101,17 +73,16 @@ export default function MediaNoti({navigation}) {
       </TouchableOpacity>
       )
     });
-    // console.log(bigPicture);
   return (
     <ScrollView style={styles.body}>
 
       <ScrollView style={styles.mediaNoti_Lastest} horizontal={true} showsHorizontalScrollIndicator={false}>
-      {bigPicture}
+      {bigPictureHolder}
       </ScrollView>
 
       <View style={styles.mediaNoti_All}>
         <Text style={styles.mediaNotiHeader}>Tổng hợp</Text>
-        {smallPicture}
+        {smallPictureHolder}
       </View>
     </ScrollView>
   );
