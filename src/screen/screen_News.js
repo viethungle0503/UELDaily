@@ -10,6 +10,7 @@ import {
   Table,
   Modal,
   Pressable,
+  ImageBackground
 
 
 } from 'react-native';
@@ -57,34 +58,35 @@ export default function News() {
     }
   };
   return (
-  <View style={styles.body}>
+  <ScrollView style={styles.body}>
 
     {loggedIn && (
-    <View style={styles.accountHeader}>
-      
-      <Image
-        style={styles.accountHeader_Illustration}
-        source={require('../assets/account_illustration.png')} 
-      />
+      <ImageBackground 
+        resizeMode='contain'
+        source={require('../assets/account_illustration.png')}
+        style={styles.accountHeader}>
+        
 
-      <View style={styles.accountHeader_AvaNameContainer}>
-        <View style={styles.studentAvatarContainer}>
-          <Image
-            style={styles.studentAvatar}
-            source={{uri: currentUser.data.profileImage}}
-          />
+        <View style={styles.accountHeader_Content}>
+          <View style={styles.studentAvatarContainer}>
+            <Image
+              style={styles.studentAvatar}
+              source={{uri: currentUser.data.profileImage}}
+            />
 
-        </View>
+          </View>
 
-        {currentUser ? (
+          {currentUser ? (
           <Text style={styles.studentName}>
             {currentUser.data.lastName + " " + currentUser.data.firstName}
           </Text>
           ) : null}
-      </View>
+          
+        </View>
 
-      
-    </View>
+      </ImageBackground>
+
+   
     )}
 
     {/* trang thông tin sinh viên chi tiết */}
@@ -421,7 +423,7 @@ export default function News() {
             source={require('../assets/account_hoidap.png')}
             style={styles.accountListItem_IconTitle}
           />
-          <Text style={styles.accountText}>
+          <Text style={styles.policy_accountText}>
           Hỏi đáp về ứng dụng
           </Text>
 
@@ -434,7 +436,7 @@ export default function News() {
             source={require('../assets/account_quydinh.png')}
             style={styles.accountListItem_IconTitle}
           />
-          <Text style={styles.accountText}>
+          <Text style={styles.policy_accountText}>
           Quy định sử dụng và chính sách người dùng
           </Text>
 
@@ -447,7 +449,7 @@ export default function News() {
             source={require('../assets/account_chinhsach.png')}
             style={styles.accountListItem_IconTitle}
           />
-          <Text style={styles.accountText}>
+          <Text style={styles.policy_accountText}>
           Chính sách quyền riêng tư
           </Text>
 
@@ -465,16 +467,85 @@ export default function News() {
 
     </View>
     
-  </View>
+  </ScrollView>
   );
 }
 const styles = StyleSheet.create({
 body:{
   flex: 1,
   flexDirection: 'column',
-
+  marginBottom: 50, 
 
 },
+/* chia layout */
+accountHeader:{
+
+
+  width: '100%',
+  height: 300, 
+  // height: '100%',
+  backgroundColor: '#FFF',
+
+  flexDirection: 'column',
+  justifyContent: 'center',
+
+  alignItems: 'center',
+  zIndex: 2,
+},
+accountInfoContainer:{
+  // flex: 1,
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  backgroundColor:"#FFF",
+
+  zIndex: 1,
+
+},
+accountSettingContainer:{
+  // flex: 1,
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  backgroundColor:"#FFF",
+  marginVertical: 6,
+
+},
+accountPolicyContainer:{
+  // flex: 4,
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  backgroundColor:"#FFF",
+
+},
+
+/* phần đầu: illustration và hình tên user */
+
+accountHeader_Content: {
+ 
+
+  alignItems: 'center',
+  zIndex: 3
+},
+studentAvatarContainer:{
+  borderColor: 'rgba(255, 110, 53, 1)',
+  padding: 5,
+  borderWidth: 1,
+  borderRadius: 100,
+
+},
+studentAvatar: {
+  width: 100,
+  aspectRatio: 1,
+  borderRadius: 100,
+  
+},
+studentName: {
+  fontWeight: 'bold',
+  fontSize: 20,
+  color: '#252525',
+  marginTop: 15, 
+},
+/* illustration and user info end*/
+
 /*change language popup  */
 langBackground: {
   flex: 1,
@@ -644,93 +715,18 @@ accountDataText:{
   fontSize: 16,
 },
 
-/* chia layout */
-accountHeader:{
-  flex: 3,
-  justifyContent: 'center',
-  alignItems: 'center',
-  // zIndex: 1,
-  backgroundColor: '#FFF',
-  // paddingVertical: 5
-},
-accountInfoContainer:{
-  flex: 1,
-  paddingVertical: 10,
-  paddingHorizontal: 20,
-  backgroundColor:"#FFF",
 
-  zIndex: 1,
-
-},
-accountSettingContainer:{
-  flex: 1,
-  paddingVertical: 10,
-  paddingHorizontal: 20,
-  backgroundColor:"#FFF",
-  marginVertical: 6,
-
-},
-accountPolicyContainer:{
-  flex: 4,
-  paddingVertical: 10,
-  paddingHorizontal: 20,
-  backgroundColor:"#FFF",
-
-},
-
-/* phần đầu: illustration và hình tên user */
-accountHeader_Illustration:{
-  width: "100%",
-  height: "100%",
-  
-
-  zIndex: 2,
-
-  position: 'absolute',
-  // left: 0,
-  // right: 0,
-  // bottom: 0,
-
-
-},
-accountHeader_AvaNameContainer: {
-  alignItems: 'center',
-  zIndex: 3
-},
-studentAvatarContainer:{
-  borderColor: 'rgba(255, 110, 53, 1)',
-  padding: 5,
-  borderWidth: 1,
-  borderRadius: 100,
-
-  
-},
-studentAvatar: {
-  width: 100,
-  aspectRatio: 1,
-  borderRadius: 100,
-  
-  
-
-},
-studentName: {
-  fontWeight: 'bold',
-  fontSize: 19,
-  color: '#252525',
-  marginTop: 10
-},
-/* illustration and user info end*/
 
 
 /* section cài đặt ngôn ngữ  */
 accountListItem:{
-  paddingVertical: 10,
+  paddingVertical: 10, 
+
   
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
 
-  backgroundColor: '#FFF',
   
 },
 row:{
@@ -755,7 +751,13 @@ accountListItem_IconOpen:{
 
 
 /* section điều khoản sử dụng */
+policy_accountText:{
+  color: '#252525',
+  fontWeight: '500',
+  fontSize: 16,
+  width: '90%',
 
+},
 btnLogoutContainer:{
   // flex: 1,
   flexDirection: 'row',

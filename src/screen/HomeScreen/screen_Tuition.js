@@ -87,9 +87,11 @@ export default function Tuition() {
                         }
                     </View>
                     <TouchableOpacity
-                        style={styles.listItem_ViewDetail}
+                        style={[styles.listItem_ViewDetail,(subItem.totalPaid < subItem.totalAmount) ? 
+                        {backgroundColor:'#FF502D'} : {backgroundColor:'#0065FF'}]}
+                        
                         onPress={() => settingModal()}>
-                        <Text style={[styles.listItem_ViewDetail_Text,(subItem.totalPaid < subItem.totalAmount) ? {color:'#FF502D'} : {color:'#fff'}]}>Chi tiết</Text>
+                        <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
                         <MaterialCommunityIcons
                             name={'arrow-right-thin'}
                             size={22}
@@ -211,14 +213,15 @@ const styles = StyleSheet.create({
         color: '#252525',
     },
     modalDetail_colContent: {
-        minWidth: 120,
+        
+        width: 140,
     },
     modalDetail_colPayAmount: {
-        minWidth: 85,
+        width: 80,
         textAlign: 'right',
     },
     modalDetail_colPaid: {
-        minWidth: 85,
+        width: 80,
         textAlign: 'right',
     },
     modalTotalPay: {
@@ -332,7 +335,9 @@ const styles = StyleSheet.create({
 
     },
     listItem_ViewDetail_Text: {
-        fontSize: 13
+        fontSize: 13,
+        color: '#FFF',
+        
     },
 
     col: {

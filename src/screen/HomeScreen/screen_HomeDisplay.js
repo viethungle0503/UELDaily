@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     flexDirection: 'column',
+    marginBottom: 50, 
   },
 
   col: {

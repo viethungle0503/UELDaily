@@ -124,7 +124,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     paddingHorizontal: 10,
-    marginBottom: 0,
+    // marginBottom: 0,
+    marginBottom: 50, 
   },
   examIcon: {
     width: 16,
