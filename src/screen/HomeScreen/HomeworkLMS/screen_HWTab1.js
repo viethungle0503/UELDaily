@@ -14,9 +14,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 export default function HWTab1({navigation}) {
 
     return (
-    <ScrollView style={styles.body}>
-
-
+    <ScrollView style={styles.body} showsVerticalScrollIndicator={false}    >
 
         <View style={[styles.hwItem, {
             marginTop: 25, 
@@ -31,7 +29,7 @@ export default function HWTab1({navigation}) {
             
             <View style={styles.row}>
                 <Text style={styles.hwtext_schedule_danger}>
-                    12h00 ngày 20/12 - 18h00 ngày 21/12
+                12:00 20/12 - 18:00 21/12
                 </Text>
 
                 <View style={[styles.timedueContainer, styles.timedue_danger]}>
@@ -39,7 +37,6 @@ export default function HWTab1({navigation}) {
                     <Image 
                         style={styles.timedueIcon}
                         source={require('../../../assets/hw_timedue_icon.png')}
-
                     />
                 
                     <Text style={styles.timedueText}>
@@ -61,7 +58,7 @@ export default function HWTab1({navigation}) {
             
             <View style={styles.row}>
                 <Text style={styles.hwtext_schedule_warning}>
-                12h00 ngày 19/11 - 18h00 ngày 22/12
+                12:00 20/12 - 18:00 21/12
                 </Text>
 
                 <View style={[styles.timedueContainer, styles.timedue_warning]}>
@@ -69,7 +66,6 @@ export default function HWTab1({navigation}) {
                     <Image 
                         style={styles.timedueIcon}
                         source={require('../../../assets/hw_timedue_icon.png')}
-
                     />
                 
                     <Text style={styles.timedueText}>
@@ -91,7 +87,7 @@ export default function HWTab1({navigation}) {
             
             <View style={styles.row}>
                 <Text style={styles.hwtext_schedule_normal}>
-                12h00 ngày 18/11 - 18h00 ngày 27/12
+                12:00 20/12 - 18:00 21/12
                 </Text>
 
                 <View style={[styles.timedueContainer, styles.timedue_normal]}>
@@ -99,7 +95,6 @@ export default function HWTab1({navigation}) {
                     <Image 
                         style={styles.timedueIcon}
                         source={require('../../../assets/hw_timedue_icon.png')}
-
                     />
                 
                     <Text style={styles.timedueText}>
@@ -109,129 +104,6 @@ export default function HWTab1({navigation}) {
             </View>
 
         </View>
-
-
-        {/* test  */}
-
-        <View style={styles.hwItem}>
-            <Text style={styles.hwtext_subject}>
-            Phân tích và thiết kế Hệ thống thông tin
-            </Text>
-
-            <Text style={styles.hwtext_topic}>
-            Group final project
-            </Text>
-            
-            <View style={styles.row}>
-                <Text style={styles.hwtext_schedule_normal}>
-                12h00 ngày 18/11 - 18h00 ngày 27/12
-                </Text>
-
-                <View style={[styles.timedueContainer, styles.timedue_normal]}>
-
-                    <Image 
-                        style={styles.timedueIcon}
-                        source={require('../../../assets/hw_timedue_icon.png')}
-
-                    />
-                
-                    <Text style={styles.timedueText}>
-                        9 ngày
-                    </Text>
-                </View>
-            </View>
-
-        </View>
-        <View style={styles.hwItem}>
-            <Text style={styles.hwtext_subject}>
-            Phân tích và thiết kế Hệ thống thông tin
-            </Text>
-
-            <Text style={styles.hwtext_topic}>
-            Group final project
-            </Text>
-            
-            <View style={styles.row}>
-                <Text style={styles.hwtext_schedule_normal}>
-                12h00 ngày 18/11 - 18h00 ngày 27/12
-                </Text>
-
-                <View style={[styles.timedueContainer, styles.timedue_normal]}>
-
-                    <Image 
-                        style={styles.timedueIcon}
-                        source={require('../../../assets/hw_timedue_icon.png')}
-
-                    />
-                
-                    <Text style={styles.timedueText}>
-                        9 ngày
-                    </Text>
-                </View>
-            </View>
-
-        </View>
-        <View style={styles.hwItem}>
-            <Text style={styles.hwtext_subject}>
-            Phân tích và thiết kế Hệ thống thông tin
-            </Text>
-
-            <Text style={styles.hwtext_topic}>
-            Group final project
-            </Text>
-            
-            <View style={styles.row}>
-                <Text style={styles.hwtext_schedule_normal}>
-                12h00 ngày 18/11 - 18h00 ngày 27/12
-                </Text>
-
-                <View style={[styles.timedueContainer, styles.timedue_normal]}>
-
-                    <Image 
-                        style={styles.timedueIcon}
-                        source={require('../../../assets/hw_timedue_icon.png')}
-
-                    />
-                
-                    <Text style={styles.timedueText}>
-                        9 ngày
-                    </Text>
-                </View>
-            </View>
-
-        </View>
-        <View style={styles.hwItem}>
-            <Text style={styles.hwtext_subject}>
-            Phân tích và thiết kế Hệ thống thông tin
-            </Text>
-
-            <Text style={styles.hwtext_topic}>
-            Group final project
-            </Text>
-            
-            <View style={styles.row}>
-                <Text style={styles.hwtext_schedule_normal}>
-                12h00 ngày 18/11 - 18h00 ngày 27/12
-                </Text>
-
-                <View style={[styles.timedueContainer, styles.timedue_normal]}>
-
-                    <Image 
-                        style={styles.timedueIcon}
-                        source={require('../../../assets/hw_timedue_icon.png')}
-
-                    />
-                
-                    <Text style={styles.timedueText}>
-                        9 ngày
-                    </Text>
-                </View>
-            </View>
-
-        </View>
-
-
-
 
     </ScrollView>
 );
@@ -240,14 +112,11 @@ const styles = StyleSheet.create({
    
 
 body: {
-    // marginHorizontal: 18, 
-
+    
     backgroundColor: '#F6F8FE',
     flex: 1,
     flexDirection: 'column',
     paddingHorizontal: 20,
-
-
 
     marginBottom: 50,
 },

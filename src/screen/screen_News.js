@@ -58,7 +58,7 @@ export default function News() {
     }
   };
   return (
-  <ScrollView style={styles.body}>
+  <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
 
     {loggedIn && (
       <ImageBackground 

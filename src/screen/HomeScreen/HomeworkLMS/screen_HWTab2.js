@@ -14,7 +14,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 export default function HWTab2({navigation}) {
 
     return (
-    <ScrollView style={styles.body}>
+    <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
 
         <View style={[styles.hwItem, {
             marginTop: 25, 
