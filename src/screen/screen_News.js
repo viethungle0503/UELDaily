@@ -408,7 +408,7 @@ export default function News() {
           </View>
         </View>
 
-    </Modal>
+      </Modal>
       
 
     </View>
