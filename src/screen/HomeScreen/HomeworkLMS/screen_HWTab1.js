@@ -260,7 +260,7 @@ hwItem:{
     paddingHorizontal: 15,
     paddingVertical: 10,
 
-    marginBottom: 10,
+    marginBottom: 15,
 
     shadowColor: 'rgb(0, 101, 255)',
     shadowOffset: {
@@ -288,18 +288,19 @@ hwtext_topic:{
 hwtext_schedule_danger:{
     color: '#FF6E35',
     fontWeight: '500',
-    width: 250,
+    width: '75%',
+ 
     
 },
 hwtext_schedule_warning:{
     color: '#FCCD41',
     fontWeight: '500',
-    width: 250,
+    width: '75%',
 },
 hwtext_schedule_normal:{
     color: '#40CFF7',
     fontWeight: '500',
-    width: 250,
+    width: '75%',
 },
 timedueContainer:{
     borderRadius: 5,

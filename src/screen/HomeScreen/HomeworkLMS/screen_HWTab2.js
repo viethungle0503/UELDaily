@@ -137,7 +137,7 @@ hwItem:{
     paddingHorizontal: 15,
     paddingVertical: 10,
 
-    marginBottom: 10,
+    marginBottom: 15,
 
     shadowColor: 'rgb(0, 101, 255)',
     shadowOffset: {
