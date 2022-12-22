@@ -4,6 +4,7 @@ import {Text, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { Image } from 'react-native';
 
 // Screen
 import Home from './screen/HomeScreen/screen_Home';
@@ -27,7 +28,7 @@ import {
   setCurrentUserProfileImage,
   setScoreBoard,
 } from './redux_toolkit/userSlice';
-import {setNews_UEL} from './redux_toolkit/newsSlice';
+import {setNews_UEL,setBigPicture,setSmallPicture} from './redux_toolkit/newsSlice';
 // Firebase
 import {firebase} from '@react-native-firebase/database';
 
@@ -159,6 +160,8 @@ function App() {
 const AppWrapper = () => {
   // News
   global.news_UEL = useSelector(state => state.news.news_UEL);
+  global.smallPicture = useSelector(state => state.news.smallPicture);
+  global.bigPicture = useSelector(state => state.news.bigPicture);
   // Database
   global.database_app = useSelector(state => state.database.db_app);
   global.database_uel = useSelector(state => state.database.db_uel);
@@ -172,7 +175,7 @@ const AppWrapper = () => {
     searchUrl = `https://uel.edu.vn/tin-tuc`,
     page = 1,
   ) {
-    const baseURL = `https://uel.edu.vn`;
+    const baseURL = searchUrl.slice(0,searchUrl.lastIndexOf("/"));
     const response = await fetch(searchUrl); // fetch page
     const htmlString = await response.text(); // get response text
     const $ = cheerio.load(htmlString); // parse HTML string
@@ -184,11 +187,22 @@ const AppWrapper = () => {
       let time = $('h4 > span', div).text();
       let imageURL = baseURL + $('img', div).attr('src');
       let link = baseURL + $('h4 > a', div).attr('href');
-      dispatch(
-        setNews_UEL({title: title, time: time, imageURL: imageURL, link: link}),
-      );
+      if(searchUrl == 'https://uel.edu.vn/tin-tuc') {
+        dispatch(setNews_UEL({title: title, time: time, imageURL: imageURL, link: link}));
+      }
+      else {
+        Image.getSize(imageURL, (imgWidth, imgHeight) => {
+          if(imgWidth <= imgHeight) {
+            dispatch(setBigPicture({title: title, time: time, imageURL: imageURL, link: link}));
+          }
+          else {
+            dispatch(setSmallPicture({title: title, time: time, imageURL: imageURL, link: link}));
+          }
+        });
+      }
+      
     });
-  }
+  };
   function onAuthStateChanged(account) {
     if (account) {
       if (account.email.search(/@st.uel.edu.vn/i) == -1) {
@@ -233,6 +247,7 @@ const AppWrapper = () => {
     if (global.news_UEL.length == 0) {
       loadGraphicCards();
     }
+    loadGraphicCards("https://ctsv.uel.edu.vn/thong-bao-chung-5",1);
     if (global.database_app.length == 0) {
       firebase
         .app()

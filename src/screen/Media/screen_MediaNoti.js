@@ -8,232 +8,81 @@ import {
   TouchableHighlight,
   ScrollView,
 } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import { FlatList } from 'react-native';
-
 export default function MediaNoti({navigation}) {
-  const cheerio = require('cheerio');
-  async function loadGraphicCards(
-    searchUrl = `https://ctsv.uel.edu.vn/thong-bao-chung-5`,
-    page = 1,
-  ) {
-    let bigPicture = [];
-    let smallPicture =[];
-    const baseURL = `https://ctsv.uel.edu.vn`;
-    const response = await fetch(searchUrl); // fetch page
-    const htmlString = await response.text(); // get response text
-    const $ = cheerio.load(htmlString); // parse HTML string
-    $('.PageColumns').remove();
-    $('#ctl08_ctl01_RadListView1_ClientState').remove();
-    $('#ctl08_ctl01_RadListView1').remove();
-    $('.nd_news > div').each(function (i, div) {
-      let title = $('h4 > a', div).text();
-      let time = $('h4 > span', div).text();
-      let imageURL = baseURL + $('img', div).attr('src');
-      let link = baseURL + $('h4 > a', div).attr('href');
-      if($('img',div).width() > 90) {
-        bigPicture.push({title: title, time: time, imageURL: imageURL, link: link});
-      }
-      else {
-        smallPicture.push({title: title, time: time, imageURL: imageURL, link: link});
-      }
+      
+    var bigPictureHolder = bigPicture.map((item,index) => {
+      return(
+        <TouchableOpacity style={styles.lastestItem} key={index}>
+        <ImageBackground 
+          imageStyle={{borderRadius: 10}}
+          resizeMode='cover'
+          source={{uri: item.imageURL}}
+          style={styles.lastestItem_ImageContainer}>
+          <LinearGradient
+            colors={[
+              'rgba(211, 212, 211, 0)',
+              'rgba(63, 106, 191, 0.99)',
+            ]}
+            style={styles.lastestItem_linearGradient}>
+          </LinearGradient>
+
+          <View style={styles.lastestItem_Content}>
+
+            <Text style={[styles.lastestItem_ContentText,{
+                fontSize: 17,
+                fontWeight: '600'
+              }]}>
+              {item.title}
+            </Text>
+
+            <Text style={styles.lastestItem_ContentText}>Công ty Jabil Việt Nam tọa lạc tại Khu Công Nghệ Cao (SHTP)...</Text>
+
+            <View style={styles.row}>
+              <Image style={styles.mediaNotiItem_DepartmentImage}
+                source={require('../../assets/mediaItemImage.png')}>
+              </Image>
+              <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
+              <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time}</Text>
+            </View>
+          </View>
+        </ImageBackground>
+      </TouchableOpacity>
+      )
     });
-  }
+    const smallPictureHolder = smallPicture.map((item,index) => {
+      return(
+        <TouchableOpacity
+        style={styles.mediaNotiItem} key={index}
+        onPress={() => {}}>
+        <Image style={styles.mediaNotiItem_Image} source={{uri: item.imageURL}} />
+
+        <View style={styles.mediaNotiItem_Content}>
+
+          <Text style={styles.mediaNotiItem_ContentTitle}>{item.title}</Text>
+
+          <View style={styles.row}>
+            <Image style={styles.mediaNotiItem_DepartmentImage}
+              source={require('../../assets/mediaItemImage.png')}>
+            </Image>
+            <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
+            <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;21/11/2022</Text>
+          </View>
+
+        </View>
+      </TouchableOpacity>
+      )
+    });
   return (
     <ScrollView style={styles.body}>
 
       <ScrollView style={styles.mediaNoti_Lastest} horizontal={true} showsHorizontalScrollIndicator={false}>
-        {/* Slide 1 */}
-        <TouchableOpacity style={styles.lastestItem}>
-          <ImageBackground 
-            imageStyle={{borderRadius: 10}}
-            resizeMode='cover'
-            source={require('../../assets/mediaNotiLastest.png')}
-            style={styles.lastestItem_ImageContainer}>
-            <LinearGradient
-              colors={[
-                'rgba(211, 212, 211, 0)',
-                'rgba(63, 106, 191, 0.99)',
-              ]}
-              style={styles.lastestItem_linearGradient}>
-            </LinearGradient>
-
-            <View style={styles.lastestItem_Content}>
-
-              <Text style={[styles.lastestItem_ContentText,{
-                  fontSize: 17,
-                  fontWeight: '600'
-                }]}>
-                Chương trình Học bổng Jabil Việt Nam 2023
-              </Text>
-
-              <Text style={styles.lastestItem_ContentText}>Công ty Jabil Việt Nam tọa lạc tại Khu Công Nghệ Cao (SHTP)...</Text>
-
-              <View style={styles.row}>
-                <Image style={styles.mediaNotiItem_DepartmentImage}
-                  source={require('../../assets/mediaItemImage.png')}>
-                </Image>
-                <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
-                <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;20 giờ</Text>
-              </View>
-            </View>
-          </ImageBackground>
-        </TouchableOpacity>
-                {/* Slide 2 */}
-        <TouchableOpacity style={styles.lastestItem}>
-          <ImageBackground 
-            imageStyle={{borderRadius: 10}}
-            resizeMode='cover'
-            source={require('../../assets/mediaNotiLastest2.png')}
-            style={styles.lastestItem_ImageContainer}>
-            <LinearGradient
-              colors={[
-                'rgba(211, 212, 211, 0)',
-                'rgba(63, 106, 191, 0.99)',
-              ]}
-              style={styles.lastestItem_linearGradient}>
-            </LinearGradient>
-
-            <View style={styles.lastestItem_Content}>
-
-              <Text style={[styles.lastestItem_ContentText, {
-                  fontSize: 17,
-                  fontWeight: '600'
-                }]}>
-                Học bổng Đồng Hành Singapore kỳ 43
-              </Text>
-
-              <Text style={styles.lastestItem_ContentText}>Phòng Công tác sinh viên thông báo về chương trình học bổng Đồng ...</Text>
-
-              <View style={styles.row}>
-                <Image style={styles.mediaNotiItem_DepartmentImage}
-                  source={require('../../assets/mediaItemImage.png')}>
-                </Image>
-                <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
-                <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;20 giờ</Text>
-              </View>
-            </View>
-          </ImageBackground>
-        </TouchableOpacity>
-                {/* Slide 3 */}
-        <TouchableOpacity style={styles.lastestItem}>
-          <ImageBackground 
-            imageStyle={{borderRadius: 10}}
-            resizeMode='cover'
-            source={require('../../assets/mediaNotiLastest3.png')}
-            style={styles.lastestItem_ImageContainer}>
-            <LinearGradient
-              colors={[
-                'rgba(211, 212, 211, 0)',
-                'rgba(63, 106, 191, 0.99)',
-              ]}
-              style={styles.lastestItem_linearGradient}>
-            </LinearGradient>
-
-            <View style={styles.lastestItem_Content}>
-
-              <Text style={[styles.lastestItem_ContentText, {
-                  fontSize: 17,
-                  fontWeight: '600'
-                }]}>
-                WORKSHOP VÀ CUỘC THI CÔNG NGHỆ EXPERT CHALLENGE MÙA 4
-              </Text>
-
-              <Text style={styles.lastestItem_ContentText}>Nhằm tạo sân chơi cho các bạn sinh viên đam mê công nghệ...</Text>
-
-              <View style={styles.row}>
-                <Image style={styles.mediaNotiItem_DepartmentImage}
-                  source={require('../../assets/mediaItemImage.png')}>
-                </Image>
-                <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
-                <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;20 giờ</Text>
-              </View>
-            </View>
-          </ImageBackground>
-        </TouchableOpacity>
-
+      {bigPictureHolder}
       </ScrollView>
 
       <View style={styles.mediaNoti_All}>
         <Text style={styles.mediaNotiHeader}>Tổng hợp</Text>
-                {/* Tin 1 */}
-        <TouchableOpacity
-          style={styles.mediaNotiItem}
-          onPress={() => {}}>
-          <Image style={styles.mediaNotiItem_Image} source={require('../../assets/mediaNotiAll.png')} />
-
-          <View style={styles.mediaNotiItem_Content}>
-
-            <Text style={styles.mediaNotiItem_ContentTitle}>Danh sách sinh viên được gia hạn học phí</Text>
-
-            <View style={styles.row}>
-              <Image style={styles.mediaNotiItem_DepartmentImage}
-                source={require('../../assets/mediaItemImage.png')}>
-              </Image>
-              <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
-              <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;21/11/2022</Text>
-            </View>
-
-          </View>
-        </TouchableOpacity>
-                {/* Tin 2 */}
-        <TouchableOpacity
-          style={styles.mediaNotiItem}
-          onPress={() => {}}>
-          <Image style={styles.mediaNotiItem_Image} source={require('../../assets/mediaNotiAll2.png')} />
-
-          <View style={styles.mediaNotiItem_Content}>
-
-            <Text style={styles.mediaNotiItem_ContentTitle}>Thông báo lịch học Tuần sinh hoạt công dân - sinh viên năm học... </Text>
-
-            <View style={styles.row}>
-              <Image style={styles.mediaNotiItem_DepartmentImage}
-                source={require('../../assets/mediaItemImage.png')}>
-              </Image>
-              <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
-              <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;14/11/2022</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-                {/* Tin 3 */}
-        <TouchableOpacity
-          style={styles.mediaNotiItem}
-          onPress={() => {}}>
-          <Image style={styles.mediaNotiItem_Image} source={require('../../assets/mediaNotiAll2.png')} />
-
-          <View style={styles.mediaNotiItem_Content}>
-
-            <Text style={styles.mediaNotiItem_ContentTitle}>Thông báo lịch học Tuần sinh hoạt công dân - sinh viên năm học... </Text>
-
-            <View style={styles.row}>
-              <Image style={styles.mediaNotiItem_DepartmentImage}
-                source={require('../../assets/mediaItemImage.png')}>
-              </Image>
-              <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
-              <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;14/11/2022</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-        {/* Tin 4 */}
-        <TouchableOpacity
-          style={styles.mediaNotiItem}
-          onPress={() => {}}>
-          <Image style={styles.mediaNotiItem_Image} source={require('../../assets/mediaNotiAll2.png')} />
-
-          <View style={styles.mediaNotiItem_Content}>
-
-            <Text style={styles.mediaNotiItem_ContentTitle}>Thông báo lịch học Tuần sinh hoạt công dân - sinh viên năm học... </Text>
-
-            <View style={styles.row}>
-              <Image style={styles.mediaNotiItem_DepartmentImage}
-                source={require('../../assets/mediaItemImage.png')}>
-              </Image>
-              <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
-              <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;14/11/2022</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+        {smallPictureHolder}
       </View>
     </ScrollView>
   );

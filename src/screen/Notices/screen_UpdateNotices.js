@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     // marginVertical: 20,
     backgroundColor: '#F7F9FE',
     borderRadius: 10,
+    marginBottom: 50,
   },
   notiItem: {
     flex: 1,
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 15,
 
-    marginBottom: 2,
+    marginBottom: 5,
 
     shadowColor: 'rgb(0, 101, 255)',
     shadowOffset: {

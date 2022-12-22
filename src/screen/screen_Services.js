@@ -132,7 +132,7 @@ export default function Services({navigation}) {
         <Text style={{padding: 20, fontWeight: 'bold', fontSize: 20}}>
           Sự kiện
         </Text>
-
+              {/* First News */}
         <TouchableOpacity
           style={styles.mediaItem}
           onPress={() => setOpen(true)}>
@@ -152,7 +152,7 @@ export default function Services({navigation}) {
             <Text>Danh sách sinh viên được gia hạn đóng học phí</Text>
           </View>
         </TouchableOpacity>
-
+              {/* Second News */}
         <View style={styles.mediaItem}>
           <Image
             style={styles.mediaItem_Image}

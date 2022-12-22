@@ -165,6 +165,8 @@ export default function Information({navigation}) {
             </View>
           </View>
         </TouchableOpacity>
+
+
         <View style={styles.notiItem}>
           <View style={styles.notiItem_Icon}>
             <Image source={require('../../assets/notiCapnhat.png')} />
@@ -250,6 +252,8 @@ export default function Information({navigation}) {
             </View>
           </View>
         </TouchableOpacity>
+
+
         <View style={styles.notiItem}>
           <View style={styles.notiItem_Icon}>
             <Image source={require('../../assets/notiCapnhat.png')} />
@@ -291,6 +295,89 @@ export default function Information({navigation}) {
             </View>
           </View>
         </View>
+        <View style={styles.notiItem}>
+          <View style={styles.notiItem_Icon}>
+            <Image source={require('../../assets/notiCapnhat.png')} />
+          </View>
+
+          <View style={styles.notiItem_Content}>
+            <Text style={styles.notiItem_Content_Title}>
+              Về việc đóng học phí HK1 ( 2022 - 2023)
+            </Text>
+
+            <Text style={styles.notiItem_Content_Describe}>
+              Thân chào các bạn sinh viên, Phòng Tài chính đang thực hiện...
+            </Text>
+
+            <TouchableOpacity style={styles.notiItem_Content_Action}>
+              <Text
+                style={[
+                  styles.notiItem_Content_ActionText,
+                  {
+                    color: '#0065FF',
+                  },
+                ]}>
+                Phòng Tài chính UEL
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.notiItem_Status}>
+            <View
+              style={[
+                styles.notiItem_Status_ReadIcon,
+                {
+                  backgroundColor: '#0065FF',
+                },
+              ]}></View>
+            <View style={styles.row}>
+              <Image source={require('../../assets/notiHistory.png')} />
+              <Text>&nbsp;1d</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.notiItem}>
+          <View style={styles.notiItem_Icon}>
+            <Image source={require('../../assets/notiCapnhat.png')} />
+          </View>
+
+          <View style={styles.notiItem_Content}>
+            <Text style={styles.notiItem_Content_Title}>
+              Về việc đóng học phí HK1 ( 2022 - 2023)
+            </Text>
+
+            <Text style={styles.notiItem_Content_Describe}>
+              Thân chào các bạn sinh viên, Phòng Tài chính đang thực hiện...
+            </Text>
+
+            <TouchableOpacity style={styles.notiItem_Content_Action}>
+              <Text
+                style={[
+                  styles.notiItem_Content_ActionText,
+                  {
+                    color: '#0065FF',
+                  },
+                ]}>
+                Phòng Tài chính UEL
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.notiItem_Status}>
+            <View
+              style={[
+                styles.notiItem_Status_ReadIcon,
+                {
+                  backgroundColor: '#0065FF',
+                },
+              ]}></View>
+            <View style={styles.row}>
+              <Image source={require('../../assets/notiHistory.png')} />
+              <Text>&nbsp;1d</Text>
+            </View>
+          </View>
+        </View>
+
       </ScrollView>
     </View>
   );
@@ -301,6 +388,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     paddingHorizontal: 14,
+
+    
     // paddingTop: 10,
   },
   fixItem: {
@@ -311,14 +400,15 @@ const styles = StyleSheet.create({
   noti: {
     display: 'flex',
     flexDirection: 'column',
-    // paddingVertical: 20,
+
     paddingHorizontal: 15,
     paddingTop: 10,
     paddingBottom: 200,
 
-    // marginVertical: 20,
     backgroundColor: '#F7F9FE',
     borderRadius: 10,
+
+    marginBottom: 50,
   },
   notiItem: {
     flex: 1,
@@ -328,7 +418,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 15,
 
-    marginBottom: 2,
+    marginBottom: 5,
 
     shadowColor: 'rgb(0, 101, 255)',
     shadowOffset: {
