@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingHorizontal: 14,
     paddingTop: 14,
+    marginBottom: 50, 
   },
   fixItem: {
     position: 'relative',
