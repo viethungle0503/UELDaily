@@ -15,7 +15,6 @@ import React from 'react';
 import {useState} from 'react';
 
 export default function HomeDisplay({navigation}) {
-<<<<<<< HEAD
   var RNFS = require('react-native-fs');
   database_departments.forEach((item) => {
     RNFS.existsAssets("departments/" + item.data.logoUrl).then((status) => {
@@ -24,7 +23,6 @@ export default function HomeDisplay({navigation}) {
       }
     })
   })
-=======
   const [openLanguage, setOpenLanguage] = useState(false);
 
   const [selectLanguageVie, setselectLanguageVie] = useState(false);
@@ -39,7 +37,6 @@ export default function HomeDisplay({navigation}) {
   };
 
 
->>>>>>> 79c3f656861fc15d5d5adb633850a12074702039
   const news = news_UEL.map((item, index) => (
     <TouchableOpacity
       style={styles.row}
