@@ -59,7 +59,6 @@ export default function News() {
   };
   return (
   <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
-
     {loggedIn && (
       <ImageBackground 
         resizeMode='contain'
@@ -83,65 +82,8 @@ export default function News() {
           ) : null}
           
         </View>
-
       </ImageBackground>
-
-   
     )}
-
-    {/* trang thông tin sinh viên chi tiết */}
-    <Modal 
-      visible={openUserInfo}
-      transparent={true}>
-
-      <View style={styles.modalContainer}>
-        <Image
-          style={styles.effectLeft}
-          source={require('../assets/preLoginEffectLeft.png')}
-        />
-        <Image
-          style={styles.modalEffect}
-          source={require('../assets/mediaEffect.png')}
-        />
-
-        <View style={styles.modalHeader}> 
-          <TouchableOpacity 
-            style={styles.modalHeader_btnBackContainer}  
-            onPress={() => setOpenUserInfo(false)}
-          >
-            <Image 
-            source={require('../assets/btnBack.png')} 
-            style={styles.modalHeader_btnBack}/>
-            
-          </TouchableOpacity>
-
-          <Text style={styles.modalHeader_Title}>
-            Thông tin sinh viên
-          </Text>
-
-        </View>
-
-        <View style={styles.modalContent}>
-          <View style={[styles.modalContentItem, { }]}>
-            <View style={[styles.row,{marginBottom: 10}]}> 
-              <Image 
-                source={require('../assets/account_thongtin_coban.png')}
-                style={styles.modalContentItem_Icon}
-              />
-
-            </View>
-
-            {currentUser ? (
-              <Text style={styles.studentName}>
-                {currentUser.data.lastName + " " + currentUser.data.firstName}
-              </Text>
-            ) : null}
-          </View>
-
-
-        </View>
-      )}
-
       {/* trang thông tin sinh viên chi tiết */}
       <Modal
         visible={openUserInfo}
@@ -296,8 +238,6 @@ export default function News() {
 
       </Modal>
       
-
-    </View>
     {/* cài đặt section */}
 
     <View style={styles.accountPolicyContainer}>
