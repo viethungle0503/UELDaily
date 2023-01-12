@@ -10,6 +10,14 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {render, WebView} from 'react-native-webview';
 
 export default function HomeDisplay({navigation}) {
+  var RNFS = require('react-native-fs');
+  database_departments.forEach((item) => {
+    RNFS.existsAssets("departments/" + item.data.logoUrl).then((status) => {
+      if (status) {
+        global.departmentLogo.push(item.data.logoUrl);
+      }
+    })
+  })
   const news = news_UEL.map((item, index) => (
     <TouchableOpacity
       style={styles.row}
@@ -313,6 +321,7 @@ const styles = StyleSheet.create({
   },
   hoatdongTime: {
     marginLeft: 5,
+    color:'red'
   },
   hoatdongImage: {
     width: 110,

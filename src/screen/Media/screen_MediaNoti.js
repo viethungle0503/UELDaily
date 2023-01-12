@@ -9,11 +9,14 @@ import {
   ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-export default function MediaNoti({navigation}) {
-      
-    var bigPictureHolder = bigPicture.map((item,index) => {
+export default function MediaNoti({navigation, route}) {
+  var {searchUrl,uri,name} = route.params
+    var bigPictureHolder = bigPicture.filter(x => x.identifier == searchUrl).map((item,index) => {
       return(
-        <TouchableOpacity style={styles.lastestItem} key={index}>
+        <TouchableOpacity style={styles.lastestItem} key={index}
+        onPress={() => {
+          navigation.navigate('MediaDetail', {link: item.link});
+        }}>
         <ImageBackground 
           imageStyle={{borderRadius: 10}}
           resizeMode='cover'
@@ -40,9 +43,9 @@ export default function MediaNoti({navigation}) {
 
             <View style={styles.row}>
               <Image style={styles.mediaNotiItem_DepartmentImage}
-                source={require('../../assets/mediaItemImage.png')}>
+                source={{uri:uri}}>
               </Image>
-              <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
+              <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;{name}</Text>
               <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time}</Text>
             </View>
           </View>
@@ -50,11 +53,13 @@ export default function MediaNoti({navigation}) {
       </TouchableOpacity>
       )
     });
-    const smallPictureHolder = smallPicture.map((item,index) => {
+    var smallPictureHolder = smallPicture.filter(x => x.identifier == searchUrl).map((item,index) => {
       return(
         <TouchableOpacity
         style={styles.mediaNotiItem} key={index}
-        onPress={() => {}}>
+        onPress={() => {
+          navigation.navigate('MediaDetail', {link: item.link});
+        }}>
         <Image style={styles.mediaNotiItem_Image} source={{uri: item.imageURL}} />
 
         <View style={styles.mediaNotiItem_Content}>
@@ -63,10 +68,10 @@ export default function MediaNoti({navigation}) {
 
           <View style={styles.row}>
             <Image style={styles.mediaNotiItem_DepartmentImage}
-              source={require('../../assets/mediaItemImage.png')}>
+              source={{uri:uri}}>
             </Image>
-            <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;P. TS&CTSV</Text>
-            <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;21/11/2022</Text>
+            <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;{name}</Text>
+            <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time}</Text>
           </View>
 
         </View>
@@ -75,11 +80,9 @@ export default function MediaNoti({navigation}) {
     });
   return (
     <ScrollView style={styles.body}>
-
       <ScrollView style={styles.mediaNoti_Lastest} horizontal={true} showsHorizontalScrollIndicator={false}>
       {bigPictureHolder}
       </ScrollView>
-
       <View style={styles.mediaNoti_All}>
         <Text style={styles.mediaNotiHeader}>Tổng hợp</Text>
         {smallPictureHolder}
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   lastestItem_ContentText:{
-    color: 'white',
+    color: 'red',
     paddingBottom: 3
   },
   mediaNoti_Lastest:{
@@ -170,6 +173,7 @@ const styles = StyleSheet.create({
   },
   mediaNotiItem_ContentTime: {
     marginLeft: 5,
+    color:'red'
   },
   mediaNotiItem_Image: {
     width: 110,

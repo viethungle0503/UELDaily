@@ -21,7 +21,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // Redux
 import {useSelector, useDispatch} from 'react-redux';
-import {getDatabaseAccount, getStudent} from './redux_toolkit/databaseSlice';
+import {getDatabaseAccount, getStudent, getDepartments} from './redux_toolkit/databaseSlice';
 import {
   setLoggedIn,
   setCurrentUser,
@@ -165,18 +165,25 @@ const AppWrapper = () => {
   // Database
   global.database_app = useSelector(state => state.database.db_app);
   global.database_uel = useSelector(state => state.database.db_uel);
+  global.database_departments = useSelector(state =>state.database.db_departments)
   // User
   global.loggedIn = useSelector(state => state.user.loggedIn);
   global.currentUser = useSelector(state => state.user.currentUser);
   global.scoreBoard = useSelector(state => state.user.scoreBoard)
+
+  
+  global.departmentLogo = [];
+  
+  const [ready,setReady] = useState(false);
   const dispatch = useDispatch();
   const cheerio = require('cheerio');
-  async function loadGraphicCards(
-    searchUrl = `https://uel.edu.vn/tin-tuc`,
-    page = 1,
-  ) {
+  async function loadGraphicCards(searchUrl) {
     const baseURL = searchUrl.slice(0,searchUrl.lastIndexOf("/"));
-    const response = await fetch(searchUrl); // fetch page
+    const response = await fetch(searchUrl).catch(function(error) {
+      console.log('There has been a problem with your fetch operation: ' + error.message);
+       // ADD THIS THROW error
+        throw error;
+      });; // fetch page
     const htmlString = await response.text(); // get response text
     const $ = cheerio.load(htmlString); // parse HTML string
     $('.PageColumns').remove();
@@ -193,10 +200,10 @@ const AppWrapper = () => {
       else {
         Image.getSize(imageURL, (imgWidth, imgHeight) => {
           if(imgWidth <= imgHeight) {
-            dispatch(setBigPicture({title: title, time: time, imageURL: imageURL, link: link}));
+            dispatch(setBigPicture({title: title, time: time, imageURL: imageURL, link: link,identifier:searchUrl}));
           }
           else {
-            dispatch(setSmallPicture({title: title, time: time, imageURL: imageURL, link: link}));
+            dispatch(setSmallPicture({title: title, time: time, imageURL: imageURL, link: link,identifier:searchUrl}));
           }
         });
       }
@@ -244,10 +251,6 @@ const AppWrapper = () => {
   };
   useEffect(() => {
     SplashScreen.hide();
-    if (global.news_UEL.length == 0) {
-      loadGraphicCards();
-    }
-    loadGraphicCards("https://ctsv.uel.edu.vn/thong-bao-chung-5",1);
     if (global.database_app.length == 0) {
       firebase
         .app()
@@ -292,10 +295,53 @@ const AppWrapper = () => {
         );
     }
 
+    if (global.database_departments.length == 0) {
+      firebase
+        .app()
+        .database(
+          'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+        )
+        .ref('/departments')
+        .once(
+          'value',
+          snapshot => {
+            snapshot.forEach(childSnapshot => {
+              let childKey = childSnapshot.key;
+              let childData = childSnapshot.val();
+              dispatch(getDepartments({key: childKey, data: childData}));
+            });
+            setReady(true);
+          },
+          error => {
+            console.error(error);
+          },
+        );
+    }
+    if (global.news_UEL.length == 0) {
+      loadGraphicCards("https://uel.edu.vn/tin-tuc");
+    }
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     // unsubscribe on unmount
     return subscriber;
   }, []);
+  const useEffectOnlyOnUpdate = (callback, dependencies) => {
+    const didMount = React.useRef(false);
+    React.useEffect(() => {
+      if (didMount.current) {
+        callback(dependencies);
+      } else {
+        didMount.current = true;
+      }
+    }, [callback, dependencies]);
+  };
+  useEffectOnlyOnUpdate((dependencies) => {
+    if(global.bigPicture.length ==0 || global.smallPicture.length == 0) {
+      let length = global.database_departments.length;
+      for(let i = 0; i<length;i++) {
+        loadGraphicCards(global.database_departments[i].data.newsLink);
+      }
+    }
+  }, [ready]);
 
   return <App />;
 };

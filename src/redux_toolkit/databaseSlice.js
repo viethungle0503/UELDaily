@@ -5,7 +5,8 @@ export const databaseSlice = createSlice({
   name: 'database',
   initialState: {
     db_app:[],
-    db_uel:[]
+    db_uel:[],
+    db_departments:[],
   },
   reducers: {
     // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -20,11 +21,14 @@ export const databaseSlice = createSlice({
     },
     getStudent:(state, action) => {
       state.db_uel.push(action.payload)
+    },
+    getDepartments:(state,action) => {
+      state.db_departments.push(action.payload)
     }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { getDatabaseAccount, getStudent } = databaseSlice.actions;
+export const { getDatabaseAccount, getStudent, getDepartments } = databaseSlice.actions;
 
 export default databaseSlice.reducer;

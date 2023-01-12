@@ -264,6 +264,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(':react-native-splash-screen')
+    implementation project(':react-native-fs')
 
     // Add the dependency for the Realtime Database library
     implementation 'com.google.firebase:firebase-database'
