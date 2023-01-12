@@ -42,7 +42,11 @@ export default function Home() {
         component={Ctxh}
         options={{title: 'Kiểm tra ngày CTXH'}}
       />
-      <HomeStack.Screen name="Homework" component={Homework} />
+      <HomeStack.Screen 
+        name="Homework" 
+        component={Homework} 
+        options={{title: 'Bài tập LMS'}}
+      />
       <HomeStack.Screen
         name="Tuition"
         component={Tuition}
