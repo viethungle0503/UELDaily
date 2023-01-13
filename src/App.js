@@ -27,6 +27,7 @@ import {
   setCurrentUser,
   setCurrentUserProfileImage,
   setScoreBoard,
+  setIsDataReady,
 } from './redux_toolkit/userSlice';
 import {setNews_UEL,setBigPicture,setSmallPicture} from './redux_toolkit/newsSlice';
 // Firebase
@@ -128,21 +129,21 @@ function App() {
       <RootStack.Navigator initialRouteName="PreLogin1">
         {!loggedIn ? (
           <RootStack.Group>
-            <RootStack.Screen
+            {(atPreLogin1) ? (
+              <RootStack.Screen
               name="PreLogin1"
               component={PreLogin1}
               options={{headerShown: false}}
             />
-            <RootStack.Screen
+            ) : ((atPreLogin2) ? (<RootStack.Screen
               name="PreLogin2"
               component={PreLogin2}
               options={{headerShown: false}}
-            />
-            <RootStack.Screen
+            />) : (<RootStack.Screen
               name="Login"
               component={Login}
               options={{headerShown: false}}
-            />
+            />))}
           </RootStack.Group>
         ) : (
           // Auth screens
@@ -160,8 +161,8 @@ function App() {
 const AppWrapper = () => {
   // News
   global.news_UEL = useSelector(state => state.news.news_UEL);
-  global.smallPicture = useSelector(state => state.news.smallPicture);
-  global.bigPicture = useSelector(state => state.news.bigPicture);
+  global.smallPicture = [];
+  global.bigPicture = [];
   // Database
   global.database_app = useSelector(state => state.database.db_app);
   global.database_uel = useSelector(state => state.database.db_uel);
@@ -169,12 +170,12 @@ const AppWrapper = () => {
   // User
   global.loggedIn = useSelector(state => state.user.loggedIn);
   global.currentUser = useSelector(state => state.user.currentUser);
-  global.scoreBoard = useSelector(state => state.user.scoreBoard)
-
+  global.scoreBoard = useSelector(state => state.user.scoreBoard);
+  global.isDataReady = useSelector(state => state.user.isDataReady);
+  global.atPreLogin1 = useSelector(state => state.user.atPreLogin1);
+  global.atPreLogin2 = useSelector(state => state.user.atPreLogin2);
   
   global.departmentLogo = [];
-  
-  const [ready,setReady] = useState(false);
   const dispatch = useDispatch();
   const cheerio = require('cheerio');
   async function loadGraphicCards(searchUrl) {
@@ -205,6 +206,8 @@ const AppWrapper = () => {
           else {
             dispatch(setSmallPicture({title: title, time: time, imageURL: imageURL, link: link,identifier:searchUrl}));
           }
+        },(error) => {
+          console.log(error);
         });
       }
       
@@ -310,12 +313,13 @@ const AppWrapper = () => {
               let childData = childSnapshot.val();
               dispatch(getDepartments({key: childKey, data: childData}));
             });
-            setReady(true);
+            
           },
           error => {
             console.error(error);
           },
         );
+        dispatch(setIsDataReady(true));
     }
     if (global.news_UEL.length == 0) {
       loadGraphicCards("https://uel.edu.vn/tin-tuc");
@@ -334,14 +338,14 @@ const AppWrapper = () => {
       }
     }, [callback, dependencies]);
   };
-  useEffectOnlyOnUpdate((dependencies) => {
-    if(global.bigPicture.length ==0 || global.smallPicture.length == 0) {
-      let length = global.database_departments.length;
-      for(let i = 0; i<length;i++) {
-        loadGraphicCards(global.database_departments[i].data.newsLink);
-      }
-    }
-  }, [ready]);
+  // useEffectOnlyOnUpdate((dependencies) => {
+  //   if(global.bigPicture.length ==0 || global.smallPicture.length == 0) {
+  //     let length = global.database_departments.length;
+  //     for(let i = 0; i<length/2;i++) {
+  //       loadGraphicCards(global.database_departments[i].data.newsLink);
+  //     }
+  //   }
+  // }, [global.isDataReady]);
 
   return <App />;
 };

@@ -8,8 +8,14 @@ import {
     ScrollView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+    setAtPreLogin1, 
+    setAtPreLogin2,
+  } from '../redux_toolkit/userSlice';
+import {useDispatch} from 'react-redux';
   
 export default function PreLogin2({navigation}) {
+    const dispatch = useDispatch();
 return (
 <View style={styles.body}>
     <View style={styles.sectionHeader}>
@@ -52,7 +58,7 @@ return (
 
         <View style={styles.btnStartView}>
 
-            <TouchableOpacity style={styles.btnStart} onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity style={styles.btnStart} onPress={() => dispatch(setAtPreLogin2(false))}>
                 <Text style={styles.btnStartText}>Tiếp theo</Text>
             </TouchableOpacity>
 
