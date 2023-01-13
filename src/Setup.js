@@ -6,8 +6,10 @@ import  Store, { persistor } from './redux_toolkit/store';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+// import { NativeModules } from 'react-native'
 
 const Setup = () => {
+    // NativeModules.DevSettings.setIsDebuggingRemotely(true)
     useEffect(() => {
         GoogleSignin.configure({
             scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile

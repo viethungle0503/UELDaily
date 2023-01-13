@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Image,
   View,
@@ -10,8 +11,50 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 export default function MediaNoti({navigation, route}) {
+  const cheerio = require('cheerio');
+  const [temp1,setTemp1] = useState([]);
+  const [temp2,setTemp2] = useState([]);
+  async function loadGraphicCards(searchUrl) {
+    const baseURL = searchUrl.slice(0,searchUrl.lastIndexOf("/"));
+    const response = await fetch(searchUrl).catch(function(error) {
+      console.log('There has been a problem with your fetch operation: ' + error.message);
+       // ADD THIS THROW error
+        throw error;
+      });; // fetch page
+    const htmlString = await response.text(); // get response text
+    const $ = cheerio.load(htmlString); // parse HTML string
+    var newbigPicture = temp1.slice();
+    var newsmallPicture = temp2.slice();
+    $('.PageColumns').remove();
+    $('#ctl08_ctl01_RadListView1_ClientState').remove();
+    $('#ctl08_ctl01_RadListView1').remove();
+    $('.nd_news > div').each(function (i, div) {
+      let title = $('h4 > a', div).text();
+      let time = $('h4 > span', div).text();
+      let imageURL = baseURL + $('img', div).attr('src');
+      let link = baseURL + $('h4 > a', div).attr('href');
+        Image.getSize(imageURL, (imgWidth, imgHeight) => {
+            if(imgWidth <= imgHeight) {
+              newbigPicture.push({title: title, time: time, imageURL: imageURL, link: link,identifier:searchUrl});
+            }
+            else {
+              newsmallPicture.push({title: title, time: time, imageURL: imageURL, link: link,identifier:searchUrl});
+            }
+        },(error) => {
+          console.log(error);
+        });
+
+      
+    });
+    setTemp1(newbigPicture);
+    setTemp2(newsmallPicture);
+  };
   var {searchUrl,uri,name} = route.params
-    var bigPictureHolder = bigPicture.filter(x => x.identifier == searchUrl).map((item,index) => {
+  loadGraphicCards(searchUrl);
+  return (
+    <ScrollView style={styles.body}>
+      <ScrollView style={styles.mediaNoti_Lastest} horizontal={true} showsHorizontalScrollIndicator={false}>
+      {temp1.filter(x => x.identifier == searchUrl).map((item,index) => {
       return(
         <TouchableOpacity style={styles.lastestItem} key={index}
         onPress={() => {
@@ -52,8 +95,11 @@ export default function MediaNoti({navigation, route}) {
         </ImageBackground>
       </TouchableOpacity>
       )
-    });
-    var smallPictureHolder = smallPicture.filter(x => x.identifier == searchUrl).map((item,index) => {
+    })}
+      </ScrollView>
+      <View style={styles.mediaNoti_All}>
+        <Text style={styles.mediaNotiHeader}>Tổng hợp</Text>
+        {temp2.filter(x => x.identifier == searchUrl).map((item,index) => {
       return(
         <TouchableOpacity
         style={styles.mediaNotiItem} key={index}
@@ -77,15 +123,7 @@ export default function MediaNoti({navigation, route}) {
         </View>
       </TouchableOpacity>
       )
-    });
-  return (
-    <ScrollView style={styles.body}>
-      <ScrollView style={styles.mediaNoti_Lastest} horizontal={true} showsHorizontalScrollIndicator={false}>
-      {bigPictureHolder}
-      </ScrollView>
-      <View style={styles.mediaNoti_All}>
-        <Text style={styles.mediaNotiHeader}>Tổng hợp</Text>
-        {smallPictureHolder}
+    })}
       </View>
     </ScrollView>
   );

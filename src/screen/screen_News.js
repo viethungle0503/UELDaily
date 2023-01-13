@@ -10,7 +10,8 @@ import {
   Table,
   Modal,
   Pressable,
-  Alert
+  Alert,
+  ImageBackground
 
 
 } from 'react-native';
@@ -25,6 +26,27 @@ import { Picker } from '@react-native-picker/picker';
 import { useState } from 'react';
 
 export default function News() {
+  function showAlert() {
+    Alert.alert(
+              "Thông báo",
+              "Tính năng này chưa được phát triển, đang đợi chị Ngân, chị Ngọc, chị Huyền và anh Bình cho biết thêm thông tin @@",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => Alert.alert("Cancel Pressed"),
+                  style: "cancel",
+                },
+                { text: "OK", onPress: () => Alert.alert("OK Pressed") }
+              ],
+              {
+                cancelable: true,
+                onDismiss: () =>
+                  Alert.alert(
+                    "This alert was dismissed by tapping outside of the alert dialog."
+                  ),
+              }
+            );
+  }
   const [openUserInfo, setOpenUserInfo] = React.useState(false);
 
   const [openLanguage, setOpenLanguage] = React.useState(false);
@@ -237,13 +259,180 @@ export default function News() {
         </View>
 
       </Modal>
-      
-    {/* cài đặt section */}
+       {/* trang thông tin sinh viên chi tiết */}
+       <View style={styles.accountInfoContainer}>
+      <Text style={styles.accountHeading}>Thông tin</Text>
 
+      <TouchableOpacity 
+        style={styles.accountListItem} 
+        onPress={()=> setOpenUserInfo(true)} >
+
+        <View style={styles.row}>
+          <Image 
+            source={require('../assets/account_userinfo.png')}
+            style={styles.accountListItem_IconTitle}
+          />
+          <Text style={styles.accountText}>
+           Thông tin sinh viên
+          </Text>
+
+        </View>
+
+        <View style={styles.row}>
+
+          <Image 
+            source={require('../assets/account_btnOpen.png')}
+            style={styles.accountListItem_IconOpen}
+          />
+
+        </View>
+
+      </TouchableOpacity>
+
+    </View>
+
+    {/* cài đặt section */}
+            <View style={styles.accountSettingContainer}>
+      <Text style={styles.accountHeading}>Cài đặt</Text>
+
+      <TouchableOpacity 
+        style={styles.accountListItem} 
+        onPress={() => setOpenLanguage(true)}>
+
+        <View style={styles.row}>
+          <Image 
+            source={require('../assets/account_userinfo.png')}
+            style={styles.accountListItem_IconTitle}
+          />
+          <Text style={styles.accountText}>
+            Ngôn ngữ
+          </Text>
+
+        </View>
+
+        <View style={styles.row}>
+          <Text style={styles.accountDataText}>Tiếng Việt</Text>
+
+          <Image 
+            source={require('../assets/account_btnOpen.png')}
+            style={styles.accountListItem_IconOpen}
+          />
+
+        </View>
+
+      </TouchableOpacity>
+
+
+      <Modal
+        visible={openLanguage}
+        transparent={true}>
+
+        <View 
+          style={styles.langBackground} 
+          onPress={() => setOpenLanguage(false)}>
+
+          <View style={styles.langContainer}>
+
+            <Text style={styles.accountHeading}>Chọn ngôn ngữ</Text>
+
+            <TouchableOpacity 
+                onPressIn={clickLanguageVie}
+                style={selectLanguageVie? 
+                  styles.langNation_Vie : 
+                  [styles.langNation_Vie,
+                    {
+                      backgroundColor: 'rgb(210, 230, 255)',
+                      borderColor: '#0065FF',
+                      borderWidth: 1,
+
+                      borderRadius: 5,
+                    }
+                  ]
+              }>
+              <View style={styles.row}>
+                <Image 
+                  source={require('../assets/account_lang_vie.png')}
+                  style={styles.langNationIcon}
+                />
+
+                <Text style={styles.accountText}>Tiếng Việt</Text>
+
+              </View>
+              <Image 
+                style={selectLanguageVie? 
+                    styles.langSelectNationIcon : 
+                    [styles.langSelectNationIcon,
+                      {
+                        opacity: 1,
+                      }
+                    ]}
+                source={require('../assets/account_lang_check.png')}
+                
+              />
+
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+                onPressIn={clickLanguageEng}
+                style={selectLanguageEng? 
+                  styles.langNation_Eng : 
+                  [styles.langNation_Eng,
+                    {
+                      backgroundColor: 'rgb(210, 230, 255)',
+                      borderColor: '#0065FF',
+                      borderWidth: 1,
+                      borderRadius: 5,
+                    }
+                  ]
+              }>
+
+              <View style={styles.row}>
+                <Image 
+                  source={require('../assets/account_lang_eng.png')}
+                  style={styles.langNationIcon}
+                />
+
+                <Text style={styles.accountText}>Tiếng Anh</Text>
+
+              </View>
+
+              <Image 
+                style={selectLanguageEng? 
+                    styles.langSelectNationIcon : 
+                    [styles.langSelectNationIcon,
+                      {
+                        opacity: 1,
+                      }
+                    ]}
+                source={require('../assets/account_lang_check.png')}
+                
+              />
+              
+
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.langFooter_ButtonClose}
+              onPress={() => setOpenLanguage(false)}>
+              <Text 
+              style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
+              Xác nhận
+              </Text>
+            </TouchableOpacity>
+
+          </View>
+        </View>
+
+      </Modal>
+      
+
+    </View>
+    {/* cài đặt section */}
     <View style={styles.accountPolicyContainer}>
       <Text style={styles.accountHeading}>Điều khoản và sử dụng</Text>
 
-      <TouchableOpacity style={styles.accountListItem}>
+      <TouchableOpacity style={styles.accountListItem}
+      onPress={() => showAlert()}>
         <View style={styles.row}>
           <Image 
             source={require('../assets/account_hoidap.png')}
@@ -256,7 +445,8 @@ export default function News() {
         </View>
 
       </TouchableOpacity>
-      <TouchableOpacity style={styles.accountListItem}>
+      <TouchableOpacity style={styles.accountListItem}
+      onPress={() => showAlert()}>
         <View style={styles.row}>
           <Image 
             source={require('../assets/account_quydinh.png')}
@@ -269,7 +459,8 @@ export default function News() {
         </View>
 
       </TouchableOpacity>
-      <TouchableOpacity style={styles.accountListItem}>
+      <TouchableOpacity style={styles.accountListItem}
+      onPress={() => showAlert()}>
         <View style={styles.row}>
           <Image 
             source={require('../assets/account_chinhsach.png')}
@@ -385,102 +576,116 @@ langContainer: {
   paddingHorizontal: 25,
   paddingVertical: 20,
 
-    borderRadius: 20,
-    elevation: 20,
+  borderRadius: 20,
+  elevation: 20,
+  
+},
+langNation_Vie:{
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingHorizontal: 15,
+  justifyContent: 'space-between',
 
-  },
-  langNation_Vie: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    justifyContent: 'space-between',
+},  
+langNation_Eng:{
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingHorizontal: 15,
+  justifyContent: 'space-between',
+},  
+langNationIcon:{
+  height: 25,
+  aspectRatio: 0.9,
+  marginRight: 10,
+},
+langSelectNationIcon:{
+  width: 30,
+  aspectRatio: 1,
+  opacity: 0,
 
-  },
-  langNation_Eng: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    justifyContent: 'space-between',
-  },
-  langNationIcon: {
-    height: 25,
-    aspectRatio: 0.9,
-    marginRight: 10,
-  },
-  langSelectNationIcon: {
-    width: 30,
-    aspectRatio: 1,
-    opacity: 0,
+},
+langFooter_ButtonClose: {
+  backgroundColor: '#0065FF',
 
-  },
-  langFooter_ButtonClose: {
-    backgroundColor: '#0065FF',
+  color: '#0065FF',
+  borderRadius: 8,
+  width: '100%',
+  height: 35,
 
-    color: '#0065FF',
-    borderRadius: 8,
-    width: '100%',
-    height: 35,
-
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 15,
-  },
-  /*change language popup  */
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginVertical: 15,
+},
+/*change language popup  */
 
 
-  /* user info */
-  modalContainer: {
-    flex: 1,
-    backgroundColor: '#F6F6F6',
-    position: 'relative'
-  },
-  modalEffect: {
-    position: 'absolute',
-    top: 30,
-    right: 0,
-    zIndex: 1
+/* user info */
+modalContainer: {
+  flex: 1,
+  backgroundColor: '#F6F6F6',
+  position: 'relative'
+},
+modalEffect:{
+  position: 'absolute',
+  top: 30,
+  right: 0,
+  zIndex: 1
+  
+},
+effectLeft: {
+  position: 'absolute',
+  bottom: 40,
+  left: 0,
+  zIndex: 1,
 
-  },
-  effectLeft: {
-    position: 'absolute',
-    bottom: 40,
-    left: 0,
-    zIndex: 1,
+},
+modalHeader:{
+  flexDirection: 'row',
+  alignItems: 'center', 
+  paddingTop: 20,
+  paddingBottom: 10,
+  paddingHorizontal: 15, 
+  backgroundColor: '#FFF',
+},
+modalHeader_btnBackContainer: {
+  width: 25,
+},
+modalHeader_btnBack: {
+  width: '100%',
+  height: undefined,
+  aspectRatio: 1,
+  resizeMode: 'contain'
+},
+modalHeader_Title:{
+  fontSize: 19, 
+  fontWeight: '700', 
+  color: '#252525',
+  paddingHorizontal: 10,
+},
+modalContent:{
+  flex: 1,
 
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 10,
-    paddingHorizontal: 15,
-    backgroundColor: '#FFF',
-  },
-  modalHeader_btnBackContainer: {
-    width: 25,
-  },
-  modalHeader_btnBack: {
-    width: '100%',
-    height: undefined,
-    aspectRatio: 1,
-    resizeMode: 'contain'
-  },
-  modalHeader_Title: {
-    fontSize: 19,
-    fontWeight: '700',
-    color: '#252525',
-    paddingHorizontal: 10,
-  },
-  modalContent: {
-    flex: 1,
+},
+modalContentItem:{
+  backgroundColor: '#FFF',
+  paddingHorizontal: 20,
+  paddingTop: 15,
+  paddingBottom: 25,
 
-  },
-  modalContentItem: {
-    backgroundColor: '#FFF',
-    paddingHorizontal: 20,
-    paddingTop: 15,
-    paddingBottom: 25,
+},
+modalContentItem_Icon:{
+  width: 35,
+  aspectRatio: 1,
+  marginRight: 8
+},
+modalContentItem_RowInfo:{
+  flexDirection: 'row',
+  // alignItems: 'center',
+  paddingTop: 2,
+  paddingBottom: 10,
+  width: '100%',
+  
 
 
 },
@@ -593,10 +798,4 @@ btnLogoutText:{
   textAlign: 'center'
 }
 /* section điều khoản sử dụng */
-
-
-
-
-
-
 });
