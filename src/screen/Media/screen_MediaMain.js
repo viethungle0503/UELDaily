@@ -10,9 +10,10 @@ import {
 } from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 export default function MediaMain({ navigation }) {
+  
   var departments = database_departments.map((item, index) => {
-    let existImage = "asset:/departments/" + item.data.logoUrl;
-    let defaultImage = "asset:/departments/default.png";
+    //let existImage = "asset:/departments/" + item.data.logoUrl;
+    //let defaultImage = "asset:/departments/default.png";
     return (
       <TouchableOpacity
         key={index}
@@ -22,11 +23,11 @@ export default function MediaMain({ navigation }) {
             name: item.data.name, searchUrl: item.data.newsLink,
             email: item.data.email, phone: item.data.phone,
             website: item.data.website, fanpage: item.data.page,
-            uri: departmentLogo.includes(item.data.logoUrl) ? existImage : defaultImage
+            uri: "asset:/" + item.logoLocation
           })}>
         <Image
           style={styles.mediaItem_Image}
-          source={{ uri: departmentLogo.includes(item.data.logoUrl) ? existImage : defaultImage }} />
+          source={{ uri: "asset:/" + item.logoLocation }} />
         <View style={styles.mediaItem_Text}>
           <View style={styles.mediaDepartment}>
             <Text style={styles.mediaDepartmentName}>

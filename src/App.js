@@ -29,7 +29,7 @@ import {
   setScoreBoard,
   setIsDataReady,
 } from './redux_toolkit/userSlice';
-import {setNews_UEL,setBigPicture,setSmallPicture} from './redux_toolkit/newsSlice';
+import {setNews_UEL, setNews_Departments} from './redux_toolkit/newsSlice';
 // Firebase
 import {firebase} from '@react-native-firebase/database';
 
@@ -161,8 +161,7 @@ function App() {
 const AppWrapper = () => {
   // News
   global.news_UEL = useSelector(state => state.news.news_UEL);
-  global.smallPicture = [];
-  global.bigPicture = [];
+  global.news_Departments = useSelector(state => state.news.news_Departments);
   // Database
   global.database_app = useSelector(state => state.database.db_app);
   global.database_uel = useSelector(state => state.database.db_uel);
@@ -174,8 +173,9 @@ const AppWrapper = () => {
   global.isDataReady = useSelector(state => state.user.isDataReady);
   global.atPreLogin1 = useSelector(state => state.user.atPreLogin1);
   global.atPreLogin2 = useSelector(state => state.user.atPreLogin2);
+  // Temporary Parameter
+  global.tempArray = [];
   
-  global.departmentLogo = [];
   const dispatch = useDispatch();
   const cheerio = require('cheerio');
   async function loadGraphicCards(searchUrl) {
@@ -195,23 +195,9 @@ const AppWrapper = () => {
       let time = $('h4 > span', div).text();
       let imageURL = baseURL + $('img', div).attr('src');
       let link = baseURL + $('h4 > a', div).attr('href');
-      if(searchUrl == 'https://uel.edu.vn/tin-tuc') {
         dispatch(setNews_UEL({title: title, time: time, imageURL: imageURL, link: link}));
-      }
-      else {
-        Image.getSize(imageURL, (imgWidth, imgHeight) => {
-          if(imgWidth <= imgHeight) {
-            dispatch(setBigPicture({title: title, time: time, imageURL: imageURL, link: link,identifier:searchUrl}));
-          }
-          else {
-            dispatch(setSmallPicture({title: title, time: time, imageURL: imageURL, link: link,identifier:searchUrl}));
-          }
-        },(error) => {
-          console.log(error);
-        });
-      }
-      
     });
+    
   };
   function onAuthStateChanged(account) {
     if (account) {
@@ -254,6 +240,39 @@ const AppWrapper = () => {
   };
   useEffect(() => {
     SplashScreen.hide();
+
+    if (global.database_departments.length == 0) {
+      var RNFS = require('react-native-fs');
+      firebase
+        .app()
+        .database(
+          'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+        )
+        .ref('/departments')
+        .once(
+          'value',
+          snapshot => {
+            snapshot.forEach(childSnapshot => {
+              let childKey = childSnapshot.key;
+              let childData = childSnapshot.val();
+              var logoLocation = "departments/" + childData.logoUrl
+              RNFS.existsAssets(logoLocation).then((status) => {
+                if (!status) {
+                  logoLocation = "departments/default.png";
+                }
+                dispatch(getDepartments({key: childKey, data: childData, logoLocation: logoLocation}));
+              })
+              
+            });
+            
+          },
+          error => {
+            console.error(error);
+          },
+        );
+        dispatch(setIsDataReady(true));
+    };
+
     if (global.database_app.length == 0) {
       firebase
         .app()
@@ -298,54 +317,27 @@ const AppWrapper = () => {
         );
     }
 
-    if (global.database_departments.length == 0) {
-      firebase
-        .app()
-        .database(
-          'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
-        )
-        .ref('/departments')
-        .once(
-          'value',
-          snapshot => {
-            snapshot.forEach(childSnapshot => {
-              let childKey = childSnapshot.key;
-              let childData = childSnapshot.val();
-              dispatch(getDepartments({key: childKey, data: childData}));
-            });
-            
-          },
-          error => {
-            console.error(error);
-          },
-        );
-        dispatch(setIsDataReady(true));
-    }
+
     if (global.news_UEL.length == 0) {
       loadGraphicCards("https://uel.edu.vn/tin-tuc");
     }
+    
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     // unsubscribe on unmount
     return subscriber;
   }, []);
-  const useEffectOnlyOnUpdate = (callback, dependencies) => {
-    const didMount = React.useRef(false);
-    React.useEffect(() => {
-      if (didMount.current) {
-        callback(dependencies);
-      } else {
-        didMount.current = true;
-      }
-    }, [callback, dependencies]);
-  };
-  // useEffectOnlyOnUpdate((dependencies) => {
-  //   if(global.bigPicture.length ==0 || global.smallPicture.length == 0) {
-  //     let length = global.database_departments.length;
-  //     for(let i = 0; i<length/2;i++) {
-  //       loadGraphicCards(global.database_departments[i].data.newsLink);
+  // const useEffectOnlyOnUpdate = (callback, dependencies) => {
+  //   const didMount = React.useRef(false);
+  //   React.useEffect(() => {
+  //     if (didMount.current) {
+  //       callback(dependencies);
+  //     } else {
+  //       didMount.current = true;
   //     }
-  //   }
-  // }, [global.isDataReady]);
+  //   }, [callback, dependencies]);
+  // };
+  // useEffectOnlyOnUpdate((dependencies) => {
+  // }, []);
 
   return <App />;
 };

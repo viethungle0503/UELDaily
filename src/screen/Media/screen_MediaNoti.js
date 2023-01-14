@@ -9,22 +9,26 @@ import {
   TouchableHighlight,
   ScrollView,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { setNews_Departments } from '../../redux_toolkit/newsSlice';
 import LinearGradient from 'react-native-linear-gradient';
-export default function MediaNoti({navigation, route}) {
+export default function MediaNoti({ navigation, route }) {
+  const dispatch = useDispatch();
+  var { searchUrl, uri, name } = route.params
   const cheerio = require('cheerio');
-  const [temp1,setTemp1] = useState([]);
-  const [temp2,setTemp2] = useState([]);
+  const [bigPictureNews, setBigPictureNews] = useState([]);
+  const [smallPictureNews, setSmallPictureNews] = useState([]);
+  const [ready, setReady] = useState(false);
   async function loadGraphicCards(searchUrl) {
-    const baseURL = searchUrl.slice(0,searchUrl.lastIndexOf("/"));
-    const response = await fetch(searchUrl).catch(function(error) {
+    global.tempArray.splice(0, global.tempArray.length);
+    const baseURL = searchUrl.slice(0, searchUrl.lastIndexOf("/"));
+    const response = await fetch(searchUrl).catch(function (error) {
       console.log('There has been a problem with your fetch operation: ' + error.message);
-       // ADD THIS THROW error
-        throw error;
-      });; // fetch page
+      // ADD THIS THROW error
+      throw error;
+    });; // fetch page
     const htmlString = await response.text(); // get response text
     const $ = cheerio.load(htmlString); // parse HTML string
-    var newbigPicture = temp1.slice();
-    var newsmallPicture = temp2.slice();
     $('.PageColumns').remove();
     $('#ctl08_ctl01_RadListView1_ClientState').remove();
     $('#ctl08_ctl01_RadListView1').remove();
@@ -33,97 +37,109 @@ export default function MediaNoti({navigation, route}) {
       let time = $('h4 > span', div).text();
       let imageURL = baseURL + $('img', div).attr('src');
       let link = baseURL + $('h4 > a', div).attr('href');
-        Image.getSize(imageURL, (imgWidth, imgHeight) => {
-            if(imgWidth <= imgHeight) {
-              newbigPicture.push({title: title, time: time, imageURL: imageURL, link: link,identifier:searchUrl});
-            }
-            else {
-              newsmallPicture.push({title: title, time: time, imageURL: imageURL, link: link,identifier:searchUrl});
-            }
-        },(error) => {
+      global.tempArray.push({ title: title, time: time, imageURL: imageURL, link: link })
+    });
+    dispatch(setNews_Departments({ data: global.tempArray, identifier: searchUrl }));
+  };
+  var index = global.news_Departments.findIndex(x => x.identifier == searchUrl);
+  if (index == -1) {
+    loadGraphicCards(searchUrl);
+  }
+  useEffect(() => {
+    setTimeout(() => {
+      var newbigPicture = [...bigPictureNews];
+      var newsmallPicture = [...smallPictureNews];
+      var trueNews = global.news_Departments.find(x => x.identifier == searchUrl);
+      trueNews.data.forEach((value, index) => {
+        Image.getSize(value.imageURL, (imgWidth, imgHeight) => {
+          if (imgWidth <= imgHeight) {
+            newbigPicture.push(value);
+          }
+          else {
+            newsmallPicture.push(value);
+          }
+        }, (error) => {
           console.log(error);
         });
-
-      
-    });
-    setTemp1(newbigPicture);
-    setTemp2(newsmallPicture);
-  };
-  var {searchUrl,uri,name} = route.params
-  loadGraphicCards(searchUrl);
+      });
+      setBigPictureNews(newbigPicture);
+      setSmallPictureNews(newsmallPicture);
+      setReady(true);
+    }, 10);
+  }, [ready]);
   return (
     <ScrollView style={styles.body}>
       <ScrollView style={styles.mediaNoti_Lastest} horizontal={true} showsHorizontalScrollIndicator={false}>
-      {temp1.filter(x => x.identifier == searchUrl).map((item,index) => {
-      return(
-        <TouchableOpacity style={styles.lastestItem} key={index}
-        onPress={() => {
-          navigation.navigate('MediaDetail', {link: item.link});
-        }}>
-        <ImageBackground 
-          imageStyle={{borderRadius: 10}}
-          resizeMode='cover'
-          source={{uri: item.imageURL}}
-          style={styles.lastestItem_ImageContainer}>
-          <LinearGradient
-            colors={[
-              'rgba(211, 212, 211, 0)',
-              'rgba(63, 106, 191, 0.99)',
-            ]}
-            style={styles.lastestItem_linearGradient}>
-          </LinearGradient>
+        {bigPictureNews.map((item, index) => {
+          return (
+            <TouchableOpacity style={styles.lastestItem} key={item.link + index}
+              onPress={() => {
+                navigation.navigate('MediaDetail', { link: item.link });
+              }}>
+              <ImageBackground
+                imageStyle={{ borderRadius: 10 }}
+                resizeMode='cover'
+                source={{ uri: item.imageURL }}
+                style={styles.lastestItem_ImageContainer}>
+                <LinearGradient
+                  colors={[
+                    'rgba(211, 212, 211, 0)',
+                    'rgba(63, 106, 191, 0.99)',
+                  ]}
+                  style={styles.lastestItem_linearGradient}>
+                </LinearGradient>
 
-          <View style={styles.lastestItem_Content}>
+                <View style={styles.lastestItem_Content}>
 
-            <Text style={[styles.lastestItem_ContentText,{
-                fontSize: 17,
-                fontWeight: '600'
-              }]}>
-              {item.title}
-            </Text>
+                  <Text style={[styles.lastestItem_ContentText, {
+                    fontSize: 17,
+                    fontWeight: '600'
+                  }]}>
+                    {item.title}
+                  </Text>
 
-            <Text style={styles.lastestItem_ContentText}>Công ty Jabil Việt Nam tọa lạc tại Khu Công Nghệ Cao (SHTP)...</Text>
+                  <Text style={styles.lastestItem_ContentText}>Công ty Jabil Việt Nam tọa lạc tại Khu Công Nghệ Cao (SHTP)...</Text>
 
-            <View style={styles.row}>
-              <Image style={styles.mediaNotiItem_DepartmentImage}
-                source={{uri:uri}}>
-              </Image>
-              <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;{name}</Text>
-              <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time}</Text>
-            </View>
-          </View>
-        </ImageBackground>
-      </TouchableOpacity>
-      )
-    })}
+                  <View style={styles.row}>
+                    <Image style={styles.mediaNotiItem_DepartmentImage}
+                      source={{ uri: uri }}>
+                    </Image>
+                    <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;{name}</Text>
+                    <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time}</Text>
+                  </View>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
+          )
+        })}
       </ScrollView>
       <View style={styles.mediaNoti_All}>
         <Text style={styles.mediaNotiHeader}>Tổng hợp</Text>
-        {temp2.filter(x => x.identifier == searchUrl).map((item,index) => {
-      return(
-        <TouchableOpacity
-        style={styles.mediaNotiItem} key={index}
-        onPress={() => {
-          navigation.navigate('MediaDetail', {link: item.link});
-        }}>
-        <Image style={styles.mediaNotiItem_Image} source={{uri: item.imageURL}} />
+        {smallPictureNews.map((item, index) => {
+          return (
+            <TouchableOpacity
+              style={styles.mediaNotiItem} key={item.link + index}
+              onPress={() => {
+                navigation.navigate('MediaDetail', { link: item.link });
+              }}>
+              <Image style={styles.mediaNotiItem_Image} source={{ uri: item.imageURL }} />
 
-        <View style={styles.mediaNotiItem_Content}>
+              <View style={styles.mediaNotiItem_Content}>
 
-          <Text style={styles.mediaNotiItem_ContentTitle}>{item.title}</Text>
+                <Text style={styles.mediaNotiItem_ContentTitle}>{item.title}</Text>
 
-          <View style={styles.row}>
-            <Image style={styles.mediaNotiItem_DepartmentImage}
-              source={{uri:uri}}>
-            </Image>
-            <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;{name}</Text>
-            <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time}</Text>
-          </View>
+                <View style={styles.row}>
+                  <Image style={styles.mediaNotiItem_DepartmentImage}
+                    source={{ uri: uri }}>
+                  </Image>
+                  <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;{name}</Text>
+                  <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time}</Text>
+                </View>
 
-        </View>
-      </TouchableOpacity>
-      )
-    })}
+              </View>
+            </TouchableOpacity>
+          )
+        })}
       </View>
     </ScrollView>
   );
@@ -135,18 +151,18 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     // paddingHorizontal: 20,
   },
-  lastestItem:{
+  lastestItem: {
     maxWidth: 220,
     maxHeight: '100%',
     flexDirection: 'column',
     marginRight: 7
   },
-  lastestItem_ImageContainer:{
+  lastestItem_ImageContainer: {
     height: '100%',
     justifyContent: 'flex-end',
     position: 'relative',
   },
-  lastestItem_linearGradient:{
+  lastestItem_linearGradient: {
     borderRadius: 10,
     backgroundColor: "transparent",
     position: "absolute",
@@ -155,27 +171,27 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0
   },
-  lastestItem_Content:{
+  lastestItem_Content: {
     marginHorizontal: 8,
     marginBottom: 15
   },
-  lastestItem_ContentText:{
+  lastestItem_ContentText: {
     color: 'red',
     paddingBottom: 3
   },
-  mediaNoti_Lastest:{
+  mediaNoti_Lastest: {
     flex: 1,
     marginTop: 20,
     marginLeft: 20,
     flexDirection: 'row',
     height: 300,
   },
-  mediaNoti_All:{
+  mediaNoti_All: {
     flex: 1,
     marginHorizontal: 20,
   },
-  
-  mediaNotiItem:{
+
+  mediaNotiItem: {
     flexDirection: 'row',
     marginBottom: 10,
   },
@@ -200,18 +216,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingBottom: 7
   },
-  mediaNotiItem_DepartmentImage:{
+  mediaNotiItem_DepartmentImage: {
     borderRadius: 100,
     width: 20,
     aspectRatio: 1,
     resizeMode: 'contain'
   },
-  mediaNotiItem_ContentDepartment:{
+  mediaNotiItem_ContentDepartment: {
     color: '#FF6E35'
   },
   mediaNotiItem_ContentTime: {
     marginLeft: 5,
-    color:'red'
+    color: 'red'
   },
   mediaNotiItem_Image: {
     width: 110,
@@ -219,7 +235,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginRight: 10, //cách hình
   },
-  row:{
+  row: {
     flexDirection: 'row'
   }
 

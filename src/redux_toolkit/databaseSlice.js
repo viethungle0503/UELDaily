@@ -32,3 +32,4 @@ export const databaseSlice = createSlice({
 export const { getDatabaseAccount, getStudent, getDepartments } = databaseSlice.actions;
 
 export default databaseSlice.reducer;
+
