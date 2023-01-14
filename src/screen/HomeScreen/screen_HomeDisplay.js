@@ -15,14 +15,6 @@ import React from 'react';
 import { useState } from 'react';
 
 export default function HomeDisplay({ navigation }) {
-  var RNFS = require('react-native-fs');
-  database_departments.forEach((item) => {
-    RNFS.existsAssets("departments/" + item.data.logoUrl).then((status) => {
-      if (status) {
-        global.departmentLogo.push(item.data.logoUrl);
-      }
-    })
-  })
   const [openLanguage, setOpenLanguage] = useState(false);
 
   const [selectLanguageVie, setselectLanguageVie] = useState(false);
