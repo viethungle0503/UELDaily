@@ -28,12 +28,19 @@ export default function UpdateNotices({ navigation }) {
         {updateNotices.map((item, index) => {
           let creTime = new Date(item.creTime);
           let today = new Date();
-          let diff = new Date((Math.abs(today - creTime)) * 1000);
-          var days = diff.getDay();
-          var hours = diff.getHours();
-          let time_gap = hours + "h";
+          let diff = new Date((Math.abs(today.getTime() - creTime.getTime())));
+          var days = 0;
+          var hours = diff / (1000 * 3600);
+          while (hours > 23) {
+            days += 1;
+            hours -= 24;
+          }
+          let time_gap = ``;
           if (days != 0) {
-            time_gap = days + "d " + time_gap;
+            time_gap = `${Math.floor(days)}d ${Math.floor(hours)}h`;
+          }
+          else {
+            time_gap = `${Math.floor(hours)}h`;
           }
           return (
             <TouchableOpacity style={styles.notiItem} key={item._id + index}>

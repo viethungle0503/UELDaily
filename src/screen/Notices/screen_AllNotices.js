@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function Information({navigation, route}) {
+export default function Information({ navigation, route }) {
   const [allNotices, setAllNotices] = useState([]);
   useEffect(() => {
     if (allNotices.length == 0) {
@@ -24,30 +24,37 @@ export default function Information({navigation, route}) {
     }
   }, [allNotices])
   function navigateToHomeWork() {
-    navigation.navigate('Homework', {initBy:route.name})
+    navigation.navigate('Homework', { initBy: route.name })
   }
   return (
     <View style={styles.body}>
       <ScrollView style={styles.noti} showsVerticalScrollIndicator={false}>
-      {allNotices.map((item, index) => {
+        {allNotices.map((item, index) => {
           let creTime = new Date(item.creTime);
           let today = new Date();
-          let diff = new Date((Math.abs(today - creTime)) * 1000);
-          var days = diff.getDay();
-          var hours = diff.getHours();
-          let time_gap = hours + "h";
-          if(days != 0 ) {
-            time_gap = days + "d " + time_gap;
+          let diff = new Date((Math.abs(today.getTime() - creTime.getTime())));
+          var days = 0;
+          var hours = diff / (1000 * 3600);
+          while (hours > 23) {
+            days += 1;
+            hours -= 24;
+          }
+          let time_gap = ``;
+          if (days != 0) {
+            time_gap = `${Math.floor(days)}d ${Math.floor(hours)}h`;
+          }
+          else {
+            time_gap = `${Math.floor(hours)}h`;
           }
           return (
             <TouchableOpacity
               style={styles.notiItem}
               key={item._id + index}
-              onPress={(item.type == 0) ? (() => navigateToHomeWork()) :(() =>console.log("gg"))}>
+              onPress={(item.type == 0) ? (() => navigateToHomeWork()) : (() => console.log("gg"))}>
               <View style={styles.notiItem_Icon}>
-                {(item.type == 0) ? 
-                (<Image source={require('../../assets/notiNhacnho.png')} />) : 
-                (<Image source={require('../../assets/notiCapnhat.png')} />)}
+                {(item.type == 0) ?
+                  (<Image source={require('../../assets/notiNhacnho.png')} />) :
+                  (<Image source={require('../../assets/notiCapnhat.png')} />)}
               </View>
 
               <View style={styles.notiItem_Content}>
@@ -97,7 +104,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingHorizontal: 14,
 
-    
+
     // paddingTop: 10,
   },
   fixItem: {
