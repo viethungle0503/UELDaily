@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function Information({navigation}) {
+export default function Information({navigation, route}) {
   const [allNotices, setAllNotices] = useState([]);
   useEffect(() => {
     if (allNotices.length == 0) {
@@ -25,6 +25,9 @@ export default function Information({navigation}) {
       setAllNotices(allNoticesHolder);
     }
   }, [allNotices]);
+  function navigateToHomeWork() {
+    navigation.navigate('Homework', {initBy: route.name});
+  }
   return (
     <View style={styles.body}>
       <ScrollView style={styles.noti} showsVerticalScrollIndicator={false}>
@@ -44,7 +47,7 @@ export default function Information({navigation}) {
               key={item._id + index}
               onPress={
                 item.type == 0
-                  ? () => navigation.navigate('Homework')
+                  ? () => navigateToHomeWork()
                   : () => console.log('gg')
               }>
               <View style={styles.notiItem_Icon}>
@@ -64,7 +67,7 @@ export default function Information({navigation}) {
                 </Text>
                 <TouchableOpacity
                   style={styles.notiItem_Content_Action}
-                  onPress={() => navigation.navigate('Homework')}>
+                  onPress={() => navigateToHomeWork()}>
                   <Text
                     style={[
                       styles.notiItem_Content_ActionText,
