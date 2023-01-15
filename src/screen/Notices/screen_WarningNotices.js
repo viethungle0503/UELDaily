@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function WarningNotices({ navigation,route }) {
+export default function WarningNotices({ navigation, route }) {
   const [warningNotices, setWarningNotices] = useState([]);
   useEffect(() => {
     if (warningNotices.length == 0) {
@@ -23,7 +23,7 @@ export default function WarningNotices({ navigation,route }) {
     }
   }, [warningNotices])
   function navigateToHomeWork() {
-    navigation.navigate('Homework', {initBy:route.name})
+    navigation.navigate('Homework', { initBy: route.name })
   }
   return (
     <View style={styles.body}>
@@ -31,15 +31,19 @@ export default function WarningNotices({ navigation,route }) {
         {warningNotices.map((item, index) => {
           let creTime = new Date(item.creTime);
           let today = new Date();
-          // Create a new JavaScript Date object based on the timestamp
-          // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-          let diff = new Date((Math.abs(today - creTime)) * 1000);
-          var days = diff.getDay();
-          // Hours part from the timestamp
-          var hours = diff.getHours();
-          let time_gap = hours + "h";
-          if(days != 0 ) {
-            time_gap = days + "d " + time_gap;
+          let diff = new Date((Math.abs(today.getTime() - creTime.getTime())));
+          var days = 0;
+          var hours = diff / (1000 * 3600);
+          while (hours > 23) {
+            days += 1;
+            hours -= 24;
+          }
+          let time_gap = ``;
+          if (days != 0) {
+            time_gap = `${Math.floor(days)}d ${Math.floor(hours)}h`;
+          }
+          else {
+            time_gap = `${Math.floor(hours)}h`;
           }
           return (
             <TouchableOpacity
