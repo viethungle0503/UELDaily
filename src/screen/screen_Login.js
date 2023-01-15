@@ -17,7 +17,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import auth from '@react-native-firebase/auth';
 
 export default function Login({navigation}) {
-  // const database_app = useSelector((state) => state.database.db_app);
 
   _signIn = async () => {
     try {

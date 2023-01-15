@@ -200,7 +200,7 @@ const AppWrapper = () => {
     
   };
   function onAuthStateChanged(account) {
-    if (account) {
+    if (account !== null) {
       if (account.email.search(/@st.uel.edu.vn/i) == -1) {
         alert('Vui lòng sử mail email trường cấp');
         signOut();

@@ -65,7 +65,7 @@ export default function MediaNoti({ navigation, route }) {
       setBigPictureNews(newbigPicture);
       setSmallPictureNews(newsmallPicture);
       setReady(true);
-    }, 10);
+    }, 100);
   }, [ready]);
   return (
     <ScrollView style={styles.body}>
