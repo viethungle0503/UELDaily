@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import {useEffect, useState} from 'react';
+import {Alert} from 'react-native';
 import {
   Image,
   View,
@@ -16,39 +16,50 @@ export default function Information({navigation}) {
   useEffect(() => {
     if (allNotices.length == 0) {
       var allNoticesHolder = [...allNotices];
-      var trueUser = database_app.find(x => x.data.email == currentUser.data.email);
-      trueUser.data.notices.forEach((value) => {
+      var trueUser = database_app.find(
+        x => x.data.email == currentUser.data.email,
+      );
+      trueUser.data.notices.forEach(value => {
         allNoticesHolder.push(value);
-      })
+      });
       setAllNotices(allNoticesHolder);
     }
-  }, [allNotices])
+  }, [allNotices]);
   return (
     <View style={styles.body}>
       <ScrollView style={styles.noti} showsVerticalScrollIndicator={false}>
-      {allNotices.map((item, index) => {
+        {allNotices.map((item, index) => {
           let creTime = new Date(item.creTime);
           let today = new Date();
-          let diff = new Date((Math.abs(today - creTime)) * 1000);
+          let diff = new Date(Math.abs(today - creTime) * 1000);
           var days = diff.getDay();
           var hours = diff.getHours();
-          let time_gap = hours + "h";
-          if(days != 0 ) {
-            time_gap = days + "d " + time_gap;
+          let time_gap = hours + 'h';
+          if (days != 0) {
+            time_gap = days + 'd ' + time_gap;
           }
           return (
             <TouchableOpacity
               style={styles.notiItem}
               key={item._id + index}
-              onPress={(item.type == 0) ? (() => navigation.navigate('Homework')) :(() =>console.log("gg"))}>
+              onPress={
+                item.type == 0
+                  ? () => navigation.navigate('Homework')
+                  : () => console.log('gg')
+              }>
               <View style={styles.notiItem_Icon}>
-                {(item.type == 0) ? 
-                (<Image source={require('../../assets/notiNhacnho.png')} />) : 
-                (<Image source={require('../../assets/notiCapnhat.png')} />)}
+                {item.type == 0 ? (
+                  <Image source={require('../../assets/notiNhacnho.png')} />
+                ) : (
+                  <Image source={require('../../assets/notiCapnhat.png')} />
+                )}
               </View>
 
               <View style={styles.notiItem_Content}>
-                <Text style={styles.notiItem_Content_Title}>
+                <Text
+                  numberOfLines={4}
+                  ellipsizeMode="tail"
+                  style={styles.notiItem_Content_Title}>
                   {item.title}
                 </Text>
                 <TouchableOpacity
@@ -77,11 +88,11 @@ export default function Information({navigation}) {
 
                 <View style={styles.row}>
                   <Image source={require('../../assets/notiHistory.png')} />
-                  <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
+                  <Text style={{color: 'red'}}>&nbsp;{time_gap}</Text>
                 </View>
               </View>
             </TouchableOpacity>
-          )
+          );
         })}
       </ScrollView>
     </View>
@@ -94,7 +105,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingHorizontal: 14,
 
-    
     // paddingTop: 10,
   },
   fixItem: {
