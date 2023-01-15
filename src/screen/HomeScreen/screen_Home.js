@@ -7,6 +7,7 @@ import Tuition from './screen_Tuition';
 import Homework from './screen_Homework';
 import ScoreBoard from './screen_ScoreBoard';
 import Schedule from './screen_Schedule';
+import { HeaderBackButton } from '@react-navigation/elements';
 
 const HomeStack = createStackNavigator();
 
@@ -45,7 +46,17 @@ export default function Home() {
       <HomeStack.Screen 
         name="Homework" 
         component={Homework} 
-        options={{title: 'Bài tập LMS'}}
+        options={({ navigation, route }) => ({
+          title: 'Bài tập LMS',
+          headerLeft: props => (
+              <HeaderBackButton
+                  {...props}
+                  onPress={() => {
+                      navigation.goBack(null);
+                  }}
+              />
+          )
+      })}
       />
       <HomeStack.Screen
         name="Tuition"

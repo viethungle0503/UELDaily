@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Image,
   View,
@@ -9,270 +10,79 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function WarningNotices({navigation}) {
+export default function WarningNotices({ navigation }) {
+  const [warningNotices, setWarningNotices] = useState([]);
+  useEffect(() => {
+    if (warningNotices.length == 0) {
+      var warningNoticesHolder = [...warningNotices];
+      var trueUser = database_app.find(x => x.data.email == currentUser.data.email);
+      trueUser.data.notices.filter(x => x.type == 0).forEach((value) => {
+        warningNoticesHolder.push(value);
+      })
+      setWarningNotices(warningNoticesHolder);
+    }
+  }, [warningNotices])
   return (
     <View style={styles.body}>
       <ScrollView style={styles.noti} showsVerticalScrollIndicator={false}>
-        <TouchableOpacity
-          style={styles.notiItem}
-          onPress={() => navigation.navigate('Homework')}>
-          <View style={styles.notiItem_Icon}>
-            <Image source={require('../../assets/notiNhacnho.png')} />
-          </View>
-
-          <View style={styles.notiItem_Content}>
-            <Text style={styles.notiItem_Content_Title}>
-              Sắp đến hạn Bài tập 3, môn Phát triển web kinh doanh
-            </Text>
+        {warningNotices.map((item, index) => {
+          let creTime = new Date(item.creTime);
+          let today = new Date();
+          // Create a new JavaScript Date object based on the timestamp
+          // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+          let diff = new Date((Math.abs(today - creTime)) * 1000);
+          var days = diff.getDay();
+          // Hours part from the timestamp
+          var hours = diff.getHours();
+          let time_gap = hours + "h";
+          if(days != 0 ) {
+            time_gap = days + "d " + time_gap;
+          }
+          return (
             <TouchableOpacity
-              style={styles.notiItem_Content_Action}
+              style={styles.notiItem}
+              key={item._id + index}
               onPress={() => navigation.navigate('Homework')}>
-              <Text
-                style={[
-                  styles.notiItem_Content_ActionText,
-                  {
-                    color: '#FF6E35',
-                  },
-                ]}>
-                Xem ngay
-              </Text>
+              <View style={styles.notiItem_Icon}>
+                <Image source={require('../../assets/notiNhacnho.png')} />
+              </View>
+
+              <View style={styles.notiItem_Content}>
+                <Text style={styles.notiItem_Content_Title}>
+                  {item.title}
+                </Text>
+                <TouchableOpacity
+                  style={styles.notiItem_Content_Action}
+                  onPress={() => navigation.navigate('Homework')}>
+                  <Text
+                    style={[
+                      styles.notiItem_Content_ActionText,
+                      {
+                        color: '#FF6E35',
+                      },
+                    ]}>
+                    Xem ngay
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.notiItem_Status}>
+                <View
+                  style={[
+                    styles.notiItem_Status_ReadIcon,
+                    {
+                      backgroundColor: '#FF6E35',
+                    },
+                  ]}></View>
+
+                <View style={styles.row}>
+                  <Image source={require('../../assets/notiHistory.png')} />
+                  <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
+                </View>
+              </View>
             </TouchableOpacity>
-          </View>
-
-          <View style={styles.notiItem_Status}>
-            <View
-              style={[
-                styles.notiItem_Status_ReadIcon,
-                {
-                  backgroundColor: '#FF6E35',
-                },
-              ]}></View>
-
-            <View style={styles.row}>
-              <Image source={require('../../assets/notiHistory.png')} />
-              <Text>&nbsp;9h</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.notiItem}
-          onPress={() => navigation.navigate('Homework')}>
-          <View style={styles.fadeItem}></View>
-
-          <View style={styles.notiItem_Icon}>
-            <Image source={require('../../assets/notiNhacnho.png')} />
-          </View>
-
-          <View style={styles.notiItem_Content}>
-            <Text style={styles.notiItem_Content_Title}>
-              Sắp đến hạn Bài tập 2, môn Phát triển web kinh doanh
-            </Text>
-            <TouchableOpacity
-              style={styles.notiItem_Content_Action}
-              onPress={() => navigation.navigate('Homework')}>
-              <Text
-                style={[
-                  styles.notiItem_Content_ActionText,
-                  {
-                    color: '#FF6E35',
-                  },
-                ]}>
-                Xem ngay
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.notiItem_Status}>
-            <View
-              style={[
-                styles.notiItem_Status_ReadIcon,
-                {
-                  backgroundColor: '#FF6E35',
-                  opacity: 0,
-                },
-              ]}></View>
-
-            <View style={styles.row}>
-              <Image source={require('../../assets/notiHistory.png')} />
-              <Text>&nbsp;20h</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.notiItem}
-          onPress={() => navigation.navigate('Homework')}>
-          <View style={styles.fadeItem}></View>
-
-          <View style={styles.notiItem_Icon}>
-            <Image source={require('../../assets/notiNhacnho.png')} />
-          </View>
-
-          <View style={styles.notiItem_Content}>
-            <Text style={styles.notiItem_Content_Title}>
-              Sắp đến hạn Data object, môn Phân tích thiết kế HTTT
-            </Text>
-            <TouchableOpacity
-              style={styles.notiItem_Content_Action}
-              onPress={() => navigation.navigate('Homework')}>
-              <Text
-                style={[
-                  styles.notiItem_Content_ActionText,
-                  {
-                    color: '#FF6E35',
-                  },
-                ]}>
-                Xem ngay
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.notiItem_Status}>
-            <View
-              style={[
-                styles.notiItem_Status_ReadIcon,
-                {
-                  backgroundColor: '#FF6E35',
-                  opacity: 0,
-                },
-              ]}></View>
-
-            <View style={styles.row}>
-              <Image source={require('../../assets/notiHistory.png')} />
-              <Text>&nbsp;20h</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <View style={styles.notiItem}>
-          <View style={styles.notiItem_Icon}>
-            <Image source={require('../../assets/notiCapnhat.png')} />
-          </View>
-
-          <View style={styles.notiItem_Content}>
-            <Text style={styles.notiItem_Content_Title}>
-              [UEL SPACE]- [UEL SPACE’S HALLOWEEN PARTY]
-            </Text>
-
-            <Text style={styles.notiItem_Content_Describe}>
-              Thân chào các bạn sinh viên, Chỉ còn ít ngày nữa thôi,
-              Halloween...
-            </Text>
-
-            <TouchableOpacity style={styles.notiItem_Content_Action}>
-              <Text
-                style={[
-                  styles.notiItem_Content_ActionText,
-                  {
-                    color: '#0065FF',
-                  },
-                ]}>
-                Startup and Language Space UEL
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.notiItem_Status}>
-            <View
-              style={[
-                styles.notiItem_Status_ReadIcon,
-                {
-                  backgroundColor: '#0065FF',
-                },
-              ]}></View>
-            <View style={styles.row}>
-              <Image source={require('../../assets/notiHistory.png')} />
-              <Text>&nbsp;1d</Text>
-            </View>
-          </View>
-        </View>
-
-        <TouchableOpacity
-          style={styles.notiItem}
-          onPress={() => navigation.navigate('Scoreboard')}>
-          <View style={styles.fadeItem}></View>
-          <View style={styles.notiItem_Icon}>
-            <Image source={require('../../assets/notiNhacnho.png')} />
-          </View>
-
-          <View style={styles.notiItem_Content}>
-            <Text style={styles.notiItem_Content_Title}>
-              Thông báo có điểm thi môn Hệ thống thông tin quản lý
-            </Text>
-            <TouchableOpacity
-              style={styles.notiItem_Content_Action}
-              onPress={() => navigation.navigate('ScoreBoard')}>
-              <Text
-                style={[
-                  styles.notiItem_Content_ActionText,
-                  {
-                    color: '#FF6E35',
-                  },
-                ]}>
-                Xem ngay
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.notiItem_Status}>
-            <View
-              style={[
-                styles.notiItem_Status_ReadIcon,
-                {
-                  backgroundColor: '#FF6E35',
-                  opacity: 0,
-                },
-              ]}></View>
-
-            <View style={styles.row}>
-              <Image source={require('../../assets/notiHistory.png')} />
-              <Text>&nbsp;2d</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <View style={styles.notiItem}>
-          <View style={styles.notiItem_Icon}>
-            <Image source={require('../../assets/notiCapnhat.png')} />
-          </View>
-
-          <View style={styles.notiItem_Content}>
-            <Text style={styles.notiItem_Content_Title}>
-              Về việc đóng học phí HK1 ( 2022 - 2023)
-            </Text>
-
-            <Text style={styles.notiItem_Content_Describe}>
-              Thân chào các bạn sinh viên, Phòng Tài chính đang thực hiện...
-            </Text>
-
-            <TouchableOpacity style={styles.notiItem_Content_Action}>
-              <Text
-                style={[
-                  styles.notiItem_Content_ActionText,
-                  {
-                    color: '#0065FF',
-                  },
-                ]}>
-                Phòng Tài chính UEL
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.notiItem_Status}>
-            <View
-              style={[
-                styles.notiItem_Status_ReadIcon,
-                {
-                  backgroundColor: '#0065FF',
-                },
-              ]}></View>
-            <View style={styles.row}>
-              <Image source={require('../../assets/notiHistory.png')} />
-              <Text>&nbsp;1d</Text>
-            </View>
-          </View>
-        </View>
+          )
+        })}
       </ScrollView>
     </View>
   );
@@ -350,6 +160,9 @@ const styles = StyleSheet.create({
   },
   notiItem_Content_Action: {
     paddingTop: 5,
+  },
+  notiItem_Content_ActionText: {
+    fontSize: 12,
   },
 
   notiItem_Status_ReadIcon: {
