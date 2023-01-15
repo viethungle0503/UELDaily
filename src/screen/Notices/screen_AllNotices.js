@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import {useEffect, useState} from 'react';
+import {Alert} from 'react-native';
 import {
   Image,
   View,
@@ -16,13 +16,15 @@ export default function Information({ navigation, route }) {
   useEffect(() => {
     if (allNotices.length == 0) {
       var allNoticesHolder = [...allNotices];
-      var trueUser = database_app.find(x => x.data.email == currentUser.data.email);
-      trueUser.data.notices.forEach((value) => {
+      var trueUser = database_app.find(
+        x => x.data.email == currentUser.data.email,
+      );
+      trueUser.data.notices.forEach(value => {
         allNoticesHolder.push(value);
-      })
+      });
       setAllNotices(allNoticesHolder);
     }
-  }, [allNotices])
+  }, [allNotices]);
   function navigateToHomeWork() {
     navigation.navigate('Homework', { initBy: route.name })
   }
@@ -58,7 +60,10 @@ export default function Information({ navigation, route }) {
               </View>
 
               <View style={styles.notiItem_Content}>
-                <Text style={styles.notiItem_Content_Title}>
+                <Text
+                  numberOfLines={4}
+                  ellipsizeMode="tail"
+                  style={styles.notiItem_Content_Title}>
                   {item.title}
                 </Text>
                 <TouchableOpacity
@@ -87,11 +92,11 @@ export default function Information({ navigation, route }) {
 
                 <View style={styles.row}>
                   <Image source={require('../../assets/notiHistory.png')} />
-                  <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
+                  <Text style={{color: 'red'}}>&nbsp;{time_gap}</Text>
                 </View>
               </View>
             </TouchableOpacity>
-          )
+          );
         })}
       </ScrollView>
     </View>
@@ -103,7 +108,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     paddingHorizontal: 14,
-
 
     // paddingTop: 10,
   },
