@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function WarningNotices({ navigation }) {
+export default function WarningNotices({ navigation,route }) {
   const [warningNotices, setWarningNotices] = useState([]);
   useEffect(() => {
     if (warningNotices.length == 0) {
@@ -22,6 +22,9 @@ export default function WarningNotices({ navigation }) {
       setWarningNotices(warningNoticesHolder);
     }
   }, [warningNotices])
+  function navigateToHomeWork() {
+    navigation.navigate('Homework', {initBy:route.name})
+  }
   return (
     <View style={styles.body}>
       <ScrollView style={styles.noti} showsVerticalScrollIndicator={false}>
@@ -42,7 +45,7 @@ export default function WarningNotices({ navigation }) {
             <TouchableOpacity
               style={styles.notiItem}
               key={item._id + index}
-              onPress={() => navigation.navigate('Homework')}>
+              onPress={() => navigateToHomeWork()}>
               <View style={styles.notiItem_Icon}>
                 <Image source={require('../../assets/notiNhacnho.png')} />
               </View>
@@ -53,7 +56,7 @@ export default function WarningNotices({ navigation }) {
                 </Text>
                 <TouchableOpacity
                   style={styles.notiItem_Content_Action}
-                  onPress={() => navigation.navigate('Homework')}>
+                  onPress={() => navigateToHomeWork()}>
                   <Text
                     style={[
                       styles.notiItem_Content_ActionText,

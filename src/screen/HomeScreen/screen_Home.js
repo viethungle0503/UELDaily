@@ -1,4 +1,4 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import Ctxh from './screen_Ctxh';
 import NewsDetail from './screen_NewsDetail';
 import Exam from './screen_Exam';
@@ -17,7 +17,7 @@ export default function Home() {
       <HomeStack.Screen
         name="HomeDisplay"
         component={HomeDisplay}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <HomeStack.Screen
         name="Schedule"
@@ -36,37 +36,50 @@ export default function Home() {
       <HomeStack.Screen
         name="Exam"
         component={Exam}
-        options={{title: 'Lịch thi'}}
+        options={{ title: 'Lịch thi' }}
       />
       <HomeStack.Screen
         name="Ctxh"
         component={Ctxh}
-        options={{title: 'Kiểm tra ngày CTXH'}}
+        options={{ title: 'Kiểm tra ngày CTXH' }}
       />
-      <HomeStack.Screen 
-        name="Homework" 
-        component={Homework} 
+      <HomeStack.Screen
+        name="Homework"
+        component={Homework}
         options={({ navigation, route }) => ({
           title: 'Bài tập LMS',
           headerLeft: props => (
-              <HeaderBackButton
-                  {...props}
-                  onPress={() => {
-                      navigation.goBack(null);
-                  }}
-              />
+            <HeaderBackButton
+              {...props}
+              onPress={() => {
+                if (route.params == undefined) {
+                  var initBy = ""
+                }
+                else {
+                  var { initBy } = route.params;
+                }
+                if (initBy != "") {
+                  navigation.goBack();
+                  navigation.navigate(initBy);
+                }
+                else {
+                  navigation.goBack();
+                }
+
+              }}
+            />
           )
-      })}
+        })}
       />
       <HomeStack.Screen
         name="Tuition"
         component={Tuition}
-        options={{title: 'Học phí'}}
+        options={{ title: 'Học phí' }}
       />
       <HomeStack.Screen
         name="NewsDetail"
         component={NewsDetail}
-        options={{title: 'Thông tin chi tiết'}}
+        options={{ title: 'Thông tin chi tiết' }}
       />
     </HomeStack.Navigator>
   );
