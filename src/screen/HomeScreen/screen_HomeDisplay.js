@@ -6,20 +6,19 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
-
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { render, WebView } from 'react-native-webview';
+import {render, WebView} from 'react-native-webview';
 
 import React from 'react';
-import { useState } from 'react';
+import {useState} from 'react';
 
-export default function HomeDisplay({ navigation }) {
+export default function HomeDisplay({navigation}) {
   const [openLanguage, setOpenLanguage] = useState(false);
 
   const [selectLanguageVie, setselectLanguageVie] = useState(false);
   const clickLanguageVie = () => {
-    // selectLanguageEng ? 
+    // selectLanguageEng ?
     setselectLanguageVie(!selectLanguageVie);
   };
 
@@ -28,19 +27,26 @@ export default function HomeDisplay({ navigation }) {
     setselectLanguageEng(!selectLanguageEng);
   };
 
-
   const news = news_UEL.map((item, index) => (
     <TouchableOpacity
       style={styles.row}
       key={index}
       onPress={() => {
-        navigation.navigate('NewsDetail', { link: item.link });
+        navigation.navigate('NewsDetail', {link: item.link});
       }}>
-      <Image style={styles.hoatdongImage} source={{ uri: item.imageURL }} />
+      <Image style={styles.hoatdongImage} source={{uri: item.imageURL}} />
       <View style={styles.contentMain}>
-        <Text style={styles.hoatdongTitle}>{item.title}</Text>
+        <Text
+          style={styles.hoatdongTitle}
+          numberOfLines={3}
+          ellipsizeMode="tail">
+          {item.title}
+        </Text>
         <View style={styles.timeBlock}>
-          <Image source={require('../../assets/clock.png')} />
+          <Image
+            style={styles.iconTime}
+            source={require('../../assets/clock.png')}
+          />
           <Text style={styles.hoatdongTime}>{item.time.slice(1, 11)}</Text>
         </View>
       </View>
@@ -53,7 +59,7 @@ export default function HomeDisplay({ navigation }) {
         <View style={styles.studentwelcome}>
           <Image
             style={styles.studentAvatar}
-            source={{ uri: currentUser.data.profileImage }}
+            source={{uri: currentUser.data.profileImage}}
           />
           <View>
             {currentUser ? (
@@ -67,7 +73,7 @@ export default function HomeDisplay({ navigation }) {
           <TouchableOpacity
             style={styles.btnLanguage}
             onPress={() => {
-              setOpenLanguage(true)
+              setOpenLanguage(true);
             }}>
             <MaterialCommunityIcons
               style={styles.svgLanguage}
@@ -77,29 +83,26 @@ export default function HomeDisplay({ navigation }) {
           </TouchableOpacity>
 
           {/* modal chọn ngôn ngữ */}
-          <Modal
-            visible={openLanguage}
-            transparent={true}>
-
-            <View style={styles.langBackground} >
-
+          <Modal visible={openLanguage} transparent={true}>
+            <View style={styles.langBackground}>
               <View style={styles.langContainer}>
-
                 <Text style={styles.accountHeading}>Chọn ngôn ngữ</Text>
 
                 <TouchableOpacity
                   onPressIn={clickLanguageVie}
-                  style={selectLanguageVie ?
-                    styles.langNation_Vie :
-                    [styles.langNation_Vie,
-                    {
-                      backgroundColor: 'rgb(210, 230, 255)',
-                      borderColor: '#0065FF',
-                      borderWidth: 1,
+                  style={
+                    selectLanguageVie
+                      ? styles.langNation_Vie
+                      : [
+                          styles.langNation_Vie,
+                          {
+                            backgroundColor: 'rgb(210, 230, 255)',
+                            borderColor: '#0065FF',
+                            borderWidth: 1,
 
-                      borderRadius: 5,
-                    }
-                    ]
+                            borderRadius: 5,
+                          },
+                        ]
                   }>
                   <View style={styles.row}>
                     <Image
@@ -108,36 +111,37 @@ export default function HomeDisplay({ navigation }) {
                     />
 
                     <Text style={styles.accountText}>Tiếng Việt</Text>
-
                   </View>
                   <Image
-                    style={selectLanguageVie ?
-                      styles.langSelectNationIcon :
-                      [styles.langSelectNationIcon,
-                      {
-                        opacity: 1,
-                      }
-                      ]}
+                    style={
+                      selectLanguageVie
+                        ? styles.langSelectNationIcon
+                        : [
+                            styles.langSelectNationIcon,
+                            {
+                              opacity: 1,
+                            },
+                          ]
+                    }
                     source={require('../../assets/account_lang_check.png')}
-
                   />
-
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   onPressIn={clickLanguageEng}
-                  style={selectLanguageEng ?
-                    styles.langNation_Eng :
-                    [styles.langNation_Eng,
-                    {
-                      backgroundColor: 'rgb(210, 230, 255)',
-                      borderColor: '#0065FF',
-                      borderWidth: 1,
-                      borderRadius: 5,
-                    }
-                    ]
+                  style={
+                    selectLanguageEng
+                      ? styles.langNation_Eng
+                      : [
+                          styles.langNation_Eng,
+                          {
+                            backgroundColor: 'rgb(210, 230, 255)',
+                            borderColor: '#0065FF',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                          },
+                        ]
                   }>
-
                   <View style={styles.row}>
                     <Image
                       source={require('../../assets/account_lang_eng.png')}
@@ -145,36 +149,33 @@ export default function HomeDisplay({ navigation }) {
                     />
 
                     <Text style={styles.accountText}>Tiếng Anh</Text>
-
                   </View>
 
                   <Image
-                    style={selectLanguageEng ?
-                      styles.langSelectNationIcon :
-                      [styles.langSelectNationIcon,
-                      {
-                        opacity: 1,
-                      }
-                      ]}
+                    style={
+                      selectLanguageEng
+                        ? styles.langSelectNationIcon
+                        : [
+                            styles.langSelectNationIcon,
+                            {
+                              opacity: 1,
+                            },
+                          ]
+                    }
                     source={require('../../assets/account_lang_check.png')}
-
                   />
-
-
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   style={styles.langFooter_ButtonClose}
                   onPress={() => setOpenLanguage(false)}>
                   <Text
-                    style={{ color: '#FFF', fontSize: 16, fontWeight: '600' }}>
+                    style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
                     Xác nhận
                   </Text>
                 </TouchableOpacity>
-
               </View>
             </View>
-
           </Modal>
 
           {/* modal chọn ngôn ngữ */}
@@ -189,7 +190,7 @@ export default function HomeDisplay({ navigation }) {
           <Text style={styles.tienichText}>Tiện ích</Text>
           <TouchableOpacity style={styles.btnAllTienich}>
             <MaterialCommunityIcons name={'tune-variant'} size={12} />
-            <Text style={{ color: 'black', marginLeft: 5 }}>Tất cả</Text>
+            <Text style={{color: 'black', marginLeft: 5}}>Tất cả</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.col}>
@@ -448,7 +449,11 @@ const styles = StyleSheet.create({
   },
   hoatdongTime: {
     marginLeft: 5,
-    color: 'red'
+    color: '#938F8F',
+  },
+  iconTime: {
+    width: 16,
+    height: 16,
   },
   hoatdongImage: {
     width: 110,
