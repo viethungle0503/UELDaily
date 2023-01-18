@@ -1,4 +1,3 @@
-import { current } from '@reduxjs/toolkit';
 import {
   Image,
   View,
@@ -7,12 +6,13 @@ import {
   Button,
   TouchableOpacity,
   ScrollView,
+  TouchableWithoutFeedback
 } from 'react-native';
 import { useState, useRef } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useEffect,  } from 'react';
+import { useEffect,useCallback  } from 'react';
 import {useDispatch} from 'react-redux';
-import { Picker } from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import {
   setScoreBoard,
   setScoreBoardByYear,
@@ -20,13 +20,38 @@ import {
 } from '../../redux_toolkit/userSlice';
 export default function ScoreBoard({ navigation }) {
   const dispatch = useDispatch();
+  const [openYear, setOpenYear] = useState(false);
+  const [valueYear, setValueYear] = useState(null);
+  const [itemsYear, setItemsYear] = useState([
+    { label: 'Tất cả', value: '0' },
+    { label: 'Năm 1', value: '1' },
+    { label: 'Năm 2', value: '2' },
+    { label: 'Năm 3', value: '3' },
+    { label: 'Năm 4', value: '4' },
+  ]);
+  const onYearOpen = useCallback(() => {
+    setOpenSemester(false);
+  }, []);
+  const [openSemester, setOpenSemester] = useState(false);
+  const [valueSemester, setValueSemester] = useState(null);
+  const [itemsSemester, setItemsSemester] = useState([
+    { label: 'Tất cả', value: '0' },
+    { label: 'Học kỳ 1', value: '1' },
+    { label: 'Học kỳ 2', value: '2' },
+    { label: 'Học kỳ hè', value: '3' },
+  ]);
+  const onSemesterOpen = useCallback(() => {
+    setOpenYear(false);
+  }, []);
+  const [year, setYear] = useState(currentUser.data.currentYear)
+  const [semester, setSemester] = useState(currentUser.data.currentSemester);
+  // Barrier
   const [mediumScore, setMediumScore] = useState(0);
   const [passedCredit, setPassedCredit] = useState(0);
   const [credit, setCredit] = useState(0);
-  const [year, setYear] = useState(0)
-  const [semester, setSemester] = useState(0);
   function changeView(xyear = 0, xsemester = 0) {
     dispatch(setScoreBoard(currentUser.data.scoreboard));
+    console.log("done")
     if (xyear != 0) {
       dispatch(setScoreBoardByYear(xyear));
     }
@@ -34,13 +59,6 @@ export default function ScoreBoard({ navigation }) {
       dispatch(setScoreBoardBySemester(xsemester));
     }
   };
-  const pickerRef = useRef();
-  function openPicker() {
-    pickerRef.current.focus();
-  }
-  function closePicker() {
-    pickerRef.current.blur();
-  }
   var temp1 = 0;
   var temp2 = 0;
   var temp3 = 0;
@@ -57,55 +75,100 @@ export default function ScoreBoard({ navigation }) {
     temp3 = 0;
   },[scoreBoard])
   return (
-    <View style={styles.body}>
+
+          <View style={styles.body}>
       {/* Selection */}
       <View style={styles.fixItem}>
         <View style={styles.scoreHeader_Sort}>
-          <View style={styles.btnSort}>
-            <Picker
-              style={styles.btnSort_Text}
-              dropdownIconColor='#0065FF'
-              prompt="Chọn năm học"
-              mode='dropdown'
-              ref={pickerRef}
-              selectedValue={year}
-              onValueChange={(itemValue) => {
+        <DropDownPicker
+              open={openYear}
+              value={valueYear}
+              items={itemsYear}
+              setOpen={setOpenYear}
+              setValue={setValueYear}
+              setItems={setItemsYear}
+              defaultNull
+              labelStyle={styles.btnSort_Text}
+              placeholder='Năm học'
+              placeholderStyle={styles.btnSort_Text}
+              style={styles.btnSort}
+              containerStyle={styles.btnSortContainer}
+              onChangeValue={(itemValue) => {
                 setYear(itemValue);
                 changeView(itemValue,semester);
-              }
-              }>
-              <Picker.Item label='Tất cả' value={0} />
-              <Picker.Item label='Năm nhất' value={1} />
-              <Picker.Item label='Năm hai' value={2} />
-              <Picker.Item label='Năm ba' value={3} />
-              <Picker.Item label='Năm bốn' value={4} />
-            </Picker>
-          </View>
+              }}
+              dropDownMaxHeight={240}
+              dropDownContainerStyle={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
+              closeOnBackPressed={true}
+              onOpen={onYearOpen}
+              ArrowDownIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconDown.png')}
+                  />
+                );
+              }}
+              ArrowUpIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconUp.png')}
+                  />
+                );
+              }}
+            />
 
-          <View style={styles.btnSort}>
-            <Picker
-              style={styles.btnSort_Text}
-              prompt="Chọn học kỳ"
-              dropdownIconColor='#0065FF'
-              mode='dropdown'
-              ref={pickerRef}
-              selectedValue={semester}
-              onValueChange={(itemValue) => {
+            <DropDownPicker
+              open={openSemester}
+              value={valueSemester}
+              items={itemsSemester}
+              setOpen={setOpenSemester}
+              setValue={setValueSemester}
+              setItems={setItemsSemester}
+              defaultNull
+              labelStyle={styles.btnSort_Text}
+              placeholder='Học kỳ'
+              placeholderStyle={styles.btnSort_Text}
+              style={styles.btnSort}
+              containerStyle={styles.btnSortContainer}
+              onChangeValue={(itemValue) => {
                 setSemester(itemValue);
                 changeView(year,itemValue);
-              }
-              }>
-              <Picker.Item label='Tất cả' value={0} />
-              <Picker.Item label='Học kỳ 1' value={1} />
-              <Picker.Item label='Học kỳ 2' value={2} />
-              <Picker.Item label='Học kỳ hè' value={3} />
-            </Picker>
-          </View>
+              }}
+              closeOnBackPressed={true}
+              onOpen={onSemesterOpen}
+              ArrowDownIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconDown.png')}
+                  />
+                );
+              }}
+              ArrowUpIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconUp.png')}
+                  />
+                );
+              }}
+            />
         </View>
       </View>
       {/* Selection */}
 
       {/* Main Content */}
+      <TouchableWithoutFeedback onPress={() => {
+
+      if (openSemester) {
+        setOpenSemester(false)
+      }
+      if (openYear) {
+        setOpenYear(false);
+      }
+    }}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.dashboard}>
           <Text style={styles.dashboardHeader}>Điểm trung bình toàn khóa</Text>
@@ -244,7 +307,9 @@ export default function ScoreBoard({ navigation }) {
         }
       </ScrollView>
       {/* Main Content */}
+      </TouchableWithoutFeedback>
     </View>
+    
   );
 }
 
@@ -451,17 +516,26 @@ const styles = StyleSheet.create({
   },
   btnSort: {
     borderColor: '#0065FF',
-    borderStyle: 'solid',
-    borderRadius: 8,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
     borderWidth: 1,
+    borderStyle: 'solid',
     backgroundColor: 'transparent',
-    marginLeft: 10,
-    width: 150,
+    marginRight: 50
+  },
+  btnSortContainer: {
+    width: 120,
+    height: 30,
+    marginRight: 10,
+    marginBottom: 10
   },
   btnSort_Text: {
     color: '#0065FF',
+    fontSize: 15,
+    fontFamily: "Roboto"
   },
-
   effect: {
     position: 'absolute',
     right: 0,

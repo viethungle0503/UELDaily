@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Image,
   View,
@@ -14,7 +14,7 @@ import { setNews_Departments } from '../../redux_toolkit/newsSlice';
 import LinearGradient from 'react-native-linear-gradient';
 export default function MediaNoti({ navigation, route }) {
   const dispatch = useDispatch();
-  var { searchUrl, uri, name } = route.params
+  var { searchUrl, uri, name} = route.params
   const cheerio = require('cheerio');
   const [bigPictureNews, setBigPictureNews] = useState([]);
   const [smallPictureNews, setSmallPictureNews] = useState([]);
@@ -41,12 +41,12 @@ export default function MediaNoti({ navigation, route }) {
     });
     dispatch(setNews_Departments({ data: global.tempArray, identifier: searchUrl }));
   };
-  var index = global.news_Departments.findIndex(x => x.identifier == searchUrl);
+  const index = global.news_Departments.findIndex(x => x.identifier == searchUrl);
   if (index == -1) {
     loadGraphicCards(searchUrl);
   }
   useEffect(() => {
-    setTimeout(() => {
+    let timer = setTimeout(() => {
       var newbigPicture = [...bigPictureNews];
       var newsmallPicture = [...smallPictureNews];
       var trueNews = global.news_Departments.find(x => x.identifier == searchUrl);
@@ -65,11 +65,14 @@ export default function MediaNoti({ navigation, route }) {
       setBigPictureNews(newbigPicture);
       setSmallPictureNews(newsmallPicture);
       setReady(true);
-    }, 100);
+    }, 1000);
+    return () => clearTimeout(timer)
   }, [ready]);
   return (
     <ScrollView style={styles.body}>
-      <ScrollView style={styles.mediaNoti_Lastest} horizontal={true} showsHorizontalScrollIndicator={false}>
+
+      {ready ? (<>
+      {bigPictureNews.length == 0 ? (<></>) : (        <ScrollView style={styles.mediaNoti_Lastest} horizontal={true} showsHorizontalScrollIndicator={false}>
         {bigPictureNews.map((item, index) => {
           return (
             <TouchableOpacity style={styles.lastestItem} key={item.link + index}
@@ -112,7 +115,7 @@ export default function MediaNoti({ navigation, route }) {
             </TouchableOpacity>
           )
         })}
-      </ScrollView>
+      </ScrollView>)}
       <View style={styles.mediaNoti_All}>
         <Text style={styles.mediaNotiHeader}>Tổng hợp</Text>
         {smallPictureNews.map((item, index) => {
@@ -140,7 +143,7 @@ export default function MediaNoti({ navigation, route }) {
             </TouchableOpacity>
           )
         })}
-      </View>
+      </View></>) : (<Text>Loading</Text>)}
     </ScrollView>
   );
 }

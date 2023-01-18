@@ -13,9 +13,6 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Picker } from '@react-native-picker/picker';
-import { useEffect } from 'react';
-import { color } from 'react-native-reanimated';
 
 export default function Tuition() {
 

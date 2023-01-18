@@ -6,77 +6,189 @@ import {
   Button,
   TouchableOpacity,
   ScrollView,
+  TouchableWithoutFeedback,
+
 } from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
 
-export default function Exam({navigation}) {
+import { FlatList } from 'react-native-gesture-handler';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { useCallback, useEffect, useState } from 'react';
 
-  let temp = currentUser.data.test_schedules;
-  const exam_schedule = [];
-  for (key in temp) {
-    exam_schedule.push(temp[key]);
+
+export default function Exam({ navigation }) {
+  const [openYear, setOpenYear] = useState(false);
+  const [valueYear, setValueYear] = useState(null);
+  const [itemsYear, setItemsYear] = useState([
+    { label: 'Năm 1', value: '1' },
+    { label: 'Năm 2', value: '2' },
+    { label: 'Năm 3', value: '3' },
+    { label: 'Năm 4', value: '4' },
+  ]);
+  const onYearOpen = useCallback(() => {
+    setOpenSemester(false);
+  }, []);
+  const [openSemester, setOpenSemester] = useState(false);
+  const [valueSemester, setValueSemester] = useState(null);
+  const [itemsSemester, setItemsSemester] = useState([
+    { label: 'Học kỳ 1', value: '1' },
+    { label: 'Học kỳ 2', value: '2' },
+    { label: 'Học kỳ hè', value: '5' },
+  ]);
+  const onSemesterOpen = useCallback(() => {
+    setOpenYear(false);
+  }, []);
+  const [year, setYear] = useState(currentUser.data.currentYear)
+  const [semester, setSemester] = useState(currentUser.data.currentSemester);
+  function changeView(year, semester) {
+    let examScheduleHolder = currentUser.data.test_schedules.filter(x => x.year_type == year && x.semester_type == semester);
+    setExamSchedule(examScheduleHolder);
   }
+  const [ready, setReady] = useState(null)
+  const [examSchedule, setExamSchedule] = useState([]);
+  useEffect(() => {
+    if (examSchedule.length == 0) {
+      setValueYear(currentUser.data.currentYear);
+      setValueSemester(currentUser.data.currentSemester);
+      let testSchedules = currentUser.data.test_schedules.filter(x => x.year_type == year && x.semester_type == semester);
+      var examScheduleHolder = [...examSchedule];
+      for (key in testSchedules) {
+        examScheduleHolder.push(testSchedules[key]);
+      }
+      setExamSchedule(examScheduleHolder);
+    }
+  }, []);
   return (
-    <View style={styles.body}>
-      <View style={styles.fixItem}>
-        <View style={styles.lichthiHeader_Sort}>
-          <TouchableOpacity style={styles.btnSort}>
-            <Text style={styles.btnSort_Text}>Năm học</Text>
-            <Image
-              style={styles.examIcon}
-              source={require('../../assets/btnSortIcon.png')}
+    <TouchableWithoutFeedback onPress={() => {
+      if (openSemester) {
+        setOpenSemester(false)
+      }
+      if (openYear) {
+        setOpenYear(false);
+      }
+    }}>
+      <View style={styles.body}>
+        <View style={styles.fixItem}>
+          <View style={styles.examScheduleHeader_Sort}>
+            <DropDownPicker
+              open={openYear}
+              value={valueYear}
+              items={itemsYear}
+              setOpen={setOpenYear}
+              setValue={setValueYear}
+              setItems={setItemsYear}
+              defaultNull
+              labelStyle={styles.btnSort_Text}
+              placeholder='Năm học'
+              placeholderStyle={styles.btnSort_Text}
+              style={styles.btnSort}
+              containerStyle={styles.btnSortContainer}
+              onChangeValue={(item) => {
+                setYear(item);
+                changeView(item, semester)
+              }}
+              dropDownMaxHeight={240}
+              dropDownContainerStyle={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
+              closeOnBackPressed={true}
+              onOpen={onYearOpen}
+              ArrowDownIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconDown.png')}
+                  />
+                );
+              }}
+              ArrowUpIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconUp.png')}
+                  />
+                );
+              }}
             />
-          </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btnSort}>
-            <Text style={styles.btnSort_Text}>Học kỳ</Text>
-            <Image
-              style={styles.examIcon}
-              source={require('../../assets/btnSortIcon.png')}
+            <DropDownPicker
+              open={openSemester}
+              value={valueSemester}
+              items={itemsSemester}
+              setOpen={setOpenSemester}
+              setValue={setValueSemester}
+              setItems={setItemsSemester}
+              defaultNull
+              labelStyle={styles.btnSort_Text}
+              placeholder='Học kỳ'
+              placeholderStyle={styles.btnSort_Text}
+              style={styles.btnSort}
+              containerStyle={styles.btnSortContainer}
+              onChangeValue={(item) => {
+                setSemester(item);
+                changeView(year, item)
+              }}
+              closeOnBackPressed={true}
+              onOpen={onSemesterOpen}
+              ArrowDownIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconDown.png')}
+                  />
+                );
+              }}
+              ArrowUpIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconUp.png')}
+                  />
+                );
+              }}
             />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        style={styles.monthi}
-        data={exam_schedule}
-        renderItem={({item}) => (
-          <View style={styles.monthi_Item}>
-            <View style={styles.monthi_Item_Markup}></View>
-            <Text style={styles.monthi_Item__SubjectName}>
-              {item.course_name}
-            </Text>
-
-            <View style={styles.monthi_Item__Detail}>
-              <Image
-                style={styles.examIcon}
-                source={require('../../assets/ngaythi.png')}></Image>
-              <Text style={styles.monthi_Item__DetailTitle}> Ngày thi: </Text>
-              <Text style={styles.monthi_Item__DetailData}>{item.date}</Text>
-            </View>
-
-            <View style={styles.monthi_Item__Detail}>
-              <Image
-                style={styles.examIcon}
-                source={require('../../assets/thoigianthi.png')}></Image>
-              <Text style={styles.monthi_Item__DetailTitle}> Thời gian: </Text>
-              <Text style={styles.monthi_Item__DetailData}>{item.time}</Text>
-            </View>
-
-            <View style={styles.monthi_Item__Detail}>
-              <Image
-                style={styles.examIcon}
-                source={require('../../assets/phongthi.png')}></Image>
-              <Text style={styles.monthi_Item__DetailTitle}> Phòng thi: </Text>
-              <Text style={styles.monthi_Item__DetailData}>{item.room}</Text>
-            </View>
           </View>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
-    </View>
+        </View>
+
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          style={styles.monthi}
+          data={examSchedule}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.monthi_Item}>
+                <View style={styles.monthi_Item_Markup}></View>
+                <Text style={styles.monthi_Item__SubjectName}>
+                  {item.course_name}
+                </Text>
+
+                <View style={styles.monthi_Item__Detail}>
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/ngaythi.png')}></Image>
+                  <Text style={styles.monthi_Item__DetailTitle}> Ngày thi: </Text>
+                  <Text style={styles.monthi_Item__DetailData}>{item.date}</Text>
+                </View>
+
+                <View style={styles.monthi_Item__Detail}>
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/thoigianthi.png')}></Image>
+                  <Text style={styles.monthi_Item__DetailTitle}> Thời gian: </Text>
+                  <Text style={styles.monthi_Item__DetailData}>{item.time}</Text>
+                </View>
+
+                <View style={styles.monthi_Item__Detail}>
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/phongthi.png')}></Image>
+                  <Text style={styles.monthi_Item__DetailTitle}> Phòng thi: </Text>
+                  <Text style={styles.monthi_Item__DetailData}>{item.room}</Text>
+                </View>
+              </View>
+            )
+          }}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -98,8 +210,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     paddingHorizontal: 10,
-    // marginBottom: 0,
-    marginBottom: 50, 
+    marginBottom: 50,
   },
   examIcon: {
     width: 16,
@@ -110,7 +221,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 15,
     paddingVertical: 15,
-
     marginBottom: 10,
 
     position: 'relative',
@@ -126,7 +236,6 @@ const styles = StyleSheet.create({
   },
   monthi_Item_Markup: {
     // viền màu cam
-
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -158,64 +267,39 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
 
-  col: {
-    display: 'flex',
-    flexDirection: 'column',
-    // alignItems: 'flex-start',
-    justifyContent: 'space-around',
-  },
   row: {
     display: 'flex',
-    // flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'flex-start',
     marginTop: 12,
     marginRight: 10,
-    // overflow: 'hidden'
   },
-  lichthiHeader: {
+  examScheduleHeader_Sort: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  lichthiHeader_Text: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#252525',
-    paddingVertical: 5,
-  },
-  lichthiHeader_Sort: {
-    display: 'flex',
-    flexDirection: 'row',
-
     justifyContent: 'flex-end',
   },
   btnSort: {
     borderColor: '#0065FF',
-    borderRadius: 8,
-
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
     borderWidth: 1,
     borderStyle: 'solid',
     backgroundColor: 'transparent',
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    marginLeft: 10,
-
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginRight: 50
+  },
+  btnSortContainer: {
+    width: 120,
+    height: 30,
+    marginRight: 10,
+    marginBottom: 10
   },
   btnSort_Text: {
     color: '#0065FF',
-    paddingRight: 7,
-  },
-
-  effect: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-
-    zIndex: 2,
+    fontSize: 15,
+    fontFamily: "Roboto"
   },
 });
