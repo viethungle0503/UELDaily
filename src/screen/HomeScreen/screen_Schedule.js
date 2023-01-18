@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-import {Agenda} from 'react-native-calendars';
-import {LocaleConfig} from 'react-native-calendars';
+import {Calendar, CalendarList, Agenda, LocaleConfig} from 'react-native-calendars';
 
 LocaleConfig.locales['vi'] = {
   monthNames: [
@@ -42,7 +41,7 @@ LocaleConfig.locales['vi'] = {
     'Thứ bảy',
   ],
   dayNamesShort: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
-  today: "Aujourd'hui",
+  today: "Hôm nay",
 };
 LocaleConfig.defaultLocale = 'vi';
 // Get current date
@@ -162,7 +161,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderColor: 'rgba(255, 204, 179, 0.4);',
     paddingLeft: 10,
-    // backgroundColor: 'red',
     marginRight: 10,
     marginTop: 30,
     minHeight: 114,

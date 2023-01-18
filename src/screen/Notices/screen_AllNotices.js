@@ -53,6 +53,7 @@ export default function Information({ navigation, route }) {
               style={styles.notiItem}
               key={item._id + index}
               onPress={(item.type == 0) ? (() => navigateToHomeWork()) : (() => console.log("gg"))}>
+                {item.seen ? <></> : <View style={styles.fadeItem}></View>}
               <View style={styles.notiItem_Icon}>
                 {(item.type == 0) ?
                   (<Image source={require('../../assets/notiNhacnho.png')} />) :
