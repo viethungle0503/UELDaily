@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react';
-import {Alert} from 'react-native';
+import { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 import {
   Image,
   View,
@@ -53,7 +53,7 @@ export default function Information({ navigation, route }) {
               style={styles.notiItem}
               key={item._id + index}
               onPress={(item.type == 0) ? (() => navigateToHomeWork()) : (() => console.log("gg"))}>
-                {item.seen ? <></> : <View style={styles.fadeItem}></View>}
+              {item.seen ? <></> : <View style={styles.fadeItem}></View>}
               <View style={styles.notiItem_Icon}>
                 {(item.type == 0) ?
                   (<Image source={require('../../assets/notiNhacnho.png')} />) :
@@ -83,17 +83,16 @@ export default function Information({ navigation, route }) {
               </View>
 
               <View style={styles.notiItem_Status}>
-                <View
-                  style={[
-                    styles.notiItem_Status_ReadIcon,
-                    {
-                      backgroundColor: '#FF6E35',
-                    },
-                  ]}></View>
-
+                  <View
+                    style={[
+                      styles.notiItem_Status_ReadIcon,
+                      {
+                        backgroundColor: !item.seen ? '#ffffff':(item.type == 0 ? '#FF6E35' : '#0065FF'),
+                      },
+                    ]}></View>
                 <View style={styles.row}>
                   <Image source={require('../../assets/notiHistory.png')} />
-                  <Text style={{color: 'red'}}>&nbsp;{time_gap}</Text>
+                  <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
                 </View>
               </View>
             </TouchableOpacity>

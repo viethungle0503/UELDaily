@@ -8,9 +8,9 @@ import { Image } from 'react-native';
 
 // Screen
 import Home from './screen/HomeScreen/screen_Home';
-import Services from './screen/screen_Services';
 import News from './screen/screen_News';
-import Information from './screen/screen_Information';
+import Notifications from './screen/screen_Notifications';
+import Profile from './screen/screen_Profile';
 import Login from './screen/screen_Login';
 import PreLogin1 from './screen/screen_PreLogin1';
 import PreLogin2 from './screen/screen_PreLogin2';
@@ -45,6 +45,15 @@ const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
 
 function Tabs() {
+  var tabBarBadge = 3;
+  var trueUser = database_app.find(
+    x => x.data.email == currentUser.data.email,
+  );
+  trueUser.data.notices.forEach(value => {
+    if(value.seen == false) {
+      tabBarBadge += 1;
+    }
+  });
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -55,16 +64,16 @@ function Tabs() {
             labelName = 'Trang chủ';
             size = focused ? 11 : 0;
             tintColor = focused ? '#0065FF' : 'gray';
-          } else if (route.name === 'Services') {
-            labelName = 'Cập nhật';
+          } else if (route.name === 'News') {
+            labelName = 'Tin tức';
             size = focused ? 11 : 0;
             tintColor = focused ? '#0065FF' : 'gray';
-          } else if (route.name === 'Information') {
+          } else if (route.name === 'Notifications') {
             labelName = 'Thông báo';
             size = focused ? 11 : 0;
             tintColor = focused ? '#0065FF' : 'gray';
           } else if (route.name === 'Profile') {
-            labelName = 'Profile';
+            labelName = 'Thông tin cá nhân';
             size = focused ? 11 : 0;
             tintColor = focused ? '#0065FF' : 'gray';
           }
@@ -85,10 +94,10 @@ function Tabs() {
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
             size = focused ? 22 : 25;
-          } else if (route.name === 'Services') {
+          } else if (route.name === 'News') {
             iconName = 'earth';
             size = focused ? 22 : 25;
-          } else if (route.name === 'Information') {
+          } else if (route.name === 'Notifications') {
             iconName = focused ? 'bell' : 'bell-outline';
             size = focused ? 22 : 25;
           } else if (route.name === 'Profile') {
@@ -109,15 +118,15 @@ function Tabs() {
         }
       })}>
       <Tab.Screen name="Home" component={Home} options={{}} />
-      <Tab.Screen name="Services" component={Services} options={{}} />
+      <Tab.Screen name="News" component={News} options={{}} />
       <Tab.Screen
-        name="Information"
-        component={Information}
+        name="Notifications"
+        component={Notifications}
         options={{
-          tabBarBadge: 3,
+          tabBarBadge: tabBarBadge,
         }}
       />
-      <Tab.Screen name="Profile" component={News} options={{}} />
+      <Tab.Screen name="Profile" component={Profile} options={{}} />
     </Tab.Navigator>
   );
 }

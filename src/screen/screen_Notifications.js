@@ -18,7 +18,7 @@ import UpdateNotices from './Notices/screen_UpdateNotices';
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function Information({navigation}) {
+export default function Notifications({navigation}) {
   return (
     <Tab.Navigator
       initialRouteName="AllNotices"
