@@ -8,13 +8,17 @@ import {
     ScrollView,
     Modal,
 } from 'react-native';
-import MediaNoti from './screen_MediaNoti';
+import {MediaNoti, MediaNoti1} from './screen_MediaNoti';
 import MediaContact from './screen_MediaContact'
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 const Tab = createMaterialTopTabNavigator();
 export default function MediaModal({ navigation,route }) {
     var {name,searchUrl, email,phone,website,fanpage,uri} =  route.params;
+    var ready = false;
+    if(global.news_Departments.findIndex(x => x.identifier == searchUrl) != -1) {
+        ready = true;
+    };
     return (
         <View style={styles.modalContainer}>
             <Image
@@ -58,7 +62,7 @@ export default function MediaModal({ navigation,route }) {
                 <Tab.Screen
                     style={styles.notiHeader_Sort_btnActive}
                     name="MediaNoti"
-                    component={MediaNoti}
+                    component={ready ? MediaNoti1 : MediaNoti}
                     initialParams={{searchUrl:searchUrl,uri:uri,name:name}}
                     options={{
                         tabBarLabel: 'Thông báo',
