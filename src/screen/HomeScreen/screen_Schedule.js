@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {Calendar, CalendarList, Agenda, LocaleConfig} from 'react-native-calendars';
+import React, { useEffect, useState } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Agenda, LocaleConfig } from 'react-native-calendars';
+import { Card, Avatar } from 'react-native-paper';
 
 LocaleConfig.locales['vi'] = {
   monthNames: [
@@ -44,117 +45,139 @@ LocaleConfig.locales['vi'] = {
   today: "Hôm nay",
 };
 LocaleConfig.defaultLocale = 'vi';
-// Get current date
-const getCurrentDate = () => {
-  var date = new Date().getDate();
-  var month = new Date().getMonth() + 1;
-  var year = new Date().getFullYear();
+function getToday() {
+  var today = new Date();
+  var date = today.getDate();
+  var month = today.getMonth() + 1;
+  var year = today.getFullYear();
   return year + '-' + month + '-' + date;
-};
-export default class Schedule extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      items: {},
-    };
+}
+function minDate(weeks = 2) {
+  var today = new Date();
+  var timestamp = today.getTime() -  (weeks * 24 * 60 * 60 * 1000 * 7);
+  today = new Date(timestamp);
+  return today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+}
+function maxDate(weeks = 2) {
+  var today = new Date();
+  var timestamp = today.getTime() +  (weeks * 24 * 60 * 60 * 1000 * 7);
+  today = new Date(timestamp);
+  return today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+}
+function objectLength(obj) {
+  var result = 0;
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      // or Object.prototype.hasOwnProperty.call(obj, prop)
+      result++;
+    }
   }
-
-  render() {
-    return (
-      <Agenda
-        // showClosingKnob={true}
-        style={styles.container}
-        items={this.state.items}
-        loadItemsForMonth={this.loadItems.bind(this)}
-        selected={getCurrentDate()}
-        renderItem={this.renderItem.bind(this)}
-        renderEmptyDate={this.renderEmptyDate.bind(this)}
-        rowHasChanged={this.rowHasChanged.bind(this)}
-        theme={{
-          agendaDayTextColor: '#FF6E35',
-          agendaDayNumColor: '#FF6E35',
-          agendaTodayColor: '#FF6E35',
-          agendaKnobColor: '#D9D9D9',
-          indicatorColor: '#3384FF',
-          arrowColor: 'red',
-          selectedDayBackgroundColor: '#3384FF',
-          calendarBackground: '#ffffff',
-          textDayHeaderFontWeight: 'bold',
-          textSectionTitleColor: 'black',
-        }}
-      />
-    );
-  }
-
-  loadItems(day) {
+  return result;
+}
+const Schedule = () => {
+  const [items, setItems] = useState({});
+  const loadItems = (day) => {
     setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
+      var schedules = currentUser.data.schedules
+      for (let i = -14; i < 14; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-        if (!this.state.items[strTime]) {
-          this.state.items[strTime] = [];
-          const numItems = Math.floor(Math.random() * 5);
-          for (let j = 0; j < numItems; j++) {
-            this.state.items[strTime].push({
-              name: 'Item for ' + strTime,
-              height: Math.max(50, Math.floor(Math.random() * 150)),
-            });
+        const strTime = (new Date(time)).toISOString().split('T')[0];
+        if (!items[strTime]) {
+          items[strTime] = [];
+          if (schedules[strTime]) {
+            const numItems = objectLength(schedules[strTime]);
+            for (let j = 0; j < numItems; j++) {
+              items[strTime].push({
+                courseName: schedules[strTime][0].courseName,
+                teacherName: schedules[strTime][0].teacherName,
+                room: schedules[strTime][0].room,
+                timeStart: schedules[strTime][0].timeStart,
+                timeEnd: schedules[strTime][0].timeEnd,
+                timeFormat: schedules[strTime][0].timeFormat,
+              });
+            }
+            // console.log(items[strTime])
           }
         }
       }
-      //console.log(this.state.items);
       const newItems = {};
-      Object.keys(this.state.items).forEach(key => {
-        newItems[key] = this.state.items[key];
+      Object.keys(items).forEach((key) => {
+        newItems[key] = items[key];
       });
-      this.setState({
-        items: newItems,
-      });
-    }, 1000);
-    // console.log(`Load Items for ${day.year}-${day.month}`);
-  }
+      setItems(newItems);
+    }, 0);
+  };
 
-  renderItem() {
+  const renderItem = (item) => {
     return (
       <View style={styles.itemContainer}>
-        <View style={styles.item}>
-          <Text style={styles.courseName}>
-            Phân tích thiết kế Hệ thống thông tin quản lý
-          </Text>
-          <View style={styles.textLine}>
-            <Text style={styles.textLabel}>Thời gian</Text>
-            <Text style={styles.textFocus}>7h00 - 9h30 SA</Text>
-          </View>
-          <View style={styles.textLine}>
-            <Text style={styles.textLabel}>Phòng học</Text>
-            <Text style={[styles.textFocus, styles.textRoom]}>A.707</Text>
-          </View>
-          <View style={styles.textLine}>
-            <Text style={styles.textLabel}>Giảng viên</Text>
-            <Text style={styles.textFocus}>Cô Vũ Thuý Hằng</Text>
-          </View>
-        </View>
+        <Card style={styles.item}>
+          <Card.Content>
+            <View>
+              <Text style={styles.courseName}>
+                {item.courseName}
+              </Text>
+              <View style={styles.textLine}>
+                <Text style={styles.textLabel}>Thời gian</Text>
+                <Text style={styles.textFocus}>{item.timeStart + item.timeEnd + item.timeFormat}</Text>
+              </View>
+              <View style={styles.textLine}>
+                <Text style={styles.textLabel}>Phòng học</Text>
+                <Text style={[styles.textFocus, styles.textRoom]}>{item.room}</Text>
+              </View>
+              <View style={styles.textLine}>
+                <Text style={styles.textLabel}>Giảng viên</Text>
+                <Text style={styles.textFocus}>{item.teacherName}</Text>
+              </View>
+              {/* <Avatar.Text label={item.room} /> */}
+            </View>
+          </Card.Content>
+        </Card>
       </View>
-    );
-  }
 
-  renderEmptyDate(item) {
+    );
+  };
+  const renderEmptyDate = (day, item) => {
     return (
       <View style={styles.emptyDate}>
         <Text style={styles.emptyText}>🥳 Ngày nghỉ!</Text>
       </View>
-    );
+    )
   }
-
-  rowHasChanged(r1, r2) {
+  const rowHasChanged = (r1, r2) => {
     return r1.name !== r2.name;
   }
-
-  timeToString(time) {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  }
-}
+  return (
+    <View style={{ flex: 1 }}>
+      <Agenda
+        items={items}
+        loadItemsForMonth={loadItems}
+        selected={getToday()}
+        minDate={minDate()}
+        maxDate={maxDate()}
+        renderItem={renderItem}
+        renderEmptyDate={renderEmptyDate}
+        rowHasChanged={rowHasChanged}
+        theme={{
+          agendaDayTextColor: 'black',
+          agendaDayNumColor: 'purple',
+          agendaTodayColor: 'orange',
+          agendaKnobColor: 'red',
+          indicatorColor: 'yellow',
+          arrowColor: '#7f3e1f',
+          selectedDayBackgroundColor: 'green',
+          calendarBackground: '#ffffff',
+          textDayHeaderFontWeight: 'bold',
+          textSectionTitleColor: 'black',
+          dotColor:'#49a65a',
+          todayDotColor:'red',
+          todayBackgroundColor:'black',
+          todayTextColor:'yellow',
+        }}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   itemContainer_delete: {
@@ -189,7 +212,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 20,
-
+    color:'red',
     marginTop: 35,
   },
 
@@ -214,3 +237,5 @@ const styles = StyleSheet.create({
     color: '#FF6E35',
   },
 });
+
+export default Schedule;
