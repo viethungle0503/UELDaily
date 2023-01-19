@@ -86,7 +86,7 @@ export default function UpdateNotices({navigation}) {
                   style={[
                     styles.notiItem_Status_ReadIcon,
                     {
-                      backgroundColor: '#0065FF',
+                      backgroundColor: item.seen ? '#0065FF' : '#ffffff',
                     },
                   ]}></View>
                 <View style={styles.row}>

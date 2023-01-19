@@ -49,7 +49,12 @@ export default function WarningNotices({ navigation, route }) {
             <TouchableOpacity
               style={styles.notiItem}
               key={item._id + index}
-              onPress={() => navigateToHomeWork()}>
+              onPress={() => {
+                console.log(warningNotices[item])
+                navigateToHomeWork()
+              }
+              }>
+              {item.seen ? <></> : <View style={styles.fadeItem}></View>}
               <View style={styles.notiItem_Icon}>
                 <Image source={require('../../assets/notiNhacnho.png')} />
               </View>
@@ -78,7 +83,7 @@ export default function WarningNotices({ navigation, route }) {
                   style={[
                     styles.notiItem_Status_ReadIcon,
                     {
-                      backgroundColor: '#FF6E35',
+                      backgroundColor: item.seen ? '#FF6E35' : '#ffffff',
                     },
                   ]}></View>
 
