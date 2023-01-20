@@ -1,12 +1,12 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import Ctxh from './screen_Ctxh';
-import NewsDetail from './screen_NewsDetail';
-import Exam from './screen_Exam';
-import HomeDisplay from './screen_HomeDisplay';
-import Tuition from './screen_Tuition';
-import Homework from './screen_Homework';
-import ScoreBoard from './screen_ScoreBoard';
-import Schedule from './screen_Schedule';
+import Ctxh from './HomeScreen/screen_Ctxh';
+import NewsDetail from './HomeScreen/screen_NewsDetail';
+import Exam from './HomeScreen/screen_Exam';
+import HomeDisplay from './HomeScreen/screen_HomeDisplay';
+import Tuition from './HomeScreen/screen_Tuition';
+import Homework from './HomeScreen/screen_Homework';
+import ScoreBoard from './HomeScreen/screen_ScoreBoard';
+import Schedule from './HomeScreen/screen_Schedule';
 import { HeaderBackButton } from '@react-navigation/elements';
 
 const HomeStack = createStackNavigator();

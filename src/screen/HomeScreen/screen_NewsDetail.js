@@ -1,4 +1,5 @@
 import {render, WebView} from 'react-native-webview';
+import styles from './HomeScreenStyles/screen_NewsDetail_style'
 
 export default function NewsDetail({navigation, route}) {
   const scripts = `

@@ -7,7 +7,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import { Image } from 'react-native';
 
 // Screen
-import Home from './screen/HomeScreen/screen_Home';
+import Home from './screen/screen_Home';
 import News from './screen/screen_News';
 import Notifications from './screen/screen_Notifications';
 import Profile from './screen/screen_Profile';
@@ -248,8 +248,6 @@ const AppWrapper = () => {
     }
   };
   useEffect(() => {
-    SplashScreen.hide();
-
     if (global.database_departments.length == 0) {
       var RNFS = require('react-native-fs');
       firebase
@@ -330,7 +328,7 @@ const AppWrapper = () => {
     if (global.news_UEL.length == 0) {
       loadGraphicCards("https://uel.edu.vn/tin-tuc");
     }
-    
+    SplashScreen.hide();
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     // unsubscribe on unmount
     return subscriber;
