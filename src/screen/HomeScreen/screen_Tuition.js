@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import {
-    Image,
     View,
     Text,
-    StyleSheet,
-    Button,
     TouchableOpacity,
     ScrollView,
     Modal
@@ -13,7 +10,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import styles from './HomeScreenStyles/screen_Tuition_style';
 
 export default function Tuition() {
-
     const [open, setOpen] = React.useState(false);
     const [modalTitle, setModalTitle] = useState();
     const [modalContent, setModalContent] = useState();
@@ -22,7 +18,7 @@ export default function Tuition() {
             function settingModal() {
                 const title = (() => (
                     <View style={styles.modalHeader}>
-                        <Text style={styles.modalHeaderText}>Học phí HK{subItem.semester_type} {item.start_year}-{item.end_year}</Text>
+                        <Text style={styles.modalHeaderText}>{`Học phí HK${subItem.semester_type} ${item.start_year}-${item.end_year}`}</Text>
                     </View>
                 ));
                 const content = (() => {

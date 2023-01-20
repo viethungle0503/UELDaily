@@ -231,7 +231,6 @@ export default StyleSheet.create({
     },
     modalBackground: {
       flex: 1,
-      // backgroundColor: 'rbga(0,0,0,0.5)',
       backgroundColor: '#000000aa',
       justifyContent: 'center',
       alignItems: 'center'
@@ -315,7 +314,6 @@ export default StyleSheet.create({
   
     modalFooter_ButtonClose: {
       backgroundColor: '#0065FF',
-  
       color: '#0065FF',
       borderRadius: 8,
       width: '100%',
