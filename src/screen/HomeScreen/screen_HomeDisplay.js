@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import React, {useState} from 'react';
-import styles from './HomeScreenStyles/screen_HomeDisplay_style'
+import styles from './HomeScreenStyles/screen_HomeDisplay_style';
+import { strings } from '../Language';
 
 export default function HomeDisplay({navigation}) {
   const [openLanguage, setOpenLanguage] = useState(false);
@@ -199,7 +200,7 @@ export default function HomeDisplay({navigation}) {
                 style={styles.tienichIcon__ItemImg}
                 source={require('../../assets/tkbIcon.png')}
               />
-              <Text style={styles.tienichIcon__ItemText}>Thời khóa biểu</Text>
+              <Text style={styles.tienichIcon__ItemText}>{strings.schedule}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.tienichIcon_Item}

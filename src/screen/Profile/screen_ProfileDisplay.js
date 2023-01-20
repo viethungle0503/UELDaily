@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   View,
@@ -18,6 +18,7 @@ import {
 } from '../../redux_toolkit/userSlice';
 import auth from '@react-native-firebase/auth';
 import styles from './ProfileStyles/screen_ProfileDisplay_style';
+import { strings } from '../Language';
 
 export default function ProfileDisplay({navigation}) {
   function showAlert() {
@@ -54,7 +55,7 @@ export default function ProfileDisplay({navigation}) {
     setENLanguage(!ENLanguage);
     setVNLanguage(!VNLanguage);
   };
-
+  const [currentLanguage,setCurrentLanguage] = useState("vn");
   const dispatch = useDispatch();
   const signOut = async () => {
     try {
@@ -83,13 +84,10 @@ export default function ProfileDisplay({navigation}) {
           style={styles.accountHeader}>
           <View style={styles.accountHeader_Content}>
             <View style={styles.studentAvatarContainer}>
-              {/* <Image
+              <Image
                 style={styles.studentAvatar}
                 source={{uri: currentUser.data.profileImage}}
-              /> */}
-              <Image
-          style={styles.studentAvatar}
-          source={require('../../components/323170536_859266148619105_984978855832508894_n.png')} />
+              />
             </View>
 
             {currentUser ? (
@@ -231,7 +229,18 @@ export default function ProfileDisplay({navigation}) {
 
               <TouchableOpacity
                 style={styles.langFooter_ButtonClose}
-                onPress={() => setopenLanguageMenu(false)}>
+                onPress={() => {
+                  setopenLanguageMenu(false);
+                  if(VNLanguage == true) {
+                    strings.setLanguage('vn')
+                    console.log("changedVN");
+                  }
+                  if(ENLanguage == true) {
+                    //changeLaguage(en);
+                    strings.setLanguage('en')
+                    console.log("changedEN");
+                  }
+                  }}>
                 <Text style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
                   Xác nhận
                 </Text>

@@ -22,12 +22,9 @@ export default function MediaMain({ navigation }) {
             website: item.data.website, fanpage: item.data.page,
             uri: "asset:/" + item.logoLocation
           })}>
-        {/* <Image
+        <Image
           style={styles.mediaItem_Image}
-          source={{ uri: "asset:/" + item.logoLocation }} /> */}
-          <Image
-          style={styles.mediaItem_Image}
-          source={require('../../components/323170536_859266148619105_984978855832508894_n.png')} />
+          source={{ uri: "asset:/" + item.logoLocation }} />
         <View style={styles.mediaItem_Text}>
           <View style={styles.mediaDepartment}>
             <Text style={styles.mediaDepartmentName}>
@@ -37,7 +34,7 @@ export default function MediaMain({ navigation }) {
             <Text style={styles.mediaLastestTime}>9h</Text>
           </View>
 
-          <Text>Danh sách sinh viên được gia hạn đóng học phí</Text>
+          <Text style={styles.mediaLastestNews}>Danh sách sinh viên được gia hạn đóng học phí</Text>
         </View>
       </TouchableOpacity>
     )

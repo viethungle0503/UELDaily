@@ -54,6 +54,7 @@ export default StyleSheet.create({
     },
     studentAvatar: {
         width: 100,
+        height:100,
         aspectRatio: 1,
         borderRadius: 100,
     },

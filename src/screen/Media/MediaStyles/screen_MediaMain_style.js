@@ -52,4 +52,10 @@ export default StyleSheet.create({
       fontSize: 16,
       color: 'red'
     },
+    mediaLastestTime: {
+      color:'blue',
+    },
+    mediaLastestNews: {
+      color:'green',
+    },
   });
