@@ -1,4 +1,5 @@
 import {render, WebView} from 'react-native-webview';
+import styles from './MediaStyles/screen_MediaDetail_style';
 
 export default function MediaDetail({navigation, route}) {
   if(route.params == undefined) {

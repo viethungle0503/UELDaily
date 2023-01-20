@@ -5,10 +5,9 @@ import {
 
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-
-
-import HWTab1 from './HomeworkLMS/screen_HWTab1';
-import HWTab2 from './HomeworkLMS/screen_HWTab2';
+import HWTab1 from './screen_HomeworkTab_1';
+import HWTab2 from './screen_HomeworkTab_2';
+import styles from './HomeScreenStyles/screen_Homework_style'
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -25,7 +24,6 @@ export default function Homework({navigation}) {
             fontSize: 16,
             fontWeight: 'bold',
             textTransform: 'none',
-         
           },
           tabBarStyle: {
           
@@ -36,7 +34,6 @@ export default function Homework({navigation}) {
           tabBarPressColor: '#0065FF',
         }}>
         <Tab.Screen
-          style={styles.notiHeader_Sort_btnActive}
           name="HWTab1"
           component={HWTab1}
           options={{
@@ -51,18 +48,6 @@ export default function Homework({navigation}) {
           options={{tabBarLabel: 'Trễ deadline', headerShown: false}}
         />
       </Tab.Navigator>
-
-      
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  body: {
-    backgroundColor: '#fff',
-    flex: 1,
-    flexDirection: 'column',
-    position: 'relative',
-  },
-  
-});
