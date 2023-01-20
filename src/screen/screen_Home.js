@@ -8,6 +8,7 @@ import Homework from './HomeScreen/screen_Homework';
 import ScoreBoard from './HomeScreen/screen_ScoreBoard';
 import Schedule from './HomeScreen/screen_Schedule';
 import { HeaderBackButton } from '@react-navigation/elements';
+import strings from './Language';
 
 const HomeStack = createStackNavigator();
 

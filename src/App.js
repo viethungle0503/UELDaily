@@ -40,6 +40,8 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import SplashScreen from 'react-native-splash-screen';
+// Language
+import { strings } from './screen/Language';
 // Main
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -61,19 +63,19 @@ function Tabs() {
         tabBarLabel: ({focused, size, tintColor}) => {
           let labelName;
           if (route.name === 'Home') {
-            labelName = 'Trang chủ';
+            labelName = strings.home;
             size = focused ? 11 : 0;
             tintColor = focused ? '#0065FF' : 'gray';
           } else if (route.name === 'News') {
-            labelName = 'Tin tức';
+            labelName = strings.news;
             size = focused ? 11 : 0;
             tintColor = focused ? '#0065FF' : 'gray';
           } else if (route.name === 'Notifications') {
-            labelName = 'Thông báo';
+            labelName = strings.notifications;
             size = focused ? 11 : 0;
             tintColor = focused ? '#0065FF' : 'gray';
           } else if (route.name === 'Profile') {
-            labelName = 'Thông tin cá nhân';
+            labelName = strings.profile;
             size = focused ? 11 : 0;
             tintColor = focused ? '#0065FF' : 'gray';
           }

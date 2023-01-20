@@ -8,7 +8,8 @@ import {
 import { FlatList } from 'react-native-gesture-handler';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useCallback, useEffect, useState } from 'react';
-import styles from './HomeScreenStyles/screen_Exam_style'
+import styles from './HomeScreenStyles/screen_Exam_style';
+import { strings } from '../Language';
 
 
 export default function Exam({ navigation }) {
@@ -74,7 +75,7 @@ export default function Exam({ navigation }) {
               setItems={setItemsYear}
               defaultNull
               labelStyle={styles.btnSort_Text}
-              placeholder='Năm học'
+              placeholder={strings.year}
               placeholderStyle={styles.btnSort_Text}
               style={styles.btnSort}
               containerStyle={styles.btnSortContainer}
