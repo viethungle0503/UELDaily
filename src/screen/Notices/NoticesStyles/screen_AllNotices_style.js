@@ -70,18 +70,24 @@ export default StyleSheet.create({
       paddingLeft: 6,
     },
     notiItem_Status: {
-      flex: 1,
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
+      // flex: 1,
+      // justifyContent: 'space-between',
+      // alignItems: 'flex-end',
+      position:'absolute',
+      top: 20,
+      right: 20,
     },
     notiItem_Content_Title: {
       fontWeight: 'bold',
       fontSize: 16,
       color: '#080B09',
     },
-    notiItem_Content_Action: {
+    notiItem_Content_ActionTime: {
       paddingTop: 5,
+      flexDirection: "row",
+      justifyContent: 'space-between',
     },
+   
   
     notiItem_Status_ReadIcon: {
       opacity: 1,

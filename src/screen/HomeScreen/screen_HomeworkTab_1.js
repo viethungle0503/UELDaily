@@ -28,11 +28,11 @@ export default function HWTab1({navigation}) {
             </Text>
             
             <View style={styles.row}>
-                <Text style={styles.hwtext_schedule_danger}>
+                <Text style={styles.hwtext_schedule}>
                 12:00 20/12 - 18:00 21/12
                 </Text>
 
-                <View style={[styles.timedueContainer, styles.timedue_danger]}>
+                <View style={styles.timedueContainer}>
 
                     <Image 
                         style={styles.timedueIcon}
@@ -57,11 +57,11 @@ export default function HWTab1({navigation}) {
             </Text>
             
             <View style={styles.row}>
-                <Text style={styles.hwtext_schedule_warning}>
+                <Text style={styles.hwtext_schedule}>
                 12:00 20/12 - 18:00 21/12
                 </Text>
 
-                <View style={[styles.timedueContainer, styles.timedue_warning]}>
+                <View style={styles.timedueContainer}>
 
                     <Image 
                         style={styles.timedueIcon}
@@ -86,11 +86,11 @@ export default function HWTab1({navigation}) {
             </Text>
             
             <View style={styles.row}>
-                <Text style={styles.hwtext_schedule_normal}>
+                <Text style={styles.hwtext_schedule}>
                 12:00 20/12 - 18:00 21/12
                 </Text>
 
-                <View style={[styles.timedueContainer, styles.timedue_normal]}>
+                <View style={styles.timedueContainer}>
 
                     <Image 
                         style={styles.timedueIcon}

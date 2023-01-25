@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
+  Touchable,
 } from 'react-native';
 import { useState, useRef } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -86,9 +87,12 @@ export default function ScoreBoard({ navigation }) {
       }
     }}>
       <View style={styles.body}>
+
         <Modal
           visible={open}
-          transparent={true}>
+          transparent={true}
+          animationType= 'slide'
+          >
           <View style={styles.modalBackground} >
             <View style={styles.modalContainer}>
               <View style={styles.modalIconContainer}>
@@ -108,9 +112,12 @@ export default function ScoreBoard({ navigation }) {
               </TouchableOpacity>
             </View>
           </View>
+         
           <View style={{ alignItems: 'center' }}>
           </View>
+
         </Modal>
+
         {/* Selection */}
         <View style={styles.fixItem}>
           <View style={styles.scoreHeader_Sort}>
@@ -313,8 +320,12 @@ export default function ScoreBoard({ navigation }) {
                               return (
                                 <View style={styles.modalDetail}>
                                   <View style={styles.modalDetail_Header}>
-                                    <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colContent]}>Tên thành phần</Text>
-                                    <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colPayAmount]}>Điểm</Text>
+                                    <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colContent]}>
+                                      Điểm thành phần
+                                    </Text>
+                                    <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colPayAmount]}>
+                                      Thang 10
+                                    </Text>
                                   </View>
                                   {section}
                                 </View>
@@ -325,7 +336,8 @@ export default function ScoreBoard({ navigation }) {
                             setOpen(true);
                           }
                           return (
-                            <View style={styles.listItem} key={finalIndex}>
+                            <TouchableOpacity style={styles.listItem} key={finalIndex} 
+                              onPress={() => settingModal()}>
                               <View style={[styles.listItem_Markup, (finalItem.overallScore >= 5) ? { backgroundColor: '#E3ECFF' } : { backgroundColor: '#FF967C' }]}></View>
 
                               <Text style={styles.listItem_SubjectName}>
@@ -342,7 +354,7 @@ export default function ScoreBoard({ navigation }) {
                                 <Text style={styles.listItem_ContentData}>{((finalItem.overallScore) >= 5) ? "Đạt" : "Chưa đạt"}</Text>
                               </View>
 
-                              <TouchableOpacity style={styles.listItem_ViewDetail}
+                              {/* <TouchableOpacity style={styles.listItem_ViewDetail}
                                 onPress={() => settingModal()}>
                                 <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
                                 <MaterialCommunityIcons
@@ -350,8 +362,8 @@ export default function ScoreBoard({ navigation }) {
                                   size={22}
                                   color={'#fff'}
                                 />
-                              </TouchableOpacity>
-                            </View>
+                              </TouchableOpacity> */}
+                            </TouchableOpacity>
                           )
                         })}
 

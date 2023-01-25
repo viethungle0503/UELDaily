@@ -198,18 +198,19 @@ export default StyleSheet.create({
       display: 'flex',
       flexDirection: 'row',
   
-      justifyContent: 'flex-end',
+      alignSelf: 'flex-end',
     },
     btnSort: {
       borderColor: '#0065FF',
-      borderTopLeftRadius: 8,
-      borderTopRightRadius: 8,
-      borderBottomLeftRadius: 8,
-      borderBottomRightRadius: 8,
+      borderRadius: 10,
       borderWidth: 1,
       borderStyle: 'solid',
       backgroundColor: 'transparent',
-      marginRight: 50
+      marginRight: 40,
+
+      minHeight: 38, 
+      // fix chiều cao btnSort
+
     },
     btnSortContainer: {
       width: 120,
@@ -236,7 +237,7 @@ export default StyleSheet.create({
       alignItems: 'center'
     },
     modalContainer: {
-      width: '92%',
+      width: '80%',
       backgroundColor: '#FFF',
       padding: 20,
       borderRadius: 20,
@@ -249,8 +250,8 @@ export default StyleSheet.create({
       borderColor: '#FFF',
       borderRadius: 50,
       position: 'absolute',
-      left: '50%',
-      top: -30,
+      left: '48%',
+      top: -25,
       width: 55,
       height: 55,
       alignItems: 'center',
@@ -265,7 +266,8 @@ export default StyleSheet.create({
     modalHeaderText: {
       fontSize: 20,
       color: '#252525',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      textAlign: 'center'
     },
     modalDetail: {
       borderRadius: 10,
@@ -286,23 +288,23 @@ export default StyleSheet.create({
       paddingBottom: 5
     },
     modalDetail_RowDataText: {
-      color: '#252525'
+      color: '#252525',
+      fontSize: 16,
     },
     modalDetail_HeaderText: {
+      fontSize: 16,
+      
       fontWeight: 'bold',
       color: '#252525',
     },
     modalDetail_colContent: {
-      minWidth: 120,
+      minWidth: 150,
     },
     modalDetail_colPayAmount: {
-      minWidth: 85,
+      minWidth: 100,
       textAlign: 'right',
     },
-    modalDetail_colPaid: {
-      minWidth: 85,
-      textAlign: 'right',
-    },
+    
     modalTotalPay: {
       flexDirection: 'row',
       justifyContent: 'space-between',
