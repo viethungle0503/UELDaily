@@ -12,17 +12,18 @@ import styles from './HomeScreenStyles/screen_HomeDisplay_style';
 import { strings } from '../Language';
 
 export default function HomeDisplay({navigation}) {
-  const [openLanguage, setOpenLanguage] = useState(false);
+  const [openLanguageMenu, setopenLanguageMenu] = React.useState(false);
 
-  const [selectLanguageVie, setselectLanguageVie] = useState(false);
-  const clickLanguageVie = () => {
-    // selectLanguageEng ?
-    setselectLanguageVie(!selectLanguageVie);
+  const [VNLanguage, setVNLanguage] = React.useState(true);
+  const chooseVNLanguage = () => {
+    setVNLanguage(!VNLanguage);
+    setENLanguage(!ENLanguage);
   };
 
-  const [selectLanguageEng, setselectLanguageEng] = useState(false);
-  const clickLanguageEng = () => {
-    setselectLanguageEng(!selectLanguageEng);
+  const [ENLanguage, setENLanguage] = React.useState(false);
+  const chooseENLanguage = () => {
+    setENLanguage(!ENLanguage);
+    setVNLanguage(!VNLanguage);
   };
 
   const news = news_UEL.map((item, index) => (
@@ -68,77 +69,76 @@ export default function HomeDisplay({navigation}) {
             <Text>{currentUser.key}</Text>
           </View>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.btnLanguage}
-            onPress={() => {
-              setOpenLanguage(true);
-            }}>
+            onPress={() => setopenLanguageMenu(true)}>
+
             <MaterialCommunityIcons
               style={styles.svgLanguage}
               name={'web'}
               size={25}
             />
-          </TouchableOpacity>
+
+          </TouchableOpacity> */}
 
           {/* modal chọn ngôn ngữ */}
-          <Modal visible={openLanguage} transparent={true}>
-            <View style={styles.langBackground}>
+          <Modal visible={openLanguageMenu} transparent={true}>
+            <View
+              style={styles.langBackground}>
               <View style={styles.langContainer}>
                 <Text style={styles.accountHeading}>Chọn ngôn ngữ</Text>
 
                 <TouchableOpacity
-                  onPressIn={clickLanguageVie}
+                  onPress={chooseVNLanguage}
                   style={
-                    selectLanguageVie
-                      ? styles.langNation_Vie
-                      : [
-                          styles.langNation_Vie,
-                          {
-                            backgroundColor: 'rgb(210, 230, 255)',
-                            borderColor: '#0065FF',
-                            borderWidth: 1,
-
-                            borderRadius: 5,
-                          },
-                        ]
+                    VNLanguage
+                      ? [
+                        styles.langNation_Vie,
+                        {
+                          backgroundColor: 'rgb(210, 230, 255)',
+                          borderColor: '#0065FF',
+                          borderWidth: 1,
+                          borderRadius: 5,
+                        },
+                      ]
+                      : styles.langNation_Vie
                   }>
                   <View style={styles.row}>
                     <Image
                       source={require('../../assets/account_lang_vie.png')}
                       style={styles.langNationIcon}
                     />
-
                     <Text style={styles.accountText}>Tiếng Việt</Text>
                   </View>
                   <Image
                     style={
-                      selectLanguageVie
-                        ? styles.langSelectNationIcon
-                        : [
-                            styles.langSelectNationIcon,
-                            {
-                              opacity: 1,
-                            },
-                          ]
+                      VNLanguage
+                        ? [
+                          styles.langSelectNationIcon,
+                          {
+                            opacity: 1,
+                          },
+                        ]
+                        : styles.langSelectNationIcon
                     }
                     source={require('../../assets/account_lang_check.png')}
                   />
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  onPressIn={clickLanguageEng}
+                  onPress={chooseENLanguage}
                   style={
-                    selectLanguageEng
-                      ? styles.langNation_Eng
-                      : [
-                          styles.langNation_Eng,
-                          {
-                            backgroundColor: 'rgb(210, 230, 255)',
-                            borderColor: '#0065FF',
-                            borderWidth: 1,
-                            borderRadius: 5,
-                          },
-                        ]
+                    ENLanguage
+                      ? [
+                        styles.langNation_Eng,
+                        {
+                          backgroundColor: 'rgb(210, 230, 255)',
+                          borderColor: '#0065FF',
+                          borderWidth: 1,
+                          borderRadius: 5,
+                        },
+                      ]
+                      : styles.langNation_Eng
                   }>
                   <View style={styles.row}>
                     <Image
@@ -151,14 +151,14 @@ export default function HomeDisplay({navigation}) {
 
                   <Image
                     style={
-                      selectLanguageEng
-                        ? styles.langSelectNationIcon
-                        : [
-                            styles.langSelectNationIcon,
-                            {
-                              opacity: 1,
-                            },
-                          ]
+                      ENLanguage
+                        ? [
+                          styles.langSelectNationIcon,
+                          {
+                            opacity: 1,
+                          },
+                        ]
+                        : styles.langSelectNationIcon
                     }
                     source={require('../../assets/account_lang_check.png')}
                   />
@@ -166,9 +166,19 @@ export default function HomeDisplay({navigation}) {
 
                 <TouchableOpacity
                   style={styles.langFooter_ButtonClose}
-                  onPress={() => setOpenLanguage(false)}>
-                  <Text
-                    style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
+                  onPress={() => {
+                    setopenLanguageMenu(false);
+                    if(VNLanguage == true) {
+                      strings.setLanguage('vn')
+                      console.log("changedVN");
+                    }
+                    if(ENLanguage == true) {
+                      //changeLaguage(en);
+                      strings.setLanguage('en')
+                      console.log("changedEN");
+                    }
+                    }}>
+                  <Text style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
                     Xác nhận
                   </Text>
                 </TouchableOpacity>

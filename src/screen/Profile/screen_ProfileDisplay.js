@@ -55,6 +55,7 @@ export default function ProfileDisplay({navigation}) {
     setENLanguage(!ENLanguage);
     setVNLanguage(!VNLanguage);
   };
+
   const [currentLanguage,setCurrentLanguage] = useState("vn");
   const dispatch = useDispatch();
   const signOut = async () => {
@@ -145,6 +146,7 @@ export default function ProfileDisplay({navigation}) {
             />
           </View>
         </TouchableOpacity>
+
         <Modal visible={openLanguageMenu} transparent={true}>
           <View
             style={styles.langBackground}>
@@ -248,6 +250,7 @@ export default function ProfileDisplay({navigation}) {
             </View>
           </View>
         </Modal>
+        
       </View>
       {/* cài đặt section */}
       <View style={styles.accountPolicyContainer}>

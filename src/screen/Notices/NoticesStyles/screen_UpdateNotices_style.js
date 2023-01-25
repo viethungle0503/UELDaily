@@ -63,9 +63,12 @@ export default StyleSheet.create({
       paddingLeft: 6,
     },
     notiItem_Status: {
-      flex: 1,
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
+      // flex: 1,
+      // justifyContent: 'space-between',
+      // alignItems: 'flex-end',
+      position:'absolute',
+      top: 20,
+      right: 20,
     },
     notiItem_Content_Title: {
       fontWeight: 'bold',
@@ -75,8 +78,10 @@ export default StyleSheet.create({
     notiItem_Content_Describe: {
       color: 'red',
     },
-    notiItem_Content_Action: {
+    notiItem_Content_ActionTime: {
       paddingTop: 5,
+      flexDirection: "row",
+      justifyContent: 'space-between',
     },
   
     notiItem_Status_ReadIcon: {
@@ -155,4 +160,99 @@ export default StyleSheet.create({
       // marginRight: 10,
       // overflow: 'hidden'
     },
+
+
+
+    //modal 
+
+    modalContainer: {
+      flex: 1,
+      backgroundColor: '#FFF',
+      position: 'relative',
+    },
+    modalEffectLeft:{
+      position: 'absolute',
+      top: '60%',
+      left: 0
+    },
+    modalEffectRight:{
+      position: 'absolute',
+      bottom: '10%',
+      right: 0
+    },
+
+    btnBackContainer: {
+      // width: '100%',
+      // height: 40,
+      padding: 10,
+      // backgroundColor: 'blue'
+    },
+   
+    modalHeader: {
+      // backgroundColor: 'green',
+      paddingHorizontal: 20,
+      // paddingVertical: 10,
+
+    },
+
+    modalHeader_TitleText:{
+      fontSize: 20,
+      color: '#252525',
+      fontWeight: '600',
+      marginBottom: 15,
+      textAlign: 'justify'
+    },
+
+    modalHeader_Department:{
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 5,
+    },
+    modalHeader_Icon:{
+      width: 42,
+      aspectRatio: 1,
+      marginRight: 12,
+
+    },
+    modalHeader_DepartmentName:{
+      fontSize: 18,
+      color: '#252525',
+    },
+    modalHeader_DepartmentMail:{
+      fontSize: 15,
+      color: '#252525',
+    },
+
+   
+    modalContent:{
+      backgroundColor: '#F7F9FE',
+      borderRadius: 10,
+      margin: 15,
+      padding: 20,
+
+    }, 
+    modalContentText:{
+      color: '#252525',
+      fontSize: 17, 
+      fontWeight: '400',
+      lineHeight: 20,
+      textAlign: 'justify'
+    },
+    btnResponse:{
+      paddingHorizontal: 35,
+      paddingVertical: 8,
+      borderRadius: 10,
+      backgroundColor: '#0065FF',
+
+      flexDirection: 'row',
+      alignSelf: 'flex-end',
+      marginRight: 15,
+
+
+    },
+    btnResponseText:{
+      color: '#FFF',
+      fontSize: 17,
+
+    }
   });

@@ -45,23 +45,12 @@ export default StyleSheet.create({
         paddingBottom: 3, 
     
     },
-    hwtext_schedule_danger:{
-        color: '#FF6E35',
-        fontWeight: '500',
-        width: '75%',
-     
-        
-    },
-    hwtext_schedule_warning:{
-        color: '#FCCD41',
+    hwtext_schedule:{
+        color: '#0065FF',
         fontWeight: '500',
         width: '75%',
     },
-    hwtext_schedule_normal:{
-        color: '#40CFF7',
-        fontWeight: '500',
-        width: '75%',
-    },
+   
     timedueContainer:{
         borderRadius: 5,
         flexDirection: 'row',
@@ -69,16 +58,11 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 5,
         paddingVertical: 3,
+
+        backgroundColor: '#0065FF'
+
     },
-    timedue_danger:{
-        backgroundColor: '#FF6E35',
-    },
-    timedue_warning:{
-        backgroundColor: '#FCCD41',
-    },
-    timedue_normal:{
-        backgroundColor: '#40CFF7',
-    },
+ 
     timedueIcon:{
         height: 18,
         width: 18,

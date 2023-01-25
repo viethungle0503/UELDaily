@@ -4,6 +4,7 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#fff',
+        marginBottom: 50
     },
     modalBackground: {
         flex: 1,
@@ -104,8 +105,8 @@ export default StyleSheet.create({
         color: '#FFF',
     },
     list: {
-        marginBottom: 15,
-        height: 350
+        // marginBottom: 50,
+        // height: 350
     },
 
     listSemester: {

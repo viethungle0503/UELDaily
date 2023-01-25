@@ -61,19 +61,28 @@ export default function WarningNotices({ navigation, route }) {
                 <Text style={styles.notiItem_Content_Title}>
                   {item.title}
                 </Text>
-                <TouchableOpacity
-                  style={styles.notiItem_Content_Action}
-                  onPress={() => navigateToHomeWork()}>
-                  <Text
-                    style={[
-                      styles.notiItem_Content_ActionText,
-                      {
-                        color: '#FF6E35',
-                      },
-                    ]}>
-                    Xem ngay
-                  </Text>
-                </TouchableOpacity>
+
+                <View style={styles.notiItem_Content_ActionTime}>
+                  <TouchableOpacity
+                    onPress={() => navigateToHomeWork()}>
+                    <Text
+                      style={[
+                        styles.notiItem_Content_ActionText,
+                        {
+                          color: '#FF6E35',
+                        },
+                      ]}>
+                      Xem ngay
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <View style={styles.row}>
+                    <Image source={require('../../assets/notiHistory.png')} />
+                    <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
+                  </View>
+
+                </View>
+
               </View>
 
               <View style={styles.notiItem_Status}>
@@ -84,11 +93,6 @@ export default function WarningNotices({ navigation, route }) {
                       backgroundColor: item.seen ? '#FF6E35' : '#ffffff',
                     },
                   ]}></View>
-
-                <View style={styles.row}>
-                  <Image source={require('../../assets/notiHistory.png')} />
-                  <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
-                </View>
               </View>
             </TouchableOpacity>
           )

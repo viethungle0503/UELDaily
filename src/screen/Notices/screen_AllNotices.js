@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { red100 } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 import styles from './NoticesStyles/screen_AllNotices_style'
 
 export default function Information({ navigation, route }) {
@@ -65,19 +66,27 @@ export default function Information({ navigation, route }) {
                   style={styles.notiItem_Content_Title}>
                   {item.title}
                 </Text>
-                <TouchableOpacity
-                  style={styles.notiItem_Content_Action}
-                  onPress={() => navigateToHomeWork()}>
-                  <Text
-                    style={[
-                      styles.notiItem_Content_ActionText,
-                      {
-                        color: item.type == 0 ? '#FF6E35' : '#0065FF',
-                      },
-                    ]}>
-                    Xem ngay
-                  </Text>
-                </TouchableOpacity>
+
+                <View style={styles.notiItem_Content_ActionTime}>
+                  <TouchableOpacity
+                    onPress={() => navigateToHomeWork()}>
+                    <Text
+                      style={[
+                        styles.notiItem_Content_ActionText,
+                        {
+                          color: item.type == 0 ? '#FF6E35' : '#0065FF',
+                        },
+                      ]}>
+                      Xem ngay
+                    </Text>
+                  </TouchableOpacity>
+
+                  <View style={styles.row} >
+                    <Image source={require('../../assets/notiHistory.png')} />
+                    <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
+                  </View>
+
+                </View>
               </View>
 
               <View style={styles.notiItem_Status}>
@@ -87,12 +96,12 @@ export default function Information({ navigation, route }) {
                       {
                         backgroundColor: !item.seen ? '#ffffff':(item.type == 0 ? '#FF6E35' : '#0065FF'),
                       },
-                    ]}></View>
-                <View style={styles.row}>
-                  <Image source={require('../../assets/notiHistory.png')} />
-                  <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
-                </View>
+                    ]}>
+
+                  </View>
+                
               </View>
+
             </TouchableOpacity>
           );
         })}
