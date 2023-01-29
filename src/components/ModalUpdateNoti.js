@@ -5,10 +5,6 @@ import {
     Text, View, TouchableOpacity, Dimensions, Image, ScrollView, StyleSheet
 } from 'react-native'
 
-
-
-
-
 const ModalUpdateNoti = (props) => {
     const [modalTitle, setModalTitle] = useState();
     const [modalContent, setModalContent] = useState();

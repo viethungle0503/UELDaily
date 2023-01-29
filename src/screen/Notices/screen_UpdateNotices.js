@@ -5,11 +5,54 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Modal
+  Modal,
+  Animated
 } from 'react-native';
 import styles from './NoticesStyles/screen_UpdateNotices_style'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Swipeable } from 'react-native-gesture-handler';
 
+const deleteItem = () => {  
+  alert('Chắc xóa chưa?')
+}
+const renderRight = (progress, dragX) => {
+  const scale = dragX.interpolate({
+    inputRange: [-50, 0.5],
+    outputRange: [1, 0.1]
+  });
+  const Style = {
+    transform: [
+      {
+        scale
+      }
+    ]
+  };
+  return(
+    <View 
+      style={{
+        width: 80,
+        height: '100%',
+
+        backgroundColor: 'red',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderTopRightRadius: 5,
+        borderBottomRightRadius: 5,
+
+        marginBottom: 20,
+        }} 
+      onPress={deleteItem}>
+
+      <Animated.Text style={[Style,{
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: 10,
+        }]}>
+        Xóa
+      </Animated.Text>
+    </View>
+  )
+};
 // import { ModalUpdateNoti } from '../../components/ModalUpdateNoti';
 
 export default function UpdateNotices({navigation}) {
@@ -155,67 +198,71 @@ export default function UpdateNotices({navigation}) {
           }
 
           return (
+            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
 
-            <TouchableOpacity 
-              onPress={() => settingModal()}
-              // onPress={() => changeModalUpdateNotiVisible(true)}
-              style={styles.notiItem} key={item._id + index}>
-              
-              
-
-              {item.seen ? <></> : <View style={styles.fadeItem}></View>}
-              
-              <View style={styles.notiItem_Icon}>
-                <Image source={require('../../assets/notiCapnhat.png')} />
-              </View>
-
-              <View style={styles.notiItem_Content}>
-                <Text
-                  style={styles.notiItem_Content_Title}
-                  numberOfLines={4}
-                  ellipsizeMode="tail">
-                  {item.title}
-                </Text>
-
-                <Text
-                  style={styles.notiItem_Content_Describe}
-                  numberOfLines={2}
-                  ellipsizeMode="tail">
-                  {item.content}
-                </Text>
-
-                <View style={styles.notiItem_Content_ActionTime}>
-                  <TouchableOpacity style={styles.notiItem_Content_Action}>
-                    <Text
-                      style={[
-                        styles.notiItem_Content_ActionText,
-                        {
-                          color: '#0065FF',
-                        },
-                      ]}>
-                      {item.sendBy}
-                    </Text>
-                  </TouchableOpacity>
-
-                  <View style={styles.row}>
-                    <Image source={require('../../assets/notiHistory.png')} />
-                    <Text style={{color: 'red'}}>&nbsp;{time_gap}</Text>
-                  </View>
-
-                </View>
-              </View>
-
-              <View style={styles.notiItem_Status}>
-                <View
-                  style={[
-                    styles.notiItem_Status_ReadIcon,
-                    {
-                      backgroundColor: item.seen ? '#0065FF' : '#ffffff',
-                    },
-                  ]}></View>
+            
+              <Animated.View 
+                onPress={() => settingModal()}
+                // onPress={() => changeModalUpdateNotiVisible(true)}
+                style={styles.notiItem} key={item._id + index}>
                 
-              </View>
-            </TouchableOpacity>
+                
+
+                {item.seen ? <></> : <View style={styles.fadeItem}></View>}
+                
+                <View style={styles.notiItem_Icon}>
+                  <Image source={require('../../assets/notiCapnhat.png')} />
+                </View>
+
+                <View style={styles.notiItem_Content}>
+                  <Text
+                    style={styles.notiItem_Content_Title}
+                    numberOfLines={4}
+                    ellipsizeMode="tail">
+                    {item.title}
+                  </Text>
+
+                  <Text
+                    style={styles.notiItem_Content_Describe}
+                    numberOfLines={2}
+                    ellipsizeMode="tail">
+                    {item.content}
+                  </Text>
+
+                  <View style={styles.notiItem_Content_ActionTime}>
+                    <TouchableOpacity style={styles.notiItem_Content_Action}>
+                      <Text
+                        style={[
+                          styles.notiItem_Content_ActionText,
+                          {
+                            color: '#0065FF',
+                          },
+                        ]}>
+                        {item.sendBy}
+                      </Text>
+                    </TouchableOpacity>
+
+                    <View style={styles.row}>
+                      <Image source={require('../../assets/notiHistory.png')} />
+                      <Text style={{color: 'red'}}>&nbsp;{time_gap}</Text>
+                    </View>
+
+                  </View>
+                </View>
+
+                <View style={styles.notiItem_Status}>
+                  <View
+                    style={[
+                      styles.notiItem_Status_ReadIcon,
+                      {
+                        backgroundColor: item.seen ? '#0065FF' : '#ffffff',
+                      },
+                    ]}></View>
+                  
+                </View>
+              </Animated.View>
+            </Swipeable>
+
           );
         })}
       </ScrollView>
