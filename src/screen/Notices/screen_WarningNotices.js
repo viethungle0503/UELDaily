@@ -11,7 +11,7 @@ import styles from './NoticesStyles/screen_WarningNotices_style'
 
 import { Swipeable } from 'react-native-gesture-handler';
 
-const deleteItem = () => {  
+const deleteItem = () => {
   alert('Chắc xóa chưa?')
 }
 const renderRight = (progress, dragX) => {
@@ -26,8 +26,8 @@ const renderRight = (progress, dragX) => {
       }
     ]
   };
-  return(
-    <View 
+  return (
+    <View
       style={{
         width: 80,
         height: '100%',
@@ -39,14 +39,14 @@ const renderRight = (progress, dragX) => {
         borderBottomRightRadius: 5,
 
         marginBottom: 20,
-        }} 
+      }}
       onPress={deleteItem}>
 
-      <Animated.Text style={[Style,{
+      <Animated.Text style={[Style, {
         color: '#FFF',
         fontWeight: 'bold',
         fontSize: 10,
-        }]}>
+      }]}>
         Xóa
       </Animated.Text>
     </View>
@@ -89,16 +89,10 @@ export default function WarningNotices({ navigation, route }) {
             time_gap = `${Math.floor(hours)}h`;
           }
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
-
-              <Animated.View 
-                style={styles.notiItem}
-                key={item._id + index}
-                onPress={() => {
-                  console.log(warningNotices[item])
-                  navigateToHomeWork()
-                }
-                }>
+            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}
+              key={item._id + index}>
+              <Animated.View
+                style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}
                 <View style={styles.notiItem_Icon}>
                   <Image source={require('../../assets/notiNhacnho.png')} />
@@ -122,7 +116,7 @@ export default function WarningNotices({ navigation, route }) {
                         Xem ngay
                       </Text>
                     </TouchableOpacity>
-                    
+
                     <View style={styles.row}>
                       <Image source={require('../../assets/notiHistory.png')} />
                       <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>

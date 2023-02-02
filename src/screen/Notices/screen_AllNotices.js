@@ -12,7 +12,7 @@ import { red100 } from 'react-native-paper/lib/typescript/styles/themes/v2/color
 import styles from './NoticesStyles/screen_AllNotices_style'
 import { Swipeable } from 'react-native-gesture-handler';
 
-const deleteItem = () => {  
+const deleteItem = () => {
   alert('Chắc xóa chưa?')
 }
 const renderRight = (progress, dragX) => {
@@ -27,8 +27,8 @@ const renderRight = (progress, dragX) => {
       }
     ]
   };
-  return(
-    <View 
+  return (
+    <View
       style={{
         width: 80,
         height: '100%',
@@ -40,14 +40,14 @@ const renderRight = (progress, dragX) => {
         borderBottomRightRadius: 5,
 
         marginBottom: 20,
-        }} 
+      }}
       onPress={deleteItem}>
 
-      <Animated.Text style={[Style,{
+      <Animated.Text style={[Style, {
         color: '#FFF',
         fontWeight: 'bold',
         fontSize: 10,
-        }]}>
+      }]}>
         Xóa
       </Animated.Text>
     </View>
@@ -57,7 +57,7 @@ const renderRight = (progress, dragX) => {
 export default function Information({ navigation, route }) {
   const [allNotices, setAllNotices] = useState([]);
 
-  
+
   useEffect(() => {
     if (allNotices.length == 0) {
       var allNoticesHolder = [...allNotices];
@@ -94,22 +94,18 @@ export default function Information({ navigation, route }) {
           else {
             time_gap = `${Math.floor(hours)}h`;
           }
-          
+
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
-
-              <Animated.View 
-                style={styles.notiItem}
-                key={item._id + index}
-                onPress={(item.type == 0) ? (() => navigateToHomeWork()) : (() => console.log("gg"))}>
-
+            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}
+              key={item._id + index}>
+              <Animated.View
+                style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}
                 <View style={styles.notiItem_Icon}>
                   {(item.type == 0) ?
                     (<Image source={require('../../assets/notiNhacnho.png')} />) :
                     (<Image source={require('../../assets/notiCapnhat.png')} />)}
                 </View>
-
                 <View style={styles.notiItem_Content}>
                   <Text
                     numberOfLines={4}
@@ -117,7 +113,6 @@ export default function Information({ navigation, route }) {
                     style={styles.notiItem_Content_Title}>
                     {item.title}
                   </Text>
-
                   <View style={styles.notiItem_Content_ActionTime}>
                     <TouchableOpacity
                       onPress={() => navigateToHomeWork()}>
@@ -131,7 +126,6 @@ export default function Information({ navigation, route }) {
                         Xem ngay
                       </Text>
                     </TouchableOpacity>
-
                     <View style={styles.row} >
                       <Image source={require('../../assets/notiHistory.png')} />
                       <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
@@ -141,16 +135,16 @@ export default function Information({ navigation, route }) {
                 </View>
 
                 <View style={styles.notiItem_Status}>
-                    <View
-                      style={[
-                        styles.notiItem_Status_ReadIcon,
-                        {
-                          backgroundColor: !item.seen ? '#ffffff':(item.type == 0 ? '#FF6E35' : '#0065FF'),
-                        },
-                      ]}>
+                  <View
+                    style={[
+                      styles.notiItem_Status_ReadIcon,
+                      {
+                        backgroundColor: !item.seen ? '#ffffff' : (item.type == 0 ? '#FF6E35' : '#0065FF'),
+                      },
+                    ]}>
 
-                    </View>
-                  
+                  </View>
+
                 </View>
 
               </Animated.View>

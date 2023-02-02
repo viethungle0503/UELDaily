@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Agenda, LocaleConfig } from 'react-native-calendars';
 import { Card, Avatar } from 'react-native-paper';
-import styles from './HomeScreenStyles/screen_Schedule_style'
+import styles from './HomeScreenStyles/screen_Schedule_style';
+import strings from '../Language';
+import { useSelector } from 'react-redux';
 
 LocaleConfig.locales['vi'] = {
   monthNames: [
@@ -45,7 +47,28 @@ LocaleConfig.locales['vi'] = {
   dayNamesShort: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
   today: "Hôm nay",
 };
-LocaleConfig.defaultLocale = 'vi';
+LocaleConfig.locales['en'] = {
+  formatAccessibilityLabel: "dddd d 'of' MMMM 'of' yyyy",
+  monthNames: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ],
+  monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  dayNamesShort: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+  today:"Today",
+  // numbers: ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'] // number localization example
+};
 function getToday() {
   var today = new Date();
   var date = today.getDate();
@@ -76,6 +99,7 @@ function objectLength(obj) {
   return result;
 }
 export default function Schedule() {
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
   const [items, setItems] = useState({});
   const loadItems = (day) => {
     setTimeout(() => {
@@ -97,7 +121,6 @@ export default function Schedule() {
                 timeFormat: schedules[strTime][0].timeFormat,
               });
             }
-            // console.log(items[strTime])
           }
         }
       }
@@ -119,15 +142,15 @@ export default function Schedule() {
                 {item.courseName}
               </Text>
               <View style={styles.textLine}>
-                <Text style={styles.textLabel}>Thời gian</Text>
+                <Text style={styles.textLabel}>{strings.time}</Text>
                 <Text style={styles.textFocus}>{`${item.timeStart} - ${item.timeEnd} ${item.timeFormat}`}</Text>
               </View>
               <View style={styles.textLine}>
-                <Text style={styles.textLabel}>Phòng học</Text>
+                <Text style={styles.textLabel}>{strings.room}</Text>
                 <Text style={[styles.textFocus, styles.textRoom]}>{item.room}</Text>
               </View>
               <View style={styles.textLine}>
-                <Text style={styles.textLabel}>Giảng viên</Text>
+                <Text style={styles.textLabel}>{strings.lecturer}</Text>
                 <Text style={styles.textFocus}>{item.teacherName}</Text>
               </View>
               {/* <Avatar.Text label={item.room} /> */}
@@ -148,6 +171,14 @@ export default function Schedule() {
   const rowHasChanged = (r1, r2) => {
     return r1.name !== r2.name;
   }
+  useEffect(() => {
+    if(currentLanguage == "en") {
+      LocaleConfig.defaultLocale ='en';
+    }
+    else {
+      LocaleConfig.defaultLocale ='vi';
+    }
+  },[currentLanguage])
   return (
     <View style={{ flex: 1 }}>
       <Agenda

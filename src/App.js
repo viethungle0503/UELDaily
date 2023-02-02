@@ -3,22 +3,18 @@ import React, {useEffect, useState} from 'react';
 import {Text, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 import { Image } from 'react-native';
 
 // Screen
-import Home from './screen/screen_Home';
-import News from './screen/screen_News';
-import Notifications from './screen/screen_Notifications';
-import Profile from './screen/screen_Profile';
 import Login from './screen/screen_Login';
 import PreLogin1 from './screen/screen_PreLogin1';
 import PreLogin2 from './screen/screen_PreLogin2';
+import Tabs from './screen/Tabs';
 
 // Font awesome
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-// font Materials
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 // Redux
 import {useSelector, useDispatch} from 'react-redux';
 import {getDatabaseAccount, getStudent, getDepartments} from './redux_toolkit/databaseSlice';
@@ -28,6 +24,7 @@ import {
   setCurrentUserProfileImage,
   setScoreBoard,
   setIsDataReady,
+  setCurrentLanguage,
 } from './redux_toolkit/userSlice';
 import {setNews_UEL, setNews_Departments} from './redux_toolkit/newsSlice';
 // Firebase
@@ -41,97 +38,10 @@ import {
 } from '@react-native-google-signin/google-signin';
 import SplashScreen from 'react-native-splash-screen';
 // Language
-import { strings } from './screen/Language';
+import strings from './screen/Language';
 // Main
-const Tab = createBottomTabNavigator();
-const RootStack = createStackNavigator();
 
-function Tabs() {
-  var tabBarBadge = 3;
-  var trueUser = database_app.find(
-    x => x.data.email == currentUser.data.email,
-  );
-  trueUser.data.notices.forEach(value => {
-    if(value.seen == false) {
-      tabBarBadge += 1;
-    }
-  });
-  return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={({route}) => ({
-        tabBarLabel: ({focused, size, tintColor}) => {
-          let labelName;
-          if (route.name === 'Home') {
-            labelName = strings.home;
-            size = focused ? 11 : 0;
-            tintColor = focused ? '#0065FF' : 'gray';
-          } else if (route.name === 'News') {
-            labelName = strings.news;
-            size = focused ? 11 : 0;
-            tintColor = focused ? '#0065FF' : 'gray';
-          } else if (route.name === 'Notifications') {
-            labelName = strings.notifications;
-            size = focused ? 11 : 0;
-            tintColor = focused ? '#0065FF' : 'gray';
-          } else if (route.name === 'Profile') {
-            labelName = strings.profile;
-            size = focused ? 11 : 0;
-            tintColor = focused ? '#0065FF' : 'gray';
-          }
-          return (
-            <Text
-              style={{
-                color: tintColor,
-                fontSize: size,
-                marginBottom: 5,
-                marginTop: -5,
-              }}>
-              {labelName}
-            </Text>
-          );
-        },
-        tabBarIcon: ({focused, size, color}) => {
-          let iconName;
-          if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
-            size = focused ? 22 : 25;
-          } else if (route.name === 'News') {
-            iconName = 'earth';
-            size = focused ? 22 : 25;
-          } else if (route.name === 'Notifications') {
-            iconName = focused ? 'bell' : 'bell-outline';
-            size = focused ? 22 : 25;
-          } else if (route.name === 'Profile') {
-            iconName = focused ? 'account' : 'account-outline';
-            size = focused ? 22 : 25;
-          }
-          return (
-            <MaterialCommunityIcons name={iconName} size={size} color={color} />
-          );
-        },
-        headerShown: false,
-        tabBarStyle: {
-          position: 'absolute',
-          bottom: 0,
-          alignItems: 'center',
-          height: 50,
-          color: 'red'
-        }
-      })}>
-      <Tab.Screen name="Home" component={Home} options={{}} />
-      <Tab.Screen name="News" component={News} options={{}} />
-      <Tab.Screen
-        name="Notifications"
-        component={Notifications}
-        options={{
-          tabBarBadge: tabBarBadge,
-        }}
-      />
-      <Tab.Screen name="Profile" component={Profile} options={{}} />
-    </Tab.Navigator>
-  );
-}
+const RootStack = createStackNavigator();
 
 function App() {
   const loggedIn = useSelector(state => state.user.loggedIn);
@@ -350,10 +260,4 @@ const AppWrapper = () => {
 
   return <App />;
 };
-
-const styles = StyleSheet.create({
-  navBottom_container: {
-    padding: 5,
-  },
-});
 export default AppWrapper;

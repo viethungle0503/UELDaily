@@ -17,17 +17,21 @@ import {
   setScoreBoardByYear,
   setScoreBoardBySemester
 } from '../../redux_toolkit/userSlice';
-import styles from './HomeScreenStyles/screen_ScoreBoard_style'
+import styles from './HomeScreenStyles/screen_ScoreBoard_style';
+import strings from '../Language';
+import { useSelector } from 'react-redux';
+
 export default function ScoreBoard({ navigation }) {
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
   const dispatch = useDispatch();
   const [openYear, setOpenYear] = useState(false);
   const [valueYear, setValueYear] = useState(null);
   const [itemsYear, setItemsYear] = useState([
     { label: 'Tất cả', value: '0' },
-    { label: 'Năm 1', value: '1' },
-    { label: 'Năm 2', value: '2' },
-    { label: 'Năm 3', value: '3' },
-    { label: 'Năm 4', value: '4' },
+    { label: strings.first_year, value: '1' },
+    { label: strings.second_year, value: '2' },
+    { label: strings.third_year, value: '3' },
+    { label: strings.fourth_year, value: '4' },
   ]);
   const onYearOpen = useCallback(() => {
     setOpenSemester(false);
@@ -36,9 +40,9 @@ export default function ScoreBoard({ navigation }) {
   const [valueSemester, setValueSemester] = useState(null);
   const [itemsSemester, setItemsSemester] = useState([
     { label: 'Tất cả', value: '0' },
-    { label: 'Học kỳ 1', value: '1' },
-    { label: 'Học kỳ 2', value: '2' },
-    { label: 'Học kỳ hè', value: '3' },
+    { label: strings.first_semester, value: '1' },
+    { label: strings.second_semester, value: '2' },
+    { label: strings.summer_semester, value: '3' },
   ]);
   const onSemesterOpen = useCallback(() => {
     setOpenYear(false);
@@ -77,6 +81,8 @@ export default function ScoreBoard({ navigation }) {
     temp2 = 0;
     temp3 = 0;
   }, [scoreBoard])
+  useEffect(() => {
+  },[currentLanguage])
   return (
     <TouchableOpacity activeOpacity={1} style={styles.body} onPress={() => {
       if (openSemester) {
@@ -130,7 +136,7 @@ export default function ScoreBoard({ navigation }) {
               setItems={setItemsYear}
               defaultNull
               labelStyle={styles.btnSort_Text}
-              placeholder='Năm học'
+              placeholder={strings.year}
               placeholderStyle={styles.btnSort_Text}
               style={styles.btnSort}
               containerStyle={styles.btnSortContainer}
@@ -169,7 +175,7 @@ export default function ScoreBoard({ navigation }) {
               setItems={setItemsSemester}
               defaultNull
               labelStyle={styles.btnSort_Text}
-              placeholder='Học kỳ'
+              placeholder={strings.semester}
               placeholderStyle={styles.btnSort_Text}
               style={styles.btnSort}
               containerStyle={styles.btnSortContainer}
@@ -203,7 +209,7 @@ export default function ScoreBoard({ navigation }) {
         {/* Main Content */}
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
           <View style={styles.dashboard}>
-            <Text style={styles.dashboardHeader}>Điểm trung bình toàn khóa</Text>
+            <Text style={styles.dashboardHeader}>{strings.Overall_GPA}</Text>
 
             <View style={styles.dashboardItemView}>
               {/* Credit */}
@@ -215,7 +221,7 @@ export default function ScoreBoard({ navigation }) {
                   },
                 ]}>
                 <Text style={styles.dashboardItem_IndicatorName}>
-                  Số tín chỉ đã đậu
+                {strings.passed_credits}
                 </Text>
 
                 <View style={styles.dashboardItem_IndicatorResultView}>
@@ -239,7 +245,7 @@ export default function ScoreBoard({ navigation }) {
                   },
                 ]}>
                 <Text style={styles.dashboardItem_IndicatorName}>
-                  Điểm trung bình
+                {strings.GPA}
                 </Text>
 
                 <View style={styles.dashboardItem_IndicatorResultView}>
@@ -265,7 +271,7 @@ export default function ScoreBoard({ navigation }) {
                   },
                 ]}>
                 <Text style={styles.dashboardItem_IndicatorName}>
-                  Xếp loại học lực
+                {strings.classification}
                 </Text>
 
                 <View style={styles.dashboardItem_IndicatorResultView}>

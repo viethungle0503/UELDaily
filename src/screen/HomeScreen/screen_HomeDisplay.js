@@ -7,33 +7,49 @@ import {
   Modal,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './HomeScreenStyles/screen_HomeDisplay_style';
-import { strings } from '../Language';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentLanguage } from '../../redux_toolkit/userSlice';
+import strings from '../Language';
 
-export default function HomeDisplay({navigation}) {
+export default function HomeDisplay({ navigation }) {
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
+  const dispatch = useDispatch()
   const [openLanguageMenu, setopenLanguageMenu] = useState(false);
-
-  const [VNLanguage, setVNLanguage] = useState(true);
+  const [VNLanguage, setVNLanguage] = useState((currentLanguage == "vn") ? true : false);
   const chooseVNLanguage = () => {
     setVNLanguage(!VNLanguage);
     setENLanguage(!ENLanguage);
   };
 
-  const [ENLanguage, setENLanguage] = useState(false);
+  const [ENLanguage, setENLanguage] = useState(!VNLanguage);
   const chooseENLanguage = () => {
     setENLanguage(!ENLanguage);
     setVNLanguage(!VNLanguage);
   };
-
+  useEffect(() => {
+    strings.setLanguage(currentLanguage);
+    if (currentLanguage == "vn") {
+      setVNLanguage(true);
+      setENLanguage(false)
+    }
+    else {
+      setVNLanguage(false);
+      setENLanguage(true)
+    }
+  }, [currentLanguage]);
+  if(strings.getInterfaceLanguage().substring(3,5).toLowerCase() != currentLanguage) {
+    strings.setLanguage(currentLanguage);
+  };
   const news = news_UEL.map((item, index) => (
     <TouchableOpacity
       style={styles.row}
       key={index}
       onPress={() => {
-        navigation.navigate('NewsDetail', {link: item.link});
+        navigation.navigate('NewsDetail', { link: item.link });
       }}>
-      <Image style={styles.hoatdongImage} source={{uri: item.imageURL}} />
+      <Image style={styles.hoatdongImage} source={{ uri: item.imageURL }} />
       <View style={styles.contentMain}>
         <Text
           style={styles.hoatdongTitle}
@@ -59,7 +75,7 @@ export default function HomeDisplay({navigation}) {
         <View
           style={styles.langBackground}>
           <View style={styles.langContainer}>
-            <Text style={styles.modalHeading}>Chọn ngôn ngữ</Text>
+            <Text style={styles.modalHeading}>{strings.select_language}</Text>
 
             <TouchableOpacity
               onPress={chooseVNLanguage}
@@ -81,7 +97,7 @@ export default function HomeDisplay({navigation}) {
                   source={require('../../assets/account_lang_vie.png')}
                   style={styles.langNationIcon}
                 />
-                <Text style={styles.modalText}>Tiếng Việt</Text>
+                <Text style={styles.modalText}>{strings.vietnamese}</Text>
               </View>
 
               <Image
@@ -120,7 +136,7 @@ export default function HomeDisplay({navigation}) {
                   style={styles.langNationIcon}
                 />
 
-                <Text style={styles.modalText}>Tiếng Anh</Text>
+                <Text style={styles.modalText}>{strings.english}</Text>
               </View>
 
               <Image
@@ -142,18 +158,17 @@ export default function HomeDisplay({navigation}) {
               style={styles.langFooter_ButtonClose}
               onPress={() => {
                 setopenLanguageMenu(false);
-                if(VNLanguage == true) {
+                if (VNLanguage == true) {
                   strings.setLanguage('vn')
-                  console.log("changedVN");
+                  dispatch(setCurrentLanguage("vn"));
                 }
-                if(ENLanguage == true) {
-                  //changeLaguage(en);
+                if (ENLanguage == true) {
                   strings.setLanguage('en')
-                  console.log("changedEN");
+                  dispatch(setCurrentLanguage("en"));
                 }
-                }}>
-              <Text style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
-                Xác nhận
+              }}>
+              <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '600' }}>
+                {strings.confirm}
               </Text>
             </TouchableOpacity>
           </View>
@@ -164,10 +179,10 @@ export default function HomeDisplay({navigation}) {
 
       {loggedIn && (
         <View style={styles.studentwelcome}>
-       
+
           <Image
             style={styles.studentAvatar}
-            source={{uri: currentUser.data.profileImage}}
+            source={{ uri: currentUser.data.profileImage }}
           />
           <View>
             {currentUser ? (
@@ -190,7 +205,7 @@ export default function HomeDisplay({navigation}) {
 
           </TouchableOpacity>
 
-          
+
           <Image
             style={styles.effect}
             source={require('../../assets/effectRound.png')}
@@ -199,10 +214,10 @@ export default function HomeDisplay({navigation}) {
       )}
       <View style={styles.tienich}>
         <View style={styles.tienichHeader}>
-          <Text style={styles.tienichText}>Tiện ích</Text>
+          <Text style={styles.tienichText}>{strings.utilities}</Text>
           <TouchableOpacity style={styles.btnAllTienich}>
             <MaterialCommunityIcons name={'tune-variant'} size={12} />
-            <Text style={{color: 'black', marginLeft: 5}}>Tất cả</Text>
+            <Text style={{ color: 'black', marginLeft: 5 }}>{strings.all}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.col}>
@@ -223,7 +238,7 @@ export default function HomeDisplay({navigation}) {
                 style={styles.tienichIcon__ItemImg}
                 source={require('../../assets/xemdiemIcon.png')}
               />
-              <Text style={styles.tienichIcon__ItemText}>Xem điểm</Text>
+              <Text style={styles.tienichIcon__ItemText}>{strings.scoreboard}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.tienichIcon_Item}
@@ -232,7 +247,7 @@ export default function HomeDisplay({navigation}) {
                 style={styles.tienichIcon__ItemImg}
                 source={require('../../assets/lichthiIcon.png')}
               />
-              <Text style={styles.tienichIcon__ItemText}>Lịch thi</Text>
+              <Text style={styles.tienichIcon__ItemText}>{strings.exam}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.tienichIcon}>
@@ -243,7 +258,7 @@ export default function HomeDisplay({navigation}) {
                 style={styles.tienichIcon__ItemImg}
                 source={require('../../assets/baitapIcon.png')}
               />
-              <Text style={styles.tienichIcon__ItemText}>Bài tập</Text>
+              <Text style={styles.tienichIcon__ItemText}>{strings.homework}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.tienichIcon_Item}
@@ -252,7 +267,7 @@ export default function HomeDisplay({navigation}) {
                 style={styles.tienichIcon__ItemImg}
                 source={require('../../assets/hocphiIcon.png')}
               />
-              <Text style={styles.tienichIcon__ItemText}>Học phí</Text>
+              <Text style={styles.tienichIcon__ItemText}>{strings.tuition}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.tienichIcon_Item}
@@ -261,7 +276,7 @@ export default function HomeDisplay({navigation}) {
                 style={styles.tienichIcon__ItemImg}
                 source={require('../../assets/ctxhIcon.png')}
               />
-              <Text style={styles.tienichIcon__ItemText}>Ngày CTXH</Text>
+              <Text style={styles.tienichIcon__ItemText}>{strings.ctxh}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -269,7 +284,7 @@ export default function HomeDisplay({navigation}) {
       <View style={styles.shape}></View>
 
       <View>
-        <Text style={styles.hoatdongHeader}>Hoạt động gần đây</Text>
+        <Text style={styles.hoatdongHeader}>{strings.recent_activity}</Text>
         <View style={styles.hoatdong}>{news}</View>
       </View>
     </ScrollView>

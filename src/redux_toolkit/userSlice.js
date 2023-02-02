@@ -9,6 +9,7 @@ export const userSlice = createSlice({
         isDataReady:false,
         atPreLogin1:true,
         atPreLogin2:false,
+        currentLanguage:"vn",
     },
     reducers: {
         setLoggedIn: (state, action) => {
@@ -40,12 +41,16 @@ export const userSlice = createSlice({
         setAtPreLogin2:(state,action) => {
             state.atPreLogin2 = action.payload;
         },
+        setCurrentLanguage:(state,action) => {
+            state.currentLanguage = action.payload;
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
 export const { setLoggedIn, setCurrentUser, setCurrentUserProfileImage,
      setScoreBoard, setScoreBoardByYear, setScoreBoardBySemester,
-      setIsDataReady, setAtPreLogin1, setAtPreLogin2} = userSlice.actions;
+      setIsDataReady, setAtPreLogin1, setAtPreLogin2,
+      setCurrentLanguage,} = userSlice.actions;
 
 export default userSlice.reducer;

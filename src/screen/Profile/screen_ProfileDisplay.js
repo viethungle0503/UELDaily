@@ -9,54 +9,52 @@ import {
   Alert,
   ImageBackground,
 } from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { useSelector, useDispatch } from 'react-redux';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import {
   setLoggedIn,
   setCurrentUser,
   setScoreBoard,
+  setCurrentLanguage
 } from '../../redux_toolkit/userSlice';
 import auth from '@react-native-firebase/auth';
 import styles from './ProfileStyles/screen_ProfileDisplay_style';
-import { strings } from '../Language';
-
-export default function ProfileDisplay({navigation}) {
+import strings from '../Language';
+export default function ProfileDisplay({ navigation }) {
   function showAlert() {
     Alert.alert(
       "Thông báo",
-              "Tính năng này chưa được phát triển, đang đợi chị Ngân, chị Ngọc, chị Huyền và anh Bình cho biết thêm thông tin @@",
-              [
-                {
-                  text: "Cancel",
-                  onPress: () => Alert.alert("Cancel Pressed"),
-                  style: "cancel",
-                },
-                { text: "OK", onPress: () => Alert.alert("OK Pressed") }
-              ],
-              {
-                cancelable: true,
-                onDismiss: () =>
-                  Alert.alert(
-                    "This alert was dismissed by tapping outside of the alert dialog."
-                  ),
-              }
+      "Tính năng này chưa được phát triển, đang đợi chị Ngân, chị Ngọc, chị Huyền và anh Bình cho biết thêm thông tin @@",
+      [
+        {
+          text: "Cancel",
+          onPress: () => Alert.alert("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => Alert.alert("OK Pressed") }
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          Alert.alert(
+            "This alert was dismissed by tapping outside of the alert dialog."
+          ),
+      }
     );
   }
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
   const [openLanguageMenu, setopenLanguageMenu] = React.useState(false);
-
-  const [VNLanguage, setVNLanguage] = React.useState(true);
+  const [VNLanguage, setVNLanguage] = React.useState((currentLanguage == "vn") ? true : false);
   const chooseVNLanguage = () => {
     setVNLanguage(!VNLanguage);
     setENLanguage(!ENLanguage);
   };
 
-  const [ENLanguage, setENLanguage] = React.useState(false);
+  const [ENLanguage, setENLanguage] = React.useState((currentLanguage == "en") ? true : false);
   const chooseENLanguage = () => {
     setENLanguage(!ENLanguage);
     setVNLanguage(!VNLanguage);
   };
-
-  const [currentLanguage,setCurrentLanguage] = useState("vn");
   const dispatch = useDispatch();
   const signOut = async () => {
     try {
@@ -73,9 +71,17 @@ export default function ProfileDisplay({navigation}) {
       console.error(error);
     }
   };
-  // useEffect(() => {
-  //   console.log("well")
-  // },[VNLanguage]);
+  useEffect(() => {
+    if (currentLanguage == "vn") {
+      setVNLanguage(true);
+      setENLanguage(false)
+    }
+    else {
+      setVNLanguage(false);
+      setENLanguage(true)
+    }
+  }, [currentLanguage])
+
   return (
     <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
       {loggedIn && (
@@ -87,7 +93,7 @@ export default function ProfileDisplay({navigation}) {
             <View style={styles.studentAvatarContainer}>
               <Image
                 style={styles.studentAvatar}
-                source={{uri: currentUser.data.profileImage}}
+                source={{ uri: currentUser.data.profileImage }}
               />
             </View>
 
@@ -100,7 +106,7 @@ export default function ProfileDisplay({navigation}) {
         </ImageBackground>
       )}
       <View style={styles.accountInfoContainer}>
-        <Text style={styles.accountHeading}>Thông tin</Text>
+        <Text style={styles.accountHeading}>{strings.information}</Text>
 
         <TouchableOpacity
           style={styles.accountListItem}
@@ -110,7 +116,7 @@ export default function ProfileDisplay({navigation}) {
               source={require('../../assets/account_userinfo.png')}
               style={styles.accountListItem_IconTitle}
             />
-            <Text style={styles.accountText}>Thông tin sinh viên</Text>
+            <Text style={styles.accountText}>{strings.student_information}</Text>
           </View>
 
           <View style={styles.row}>
@@ -124,7 +130,7 @@ export default function ProfileDisplay({navigation}) {
 
       {/* cài đặt section */}
       <View style={styles.accountSettingContainer}>
-        <Text style={styles.accountHeading}>Cài đặt</Text>
+        <Text style={styles.accountHeading}>{strings.setting}</Text>
 
         <TouchableOpacity
           style={styles.accountListItem}
@@ -134,11 +140,11 @@ export default function ProfileDisplay({navigation}) {
               source={require('../../assets/account_userinfo.png')}
               style={styles.accountListItem_IconTitle}
             />
-            <Text style={styles.accountText}>Ngôn ngữ</Text>
+            <Text style={styles.accountText}>{strings.language}</Text>
           </View>
 
           <View style={styles.row}>
-            <Text style={styles.accountDataText}>{VNLanguage ? "Tiếng Việt" : "English"}</Text>
+            <Text style={styles.accountDataText}>{(currentLanguage == "vn") ? "Tiếng Việt" : "English"}</Text>
 
             <Image
               source={require('../../assets/account_btnOpen.png')}
@@ -233,28 +239,27 @@ export default function ProfileDisplay({navigation}) {
                 style={styles.langFooter_ButtonClose}
                 onPress={() => {
                   setopenLanguageMenu(false);
-                  if(VNLanguage == true) {
+                  if (VNLanguage == true) {
                     strings.setLanguage('vn')
-                    console.log("changedVN");
+                    dispatch(setCurrentLanguage("vn"));
                   }
-                  if(ENLanguage == true) {
-                    //changeLaguage(en);
+                  if (ENLanguage == true) {
                     strings.setLanguage('en')
-                    console.log("changedEN");
+                    dispatch(setCurrentLanguage("en"));
                   }
-                  }}>
-                <Text style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
-                  Xác nhận
+                }}>
+                <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '600' }}>
+                  {strings.confirm}
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
-        
+
       </View>
       {/* cài đặt section */}
       <View style={styles.accountPolicyContainer}>
-        <Text style={styles.accountHeading}>Điều khoản và sử dụng</Text>
+        <Text style={styles.accountHeading}>{strings.terms_of_use}</Text>
 
         <TouchableOpacity
           style={styles.accountListItem}
@@ -264,7 +269,7 @@ export default function ProfileDisplay({navigation}) {
               source={require('../../assets/account_hoidap.png')}
               style={styles.accountListItem_IconTitle}
             />
-            <Text style={styles.policy_accountText}>Hỏi đáp về ứng dụng</Text>
+            <Text style={styles.policy_accountText}>{strings.QuestionAndAnswer}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -276,7 +281,7 @@ export default function ProfileDisplay({navigation}) {
               style={styles.accountListItem_IconTitle}
             />
             <Text style={styles.policy_accountText}>
-              Quy định sử dụng và chính sách người dùng
+              {strings.usage_rules_and_policy}
             </Text>
           </View>
         </TouchableOpacity>
@@ -289,7 +294,7 @@ export default function ProfileDisplay({navigation}) {
               style={styles.accountListItem_IconTitle}
             />
             <Text style={styles.policy_accountText}>
-              Chính sách quyền riêng tư
+              {strings.privacy_policy}
             </Text>
           </View>
         </TouchableOpacity>

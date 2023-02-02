@@ -11,7 +11,10 @@ import { useDispatch } from 'react-redux';
 import { setNews_Departments } from '../../redux_toolkit/newsSlice';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './MediaStyles/screen_MediaNoti_style';
+import strings from '../Language';
+import { useSelector } from 'react-redux';
 export function MediaNoti({ navigation, route }) {
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
   const dispatch = useDispatch();
   var { searchUrl, uri, name} = route.params
   const cheerio = require('cheerio');
@@ -67,6 +70,8 @@ export function MediaNoti({ navigation, route }) {
     }, 1000);
     return () => clearTimeout(timer)
   }, [ready]);
+  useEffect(() => {
+  },[currentLanguage])
   return (
     <ScrollView style={styles.body}>
       {ready ? (<>
@@ -115,7 +120,7 @@ export function MediaNoti({ navigation, route }) {
         })}
       </ScrollView>)}
       <View style={styles.mediaNoti_All}>
-        <Text style={styles.mediaNotiHeader}>Tổng hợp</Text>
+        <Text style={styles.mediaNotiHeader}>{strings.general}</Text>
         {smallPictureNews.map((item, index) => {
           return (
             <TouchableOpacity
@@ -249,7 +254,7 @@ export function MediaNoti1({ navigation, route }) {
         })}
       </ScrollView>)}
       <View style={styles.mediaNoti_All}>
-        <Text style={styles.mediaNotiHeader}>Tổng hợp</Text>
+        <Text style={styles.mediaNotiHeader}>{strings.general}</Text>
         {smallPictureNews.map((item, index) => {
           return (
             <TouchableOpacity

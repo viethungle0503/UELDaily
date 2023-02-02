@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   View,
@@ -12,7 +12,7 @@ import styles from './NoticesStyles/screen_UpdateNotices_style'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Swipeable } from 'react-native-gesture-handler';
 
-const deleteItem = () => {  
+const deleteItem = () => {
   alert('Chắc xóa chưa?')
 }
 const renderRight = (progress, dragX) => {
@@ -27,8 +27,8 @@ const renderRight = (progress, dragX) => {
       }
     ]
   };
-  return(
-    <View 
+  return (
+    <View
       style={{
         width: 80,
         height: '100%',
@@ -40,38 +40,28 @@ const renderRight = (progress, dragX) => {
         borderBottomRightRadius: 5,
 
         marginBottom: 20,
-        }} 
+      }}
       onPress={deleteItem}>
 
-      <Animated.Text style={[Style,{
+      <Animated.Text style={[Style, {
         color: '#FFF',
         fontWeight: 'bold',
         fontSize: 10,
-        }]}>
+      }]}>
         Xóa
       </Animated.Text>
     </View>
   )
 };
-// import { ModalUpdateNoti } from '../../components/ModalUpdateNoti';
 
-export default function UpdateNotices({navigation}) {
-
+export default function UpdateNotices({ navigation }) {
   // modal
   // const [open, setOpen] = useState(false);
   const [openModalUpdateNoti, setopenModalUpdateNoti] = useState(false);
-  const changeModalUpdateNotiVisible = (bool) => {
-    setopenModalUpdateNoti(bool)
-  }
-  
   const [modalData, setModalData] = useState();
   // const [modalContent, setModalContent] = useState();
-  
   // modal
-
-
   const [updateNotices, setUpdateNotices] = useState([]);
-
   useEffect(() => {
     if (updateNotices.length == 0) {
       var updateNoticesHolder = [...updateNotices];
@@ -87,14 +77,12 @@ export default function UpdateNotices({navigation}) {
     }
   }, [updateNotices]);
   return (
-
     <View style={styles.body}>
-
       <Modal
         animationType='slide'
         transparent={true}
         visible={openModalUpdateNoti}
-        >
+      >
         <View style={styles.modalContainer}>
           {/* 2 effect */}
           <Image
@@ -108,25 +96,22 @@ export default function UpdateNotices({navigation}) {
           {/* 2 effect */}
 
           <TouchableOpacity
-            style={styles.btnBackContainer} 
-            onPress={() => changeModalUpdateNotiVisible(false)}
-            >
+            style={styles.btnBackContainer}
+            onPress={() => setopenModalUpdateNoti(false)}
+          >
             <MaterialCommunityIcons
               name={'keyboard-backspace'}
               size={30}
               color={'#000'}
             />
           </TouchableOpacity>
-
           {modalData}
-         
         </View>
       </Modal>
-      
-      <ScrollView 
-        style={styles.noti} 
-        showsVerticalScrollIndicator={false}>
 
+      <ScrollView
+        style={styles.noti}
+        showsVerticalScrollIndicator={false}>
         {updateNotices.map((item, index) => {
           let creTime = new Date(item.creTime);
           let today = new Date();
@@ -144,76 +129,52 @@ export default function UpdateNotices({navigation}) {
           else {
             time_gap = `${Math.floor(hours)}h`;
           }
-
           function settingModal() {
-
             const title = (() => (
               <ScrollView>
                 <View style={styles.modalHeader}>
-
                   <Text style={styles.modalHeader_TitleText}>
                     {item.title}
                   </Text>
-
                   <View style={styles.modalHeader_Department}>
-
-                    <Image 
+                    <Image
                       style={styles.modalHeader_Icon}
-                      source={require('../../assets/component_ModalUpdateNoti_Icon.png')}/>
-
+                      source={require('../../assets/component_ModalUpdateNoti_Icon.png')} />
                     <View>
                       <Text style={styles.modalHeader_DepartmentName}>
                         {item.sendBy}
                       </Text>
-
                       <Text style={styles.modalHeader_DepartmentMail}>
-                        phongtc@uel.edu.vn
+                       No corresponding data
                       </Text>
-
                     </View>
-
                   </View>
-
                 </View>
-
                 <View style={styles.modalContent}>
                   <Text style={styles.modalContentText}>
                     {item.content}
 
                   </Text>
                 </View>
-                
+
 
                 <TouchableOpacity style={styles.btnResponse}>
                   <Text style={styles.btnResponseText}>Trả lời</Text>
                 </TouchableOpacity>
 
               </ScrollView>
-              
+
             ));
-            
             setModalData(title);
-            {/* setModalContent(content); */}
-            setopenModalUpdateNoti(true);
           }
-
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
-
-            
-              <Animated.View 
-                onPress={() => settingModal()}
-                // onPress={() => changeModalUpdateNotiVisible(true)}
-                style={styles.notiItem} key={item._id + index}>
-                
-                
-
+            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight} key={item._id + index}>
+              <Animated.View
+                style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}
-                
                 <View style={styles.notiItem_Icon}>
                   <Image source={require('../../assets/notiCapnhat.png')} />
                 </View>
-
                 <View style={styles.notiItem_Content}>
                   <Text
                     style={styles.notiItem_Content_Title}
@@ -230,7 +191,10 @@ export default function UpdateNotices({navigation}) {
                   </Text>
 
                   <View style={styles.notiItem_Content_ActionTime}>
-                    <TouchableOpacity style={styles.notiItem_Content_Action}>
+                    <TouchableOpacity style={styles.notiItem_Content_Action}
+                      onPress={() => {
+                        settingModal();
+                        setopenModalUpdateNoti(true)}}>
                       <Text
                         style={[
                           styles.notiItem_Content_ActionText,
@@ -244,7 +208,7 @@ export default function UpdateNotices({navigation}) {
 
                     <View style={styles.row}>
                       <Image source={require('../../assets/notiHistory.png')} />
-                      <Text style={{color: 'red'}}>&nbsp;{time_gap}</Text>
+                      <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
                     </View>
 
                   </View>
@@ -258,7 +222,7 @@ export default function UpdateNotices({navigation}) {
                         backgroundColor: item.seen ? '#0065FF' : '#ffffff',
                       },
                     ]}></View>
-                  
+
                 </View>
               </Animated.View>
             </Swipeable>
@@ -268,7 +232,7 @@ export default function UpdateNotices({navigation}) {
       </ScrollView>
 
 
-      
+
     </View>
   );
 }

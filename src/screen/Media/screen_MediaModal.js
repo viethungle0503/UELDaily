@@ -7,15 +7,20 @@ import {
 import {MediaNoti, MediaNoti1} from './screen_MediaNoti';
 import styles from './MediaStyles/screen_MediaModal_style';
 import MediaContact from './screen_MediaContact'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import strings from '../Language';
+import { useSelector } from 'react-redux';
 const Tab = createMaterialTopTabNavigator();
 export default function MediaModal({ navigation,route }) {
+    const currentLanguage = useSelector(state => state.user.currentLanguage);
     var {name,searchUrl, email,phone,website,fanpage,uri} =  route.params;
     var ready = false;
     if(global.news_Departments.findIndex(x => x.identifier == searchUrl) != -1) {
         ready = true;
     };
+    useEffect(() => {
+    },[currentLanguage])
     return (
         <View style={styles.modalContainer}>
             <Image
@@ -62,7 +67,7 @@ export default function MediaModal({ navigation,route }) {
                     component={ready ? MediaNoti1 : MediaNoti}
                     initialParams={{searchUrl:searchUrl,uri:uri,name:name}}
                     options={{
-                        tabBarLabel: 'Thông báo',
+                        tabBarLabel: strings.news,
                         upperCaseLabel: false,
                         headerShown: false,
                     }}
@@ -71,7 +76,7 @@ export default function MediaModal({ navigation,route }) {
                     name="MediaContact"
                     component={MediaContact}
                     initialParams={{email:email,phone:phone,website:website,fanpage:fanpage,uri:uri}}
-                    options={{ tabBarLabel: 'Liên hệ', headerShown: false }}
+                    options={{ tabBarLabel: strings.contact, headerShown: false }}
                 />
             </Tab.Navigator>
         </View>

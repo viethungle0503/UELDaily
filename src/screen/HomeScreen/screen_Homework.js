@@ -8,10 +8,16 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import HWTab1 from './screen_HomeworkTab_1';
 import HWTab2 from './screen_HomeworkTab_2';
 import styles from './HomeScreenStyles/screen_Homework_style'
+import strings from '../Language';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function Homework({navigation}) {
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
+  useEffect(() => {
+  },[currentLanguage])
   return (
     <View style={styles.body}>
      
@@ -37,7 +43,7 @@ export default function Homework({navigation}) {
           name="HWTab1"
           component={HWTab1}
           options={{
-            tabBarLabel: 'Việc cần làm',
+            tabBarLabel: strings.things_to_do,
             upperCaseLabel: false,
             headerShown: false,
           }}
@@ -45,7 +51,7 @@ export default function Homework({navigation}) {
         <Tab.Screen
           name="HWTab2"
           component={HWTab2}
-          options={{tabBarLabel: 'Trễ deadline', headerShown: false}}
+          options={{tabBarLabel: strings.late_deadline, headerShown: false}}
         />
       </Tab.Navigator>
     </View>

@@ -4,8 +4,15 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
-import styles from './ProfileStyles/screen_PersonalInformation_style'
+import styles from './ProfileStyles/screen_PersonalInformation_style';
+import strings from '../Language';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 export default function PersonalInformation({navigation}) {
+    const currentLanguage = useSelector(state => state.user.currentLanguage);
+    useEffect(() => {
+
+    },[currentLanguage])
     return (
         <View style={styles.modalContainer}>
             <Image
@@ -27,7 +34,7 @@ export default function PersonalInformation({navigation}) {
                     />
                 </TouchableOpacity>
 
-                <Text style={styles.modalHeader_Title}>Thông tin sinh viên</Text>
+                <Text style={styles.modalHeader_Title}>{strings.student_information}</Text>
             </View>
 
             <View style={styles.modalContent}>
@@ -37,12 +44,12 @@ export default function PersonalInformation({navigation}) {
                             source={require('../../assets/account_thongtin_coban.png')}
                             style={styles.modalContentItem_Icon}
                         />
-                        <Text style={styles.accountHeading}>Thông tin cơ bản</Text>
+                        <Text style={styles.accountHeading}>{strings.basic_information}</Text>
                     </View>
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>
-                            Họ và tên
+                            {strings.full_name}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             {currentUser.data.lastName + ' ' + currentUser.data.firstName}
@@ -50,14 +57,14 @@ export default function PersonalInformation({navigation}) {
                     </View>
 
                     <View style={styles.modalContentItem_RowInfo}>
-                        <Text style={styles.modalContentItem_RowInfo_Title}>Email</Text>
+                        <Text style={styles.modalContentItem_RowInfo_Title}>{strings.email}</Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             {currentUser.data.email}
                         </Text>
                     </View>
 
                     <View style={styles.modalContentItem_RowInfo}>
-                        <Text style={styles.modalContentItem_RowInfo_Title}>MSSV</Text>
+                        <Text style={styles.modalContentItem_RowInfo_Title}>{strings.student_id}</Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             {currentUser.key}
                         </Text>
@@ -65,7 +72,7 @@ export default function PersonalInformation({navigation}) {
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>
-                            Ngày sinh
+                            {strings.date_of_birth}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             {currentUser.data.dob}
@@ -74,7 +81,7 @@ export default function PersonalInformation({navigation}) {
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>
-                            Nguyên quán
+                            {strings.place_of_origin}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             {currentUser.data.city}
@@ -88,12 +95,12 @@ export default function PersonalInformation({navigation}) {
                             source={require('../../assets/account_thongtin_lienhe.png')}
                             style={styles.modalContentItem_Icon}
                         />
-                        <Text style={styles.accountHeading}>Thông tin liên hệ</Text>
+                        <Text style={styles.accountHeading}>{strings.contact_information}</Text>
                     </View>
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>
-                            Điện thoại
+                            {strings.phone}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             {currentUser.data.selfPhone}
@@ -102,7 +109,7 @@ export default function PersonalInformation({navigation}) {
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>
-                            Email cá nhân
+                            {strings.personal_email}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             {currentUser.data.selfEmail}
@@ -116,12 +123,12 @@ export default function PersonalInformation({navigation}) {
                             source={require('../../assets/account_thongtin_khoahoc.png')}
                             style={styles.modalContentItem_Icon}
                         />
-                        <Text style={styles.accountHeading}>Thông tin khóa học</Text>
+                        <Text style={styles.accountHeading}>{strings.course_information}</Text>
                     </View>
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>
-                            Khóa học
+                            {strings.course}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             Khóa {currentUser.key.substr(1, 2)}
@@ -130,7 +137,7 @@ export default function PersonalInformation({navigation}) {
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>
-                            Niên khóa
+                            {strings.school_year}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             {currentUser.data.yearAdmission +
@@ -141,7 +148,7 @@ export default function PersonalInformation({navigation}) {
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>
-                            Chương trình đào tạo
+                            {strings.education_program}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             {currentUser.data.major}
@@ -149,7 +156,7 @@ export default function PersonalInformation({navigation}) {
                     </View>
 
                     <View style={styles.modalContentItem_RowInfo}>
-                        <Text style={styles.modalContentItem_RowInfo_Title}>Lớp</Text>
+                        <Text style={styles.modalContentItem_RowInfo_Title}>{strings.class}</Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
                             {currentUser.data.class}
                         </Text>
