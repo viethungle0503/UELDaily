@@ -24,31 +24,31 @@ export default function Home() {
         name="Schedule"
         component={Schedule}
         options={{
-          title: 'Thời khoá biểu',
+          title: strings.schedule,
         }}
       />
       <HomeStack.Screen
         name="ScoreBoard"
         component={ScoreBoard}
         options={{
-          title: 'Xem điểm',
+          title: strings.scoreboard,
         }}
       />
       <HomeStack.Screen
         name="Exam"
         component={Exam}
-        options={{ title: 'Lịch thi' }}
+        options={{ title: strings.exam }}
       />
       <HomeStack.Screen
         name="Ctxh"
         component={Ctxh}
-        options={{ title: 'Kiểm tra ngày CTXH' }}
+        options={{ title: strings.ctxh }}
       />
       <HomeStack.Screen
         name="Homework"
         component={Homework}
         options={({ navigation, route }) => ({
-          title: 'Bài tập LMS',
+          title: strings.homework,
           headerLeft: props => (
             <HeaderBackButton
               {...props}
@@ -75,12 +75,12 @@ export default function Home() {
       <HomeStack.Screen
         name="Tuition"
         component={Tuition}
-        options={{ title: 'Học phí' }}
+        options={{ title: strings.tuition }}
       />
       <HomeStack.Screen
         name="NewsDetail"
         component={NewsDetail}
-        options={{ title: 'Thông tin chi tiết' }}
+        options={{ headerShown:false }}
       />
     </HomeStack.Navigator>
   );

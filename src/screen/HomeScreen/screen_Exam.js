@@ -9,17 +9,19 @@ import { FlatList } from 'react-native-gesture-handler';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useCallback, useEffect, useState } from 'react';
 import styles from './HomeScreenStyles/screen_Exam_style';
-import { strings } from '../Language';
+import strings from '../Language';
+import { useSelector } from 'react-redux';
 
 
 export default function Exam({ navigation }) {
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
   const [openYear, setOpenYear] = useState(false);
   const [valueYear, setValueYear] = useState(null);
   const [itemsYear, setItemsYear] = useState([
-    { label: 'Năm 1', value: '1' },
-    { label: 'Năm 2', value: '2' },
-    { label: 'Năm 3', value: '3' },
-    { label: 'Năm 4', value: '4' },
+    { label: strings.first_year, value: '1' },
+    { label: strings.second_year, value: '2' },
+    { label: strings.third_year, value: '3' },
+    { label: strings.fourth_year, value: '4' },
   ]);
   const onYearOpen = useCallback(() => {
     setOpenSemester(false);
@@ -27,9 +29,9 @@ export default function Exam({ navigation }) {
   const [openSemester, setOpenSemester] = useState(false);
   const [valueSemester, setValueSemester] = useState(null);
   const [itemsSemester, setItemsSemester] = useState([
-    { label: 'Học kỳ 1', value: '1' },
-    { label: 'Học kỳ 2', value: '2' },
-    { label: 'Học kỳ hè', value: '5' },
+    { label: strings.first_semester, value: '1' },
+    { label: strings.second_semester, value: '2' },
+    { label: strings.summer_semester, value: '5' },
   ]);
   const onSemesterOpen = useCallback(() => {
     setOpenYear(false);
@@ -54,6 +56,8 @@ export default function Exam({ navigation }) {
       setExamSchedule(examScheduleHolder);
     }
   }, []);
+  useEffect(() => {
+  },[currentLanguage])
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (openSemester) {
@@ -114,7 +118,7 @@ export default function Exam({ navigation }) {
               setItems={setItemsSemester}
               defaultNull
               labelStyle={styles.btnSort_Text}
-              placeholder='Học kỳ'
+              placeholder={strings.semester}
               placeholderStyle={styles.btnSort_Text}
               style={styles.btnSort}
               containerStyle={styles.btnSortContainer}
@@ -160,7 +164,7 @@ export default function Exam({ navigation }) {
                   <Image
                     style={styles.examIcon}
                     source={require('../../assets/ngaythi.png')}></Image>
-                  <Text style={styles.monthi_Item__DetailTitle}> Ngày thi: </Text>
+                  <Text style={styles.monthi_Item__DetailTitle}>{`${strings.exam_date}: `}</Text>
                   <Text style={styles.monthi_Item__DetailData}>{item.date}</Text>
                 </View>
 
@@ -168,7 +172,7 @@ export default function Exam({ navigation }) {
                   <Image
                     style={styles.examIcon}
                     source={require('../../assets/thoigianthi.png')}></Image>
-                  <Text style={styles.monthi_Item__DetailTitle}> Thời gian: </Text>
+                  <Text style={styles.monthi_Item__DetailTitle}>{`${strings.time}: `}</Text>
                   <Text style={styles.monthi_Item__DetailData}>{item.time}</Text>
                 </View>
 
@@ -176,7 +180,7 @@ export default function Exam({ navigation }) {
                   <Image
                     style={styles.examIcon}
                     source={require('../../assets/phongthi.png')}></Image>
-                  <Text style={styles.monthi_Item__DetailTitle}> Phòng thi: </Text>
+                  <Text style={styles.monthi_Item__DetailTitle}>{`${strings.examination_room}: `}</Text>
                   <Text style={styles.monthi_Item__DetailData}>{item.room}</Text>
                 </View>
               </View>

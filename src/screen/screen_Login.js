@@ -17,7 +17,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import auth from '@react-native-firebase/auth';
 
 export default function Login({navigation}) {
-
   _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -90,7 +89,7 @@ export default function Login({navigation}) {
 
         <View style={styles.btnStartView}>
           {!loggedIn && (
-            <TouchableOpacity style={styles.btnStart} onPress={this._signIn}>
+            <TouchableOpacity style={styles.btnStart} onPress={() => _signIn()}>
               <MaterialCommunityIcons
                 style={[
                   {

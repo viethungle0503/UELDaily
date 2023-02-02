@@ -5,9 +5,12 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import styles from './MediaStyles/screen_MediaMain_style'
+import styles from './MediaStyles/screen_MediaMain_style';
+import strings from '../Language';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 export default function MediaMain({ navigation }) {
-  
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
   var departments = database_departments.map((item, index) => {
     //let existImage = "asset:/departments/" + item.data.logoUrl;
     //let defaultImage = "asset:/departments/default.png";
@@ -39,6 +42,8 @@ export default function MediaMain({ navigation }) {
       </TouchableOpacity>
     )
   });
+  useEffect(() => {
+  },[currentLanguage])
   return (
     <View style={styles.body}>
       <Image
@@ -51,7 +56,7 @@ export default function MediaMain({ navigation }) {
       />
       <ScrollView style={{ flex: 1 }}>
         <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 20, color: 'red' }}>
-          Sự kiện
+          {strings.news}
         </Text>
         {departments}
       </ScrollView>
