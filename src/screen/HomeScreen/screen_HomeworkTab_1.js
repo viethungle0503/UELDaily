@@ -1,112 +1,78 @@
 import {
-    Image,
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-    ImageBackground,
-    TouchableHighlight,
-    ScrollView,
-    FlatList
-  } from 'react-native';
-import styles from './HomeScreenStyles/screen_HomeworkTab_1_style'
+  Image,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
+import styles from './HomeScreenStyles/screen_HomeworkTab_1_style';
+import { useSelector } from 'react-redux';
+import { dateDiffInDays } from '../GlobalFunction';
 
-export default function HWTab1({navigation}) {
 
-    return (
-    <ScrollView style={styles.body} showsVerticalScrollIndicator={false}    >
+export default function HWTab1({ navigation, route }) {
+  const modules = useSelector(state => state.user.lateModules);
+  return (
+    <View style={styles.body}>
+      <FlatList
+        data={modules}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => {
+          var length = item.information.dates.length;
+          var startDate = null;
+          var endDate = null;
+          var startDateFormat = null;
+          var endDateFormat = null;
+          var today = null;
+          var distanceTime = null;
+          for (let i = 0; i < length; i++) {
+            // StartDate
+            if (item.information.dates[i].label == "Opened:") {
+              startDate = new Date(item.information.dates[i].timestamp * 1000);
+              startDateFormat = `${startDate.getHours()}h${startDate.getMinutes()} ngày ${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`;
+            }
+            // EndDate
+            else if (item.information.dates[i].label == "Due:") {
+              endDate = new Date(item.information.dates[i].timestamp * 1000);
+              endDateFormat = `${endDate.getHours()}h${endDate.getMinutes()} ngày ${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear()}`;
+            }
+          }
+          // DifferenceDate
+          if (endDate !== null) {
+            today = new Date();
+            distanceTime = dateDiffInDays(today, endDate);
+          }
+          return (
+            (
+              <TouchableOpacity onPress={() => {
+                navigation.navigate('NewsDetail', { link: item.information.url });
+              }}
+                style={[
+                  styles.hwItem,
+                  {
+                    marginTop: 25,
+                  },
+                ]}>
+                <Text style={styles.hwtext_subject}>{`${item.fullname}`}</Text>
 
-        <View style={[styles.hwItem, {
-            marginTop: 25, 
-        }]}>
-            <Text style={styles.hwtext_subject}>
-                Phát triển web kinh doanh
-            </Text>
+                <Text style={styles.hwtext_topic}>{`${item.information.name}`}</Text>
 
-            <Text style={styles.hwtext_topic}>
-                Bài tập 2
-            </Text>
-            
-            <View style={styles.row}>
-                <Text style={styles.hwtext_schedule}>
-                12:00 20/12 - 18:00 21/12
-                </Text>
-
-                <View style={styles.timedueContainer}>
-
-                    <Image 
-                        style={styles.timedueIcon}
-                        source={require('../../assets/hw_timedue_icon.png')}
+                <View style={styles.row}>
+                  <Text style={styles.hwtext_schedule}>{`${startDateFormat} - ${endDateFormat}`}</Text>
+                  <View style={styles.timedueContainer}>
+                    <Image
+                      style={styles.timedueIcon}
+                      source={require('../../assets/hw_timedue_icon.png')}
                     />
-                
-                    <Text style={styles.timedueText}>
-                        9 giờ
-                    </Text>
+                    <Text style={styles.timedueText}>{distanceTime}</Text>
+                  </View>
                 </View>
-            </View>
-
-        </View>
-
-        <View style={styles.hwItem}>
-            <Text style={styles.hwtext_subject}>
-                Phát triển web kinh doanh
-            </Text>
-
-            <Text style={styles.hwtext_topic}>
-            Báo cáo đồ án cuối kỳ
-            </Text>
-            
-            <View style={styles.row}>
-                <Text style={styles.hwtext_schedule}>
-                12:00 20/12 - 18:00 21/12
-                </Text>
-
-                <View style={styles.timedueContainer}>
-
-                    <Image 
-                        style={styles.timedueIcon}
-                        source={require('../../assets/hw_timedue_icon.png')}
-                    />
-                
-                    <Text style={styles.timedueText}>
-                        3 ngày
-                    </Text>
-                </View>
-            </View>
-
-        </View>
-
-        <View style={styles.hwItem}>
-            <Text style={styles.hwtext_subject}>
-            Phân tích và thiết kế Hệ thống thông tin
-            </Text>
-
-            <Text style={styles.hwtext_topic}>
-            Group final project
-            </Text>
-            
-            <View style={styles.row}>
-                <Text style={styles.hwtext_schedule}>
-                12:00 20/12 - 18:00 21/12
-                </Text>
-
-                <View style={styles.timedueContainer}>
-
-                    <Image 
-                        style={styles.timedueIcon}
-                        source={require('../../assets/hw_timedue_icon.png')}
-                    />
-                
-                    <Text style={styles.timedueText}>
-                        9 ngày
-                    </Text>
-                </View>
-            </View>
-
-        </View>
-
-    </ScrollView>
-);
+              </TouchableOpacity>
+            )
+          )
+        }
+        }
+      />
+    </View>
+  );
 }
-
-  

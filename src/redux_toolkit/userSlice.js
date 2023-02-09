@@ -4,53 +4,63 @@ export const userSlice = createSlice({
     name: 'user',
     initialState: {
         loggedIn: false,
-        currentUser:{},
-        scoreBoard:[],
-        isDataReady:false,
-        atPreLogin1:true,
-        atPreLogin2:false,
-        currentLanguage:"vn",
+        currentUser: {},
+        scoreBoard: [],
+        isDataReady: false,
+        atPreLogin1: true,
+        atPreLogin2: false,
+        currentLanguage: "vn",
+        modules: [],
+        lateModules: [],
     },
     reducers: {
         setLoggedIn: (state, action) => {
             state.loggedIn = action.payload
         },
-        setCurrentUser:(state,action) => {
+        setCurrentUser: (state, action) => {
             state.currentUser = action.payload
         },
-        setCurrentUserProfileImage:(state,action) => {
+        setCurrentUserProfileImage: (state, action) => {
             state.currentUser.data.profileImage = action.payload
         },
-        setScoreBoard:(state,action) => {
+        setScoreBoard: (state, action) => {
             state.scoreBoard = action.payload;
         },
-        setScoreBoardByYear:(state,action) => {
+        setScoreBoardByYear: (state, action) => {
             state.scoreBoard = state.scoreBoard.filter(item => item.year_type == action.payload)
         },
-        setScoreBoardBySemester:(state,action) => {
+        setScoreBoardBySemester: (state, action) => {
             state.scoreBoard.forEach(value => {
                 value.semester = value.semester.filter(item => item.semester_type == action.payload);
             })
         },
-        setIsDataReady:(state,action) => {
+        setIsDataReady: (state, action) => {
             state.isDataReady = action.payload;
         },
-        setAtPreLogin1:(state,action) => {
+        setAtPreLogin1: (state, action) => {
             state.atPreLogin1 = action.payload;
         },
-        setAtPreLogin2:(state,action) => {
+        setAtPreLogin2: (state, action) => {
             state.atPreLogin2 = action.payload;
         },
-        setCurrentLanguage:(state,action) => {
+        setCurrentLanguage: (state, action) => {
             state.currentLanguage = action.payload;
+        },
+        setModules: (state, action) => {
+            state.modules = action.payload;
+        },
+        setLateModules: (state, action) => {
+            state.lateModules = action.payload;
         },
     },
 })
 
 // Action creators are generated for each case reducer function
 export const { setLoggedIn, setCurrentUser, setCurrentUserProfileImage,
-     setScoreBoard, setScoreBoardByYear, setScoreBoardBySemester,
-      setIsDataReady, setAtPreLogin1, setAtPreLogin2,
-      setCurrentLanguage,} = userSlice.actions;
+    setScoreBoard, setScoreBoardByYear, setScoreBoardBySemester,
+    setIsDataReady, setAtPreLogin1, setAtPreLogin2,
+    setCurrentLanguage,
+    setModules,
+    setLateModules } = userSlice.actions;
 
 export default userSlice.reducer;

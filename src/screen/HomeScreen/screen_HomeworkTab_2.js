@@ -2,87 +2,80 @@ import {
     Image,
     View,
     Text,
-    StyleSheet,
+    FlatList,
     TouchableOpacity,
-    ImageBackground,
-    TouchableHighlight,
-    ScrollView,
-    FlatList
 } from 'react-native';
-import styles from './HomeScreenStyles/screen_HomeworkTab_2_style'
+import styles from './HomeScreenStyles/screen_HomeworkTab_2_style';
+import { useSelector } from 'react-redux';
+import { dateDiffInDays } from '../GlobalFunction';
 
-export default function HWTab2({ navigation }) {
+export default function HWTab2({ navigation, route }) {
+    const lateModules = useSelector(state => state.user.lateModules);
     return (
-        <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
-            <View style={[styles.hwItem, {
-                marginTop: 25,
-            }]}>
-                <Text style={styles.hwtext_subject}>
-                    Phát triển web kinh doanh
-                </Text>
-                <Text style={styles.hwtext_topic}>
-                    Bài tập 1
-                </Text>
-                <View style={styles.row}>
-                    <Text style={styles.hwtext_schedule_danger}>
-                        12h00 ngày 12/12 - 18h00 ngày 19/10
-                    </Text>
-                    <View style={[styles.timedueContainer, styles.timedue_danger]}>
-                        <Image
-                            style={styles.timedueIcon}
-                            source={require('../../assets/hw_timedue_icon.png')}
-                        />
-                        <Text style={styles.timedueText}>
-                            9 giờ
-                        </Text>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.hwItem}>
-                <Text style={styles.hwtext_subject}>
-                    Phát triển web kinh doanh
-                </Text>
-                <Text style={styles.hwtext_topic}>
-                    Bài tập trên lớp (14/11/2022)
-                </Text>
-                <View style={styles.row}>
-                    <Text style={styles.hwtext_schedule_danger}>
-                        12h00 ngày 14/11 - 12h00 ngày 15/12
-                    </Text>
-                    <View style={[styles.timedueContainer, styles.timedue_danger]}>
-                        <Image
-                            style={styles.timedueIcon}
-                            source={require('../../assets/hw_timedue_icon.png')}
-                        />
-                        <Text style={styles.timedueText}>
-                            -5 ngày
-                        </Text>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.hwItem}>
-                <Text style={styles.hwtext_subject}>
-                    Phân tích và thiết kế Hệ thống thông tin
-                </Text>
-                <Text style={styles.hwtext_topic}>
-                    Week 3: DFD POS System
-                </Text>
-                <View style={styles.row}>
-                    <Text style={styles.hwtext_schedule_danger}>
-                        12h00 ngày 11/11 - 18h00 ngày 11/12
-                    </Text>
-                    <View style={[styles.timedueContainer, styles.timedue_danger]}>
-                        <Image
-                            style={styles.timedueIcon}
-                            source={require('../../assets/hw_timedue_icon.png')}
-                        />
-                        <Text style={styles.timedueText}>
-                            -9 ngày
-                        </Text>
-                    </View>
-                </View>
-            </View>
-        </ScrollView>
+        <View style={styles.body}>
+            <FlatList
+                data={lateModules}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => {
+                    var length = item.information.dates.length;
+                    var startDate = null;
+                    var endDate = null;
+                    var startDateFormat = null;
+                    var endDateFormat = null;
+                    var today = null;
+                    var distanceTime = null;
+                    for (let i = 0; i < length; i++) {
+                        // StartDate
+                        if (item.information.dates[i].label == "Opened:") {
+                            startDate = new Date(item.information.dates[i].timestamp * 1000);
+                            startDateFormat = `${startDate.getHours()}h${startDate.getMinutes()} ngày ${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`;
+                        }
+                        // EndDate
+                        else if (item.information.dates[i].label == "Due:") {
+                            endDate = new Date(item.information.dates[i].timestamp * 1000);
+                            endDateFormat = `${endDate.getHours()}h${endDate.getMinutes()} ngày ${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear()}`;
+                        }
+                    }
+                    // DifferenceDate
+                    if (endDate !== null) {
+                        today = new Date();
+                        distanceTime = dateDiffInDays(today, endDate);
+                    }
+                    return (
+                        (
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate('NewsDetail', { link: item.information.url });
+                            }}
+                                style={[styles.hwItem, {
+                                    marginTop: 25,
+                                }]}>
+                                <Text style={styles.hwtext_subject}>
+                                    {`${item.fullname}`}
+                                </Text>
+                                <Text style={styles.hwtext_topic}>
+                                    {`${item.information.name}`}
+                                </Text>
+                                <View style={styles.row}>
+                                    <Text style={styles.hwtext_schedule_danger}>
+                                        {`${startDateFormat} - ${endDateFormat}`}
+                                    </Text>
+                                    <View style={[styles.timedueContainer, styles.timedue_danger]}>
+                                        <Image
+                                            style={styles.timedueIcon}
+                                            source={require('../../assets/hw_timedue_icon.png')}
+                                        />
+                                        <Text style={styles.timedueText}>
+                                            {distanceTime}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    )
+                }
+                }
+            />
+        </View>
     );
 }
 

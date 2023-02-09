@@ -20,11 +20,19 @@ export default function NewsDetail({navigation, route}) {
     var {link} = route.params;
   }
 
-  return (
-    <WebView
+  return ( 
+    <>
+    {(link.search("lms-uel.thanhbinhbent.com") != -1) ? (
+      <WebView
+      source={{uri: link}}
+    />
+    ) : (
+      <WebView
       injectedJavaScript={scripts}
       javaScriptEnabledAndroid={true}
       source={{uri: link}}
     />
+    )}
+    </>
   );
 }
