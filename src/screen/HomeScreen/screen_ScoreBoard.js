@@ -5,12 +5,11 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
-  Touchable,
+  SectionList,
 } from 'react-native';
 import { useState, useRef } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useEffect, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {
   setScoreBoard,
@@ -19,10 +18,13 @@ import {
 } from '../../redux_toolkit/userSlice';
 import styles from './HomeScreenStyles/screen_ScoreBoard_style';
 import strings from '../Language';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import post_data from '../UEL';
+import { groupBy } from '../GlobalFunction';
 
 export default function ScoreBoard({ navigation }) {
-  const currentLanguage = useSelector(state => state.user.currentLanguage);
+  const [scoreBoardHolder,setScoreBoardHolder] = useState([]);
+  const scoreBoard = useSelector(state => state.user.scoreBoard);
   const dispatch = useDispatch();
   const [openYear, setOpenYear] = useState(false);
   const [valueYear, setValueYear] = useState(null);
@@ -57,11 +59,27 @@ export default function ScoreBoard({ navigation }) {
   const [open, setOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState();
   const [modalContent, setModalContent] = useState();
+  useEffect(() => {
+    post_data("scoreboard", currentUser.key).then((response) => {
+      var board = groupBy(response, item => item.startYear);
+      var size = board.size;
+      var sectionArray = []
+      board.forEach((value, key, map) => {
+        let semester = board.get(key)[0].semester;
+        let startYear = board.get(key)[0].startYear;
+        let endYear = board.get(key)[0].endYear;
+        let title = `Học kỳ ${semester} năm học ${startYear} - ${endYear}`
+        sectionArray = [...sectionArray, { title: title, data: value }];
+      })
+      setScoreBoardHolder(sectionArray);
+      dispatch(setScoreBoard(sectionArray));
+    })
+  }, [])
   function changeView(xyear = 0, xsemester = 0) {
-    dispatch(setScoreBoard(currentUser.data.scoreboard));
-    if (xyear != 0) {
-      dispatch(setScoreBoardByYear(xyear));
-    }
+    dispatch(setScoreBoard(scoreBoardHolder));
+    // if (xyear != 0) {
+    //   dispatch(setScoreBoardByYear(xyear));
+    // }
     if (xsemester != 0) {
       dispatch(setScoreBoardBySemester(xsemester));
     }
@@ -80,9 +98,7 @@ export default function ScoreBoard({ navigation }) {
     temp1 = 0;
     temp2 = 0;
     temp3 = 0;
-  }, [scoreBoard])
-  useEffect(() => {
-  },[currentLanguage])
+  }, [scoreBoard]);
   return (
     <TouchableOpacity activeOpacity={1} style={styles.body} onPress={() => {
       if (openSemester) {
@@ -97,8 +113,8 @@ export default function ScoreBoard({ navigation }) {
         <Modal
           visible={open}
           transparent={true}
-          animationType= 'slide'
-          >
+          animationType='slide'
+        >
           <View style={styles.modalBackground} >
             <View style={styles.modalContainer}>
               <View style={styles.modalIconContainer}>
@@ -118,7 +134,7 @@ export default function ScoreBoard({ navigation }) {
               </TouchableOpacity>
             </View>
           </View>
-         
+
           <View style={{ alignItems: 'center' }}>
           </View>
 
@@ -221,7 +237,7 @@ export default function ScoreBoard({ navigation }) {
                   },
                 ]}>
                 <Text style={styles.dashboardItem_IndicatorName}>
-                {strings.passed_credits}
+                  {strings.passed_credits}
                 </Text>
 
                 <View style={styles.dashboardItem_IndicatorResultView}>
@@ -230,7 +246,7 @@ export default function ScoreBoard({ navigation }) {
                     source={require('../../assets/scoreboard_tinchi.png')}
                   />
                   <Text style={styles.dashboardItem_IndicatorResult}>
-                    {(credit != 0) ? (`${passedCredit}/${credit}`) :("Không có dữ liệu")}
+                    {(credit != 0) ? (`${passedCredit}/${credit}`) : ("Không có dữ liệu")}
                   </Text>
                 </View>
               </View>
@@ -245,7 +261,7 @@ export default function ScoreBoard({ navigation }) {
                   },
                 ]}>
                 <Text style={styles.dashboardItem_IndicatorName}>
-                {strings.GPA}
+                  {strings.GPA}
                 </Text>
 
                 <View style={styles.dashboardItem_IndicatorResultView}>
@@ -271,7 +287,7 @@ export default function ScoreBoard({ navigation }) {
                   },
                 ]}>
                 <Text style={styles.dashboardItem_IndicatorName}>
-                {strings.classification}
+                  {strings.classification}
                 </Text>
 
                 <View style={styles.dashboardItem_IndicatorResultView}>
@@ -283,10 +299,10 @@ export default function ScoreBoard({ navigation }) {
                     {
                       (credit != 0) ? (
                         (mediumScore > 9) ? "Xuất sắc" :
-                        (mediumScore > 8) ? "Giỏi" :
-                          (mediumScore > 7) ? "Khá" :
-                            (mediumScore > 6) ? "Trung bình - Khá" :
-                              (mediumScore > 5) ? "Trung bình" : "Yếu"
+                          (mediumScore > 8) ? "Giỏi" :
+                            (mediumScore > 7) ? "Khá" :
+                              (mediumScore > 6) ? "Trung bình - Khá" :
+                                (mediumScore > 5) ? "Trung bình" : "Yếu"
                       ) : "Không có dữ liệu"
                     }
                   </Text>
@@ -295,101 +311,114 @@ export default function ScoreBoard({ navigation }) {
               {/* academic capacity */}
             </View>
           </View>
-          {
-            scoreBoard.map((item, index) => {
-              return (
-                <View style={styles.list} key={index}>
-                  {item.semester.map((subItem, subIndex) => {
-                    return (
-                      <View key={subIndex}>
-                        <Text style={styles.listSemester}>Học kỳ {subItem.semester_type} {item.name}</Text>
-                        {subItem.courses.map((finalItem, finalIndex) => {
-                          temp1 += finalItem.credit;
-                          if (finalItem.overallScore >= 5) {
-                            temp2 += finalItem.credit;
-                          };
-                          temp3 += (finalItem.overallScore * finalItem.credit);
-                          function settingModal() {
-                            const title = (() => (
-                              <View style={styles.modalHeader}>
-                                <Text style={styles.modalHeaderText}>{finalItem.courseName}</Text>
-                              </View>
-                            ));
-                            const content = (() => {
-                              const section = Object.keys(finalItem.courseScore).map((lastItem, lastIndex) => {
-                                return(
-                                <View style={styles.modalDetail_RowData} key={lastIndex}>
-                                  <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>{lastItem}</Text>
-                                  <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>{finalItem.courseScore[lastItem]}</Text>
-                                </View>
-                              )})
-                              return (
-                                <View style={styles.modalDetail}>
-                                  <View style={styles.modalDetail_Header}>
-                                    <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colContent]}>
-                                      Điểm thành phần
-                                    </Text>
-                                    <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colPayAmount]}>
-                                      Thang 10
-                                    </Text>
-                                  </View>
-                                  {section}
-                                </View>
-                              )
-                            });
-                            setModalTitle(title);
-                            setModalContent(content);
-                            setOpen(true);
-                          }
-                          return (
-                            <TouchableOpacity style={styles.listItem} key={finalIndex} 
-                              onPress={() => settingModal()}>
-                              <View style={[styles.listItem_Markup, (finalItem.overallScore >= 5) ? { backgroundColor: '#E3ECFF' } : { backgroundColor: '#FF967C' }]}></View>
 
-                              <Text style={styles.listItem_SubjectName}>
-                                {finalItem.courseName}
-                              </Text>
-
-                              <View style={styles.listItem_Content}>
-                                <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-                                <Text style={styles.listItem_ContentData}>{finalItem.overallScore}</Text>
-                              </View>
-
-                              <View style={styles.listItem_Content}>
-                                <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-                                <Text style={styles.listItem_ContentData}>{((finalItem.overallScore) >= 5) ? "Đạt" : "Chưa đạt"}</Text>
-                              </View>
-
-                              {/* <TouchableOpacity style={styles.listItem_ViewDetail}
-                                onPress={() => settingModal()}>
-                                <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-                                <MaterialCommunityIcons
-                                  name={'arrow-right-thin'}
-                                  size={22}
-                                  color={'#fff'}
-                                />
-                              </TouchableOpacity> */}
-                            </TouchableOpacity>
-                          )
-                        })}
-
-                      </View>
-
-                    )
-                  })}
-                </View>
-              )
-            })
-          }
         </ScrollView>
         {/* Main Content */}
-
+        <SectionList
+          sections={scoreBoard}
+          keyExtractor={(item, index) => item + index}
+          renderItem={({ item }) => {
+            function settingModal() {
+              const title = (() => (
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalHeaderText}>{item.courseName}</Text>
+                </View>
+              ));
+              const content = (() => {
+                const section = () => {
+                  return (
+                    <>
+                      {
+                        (item.attendence != undefined) ? (
+                          <View style={styles.modalDetail_RowData}>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>Điểm quá trình</Text>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>{item.attendence}</Text>
+                          </View>
+                        ) : (
+                          <></>
+                        )
+                      }
+                      {
+                        (item.midterm != undefined) ? (
+                          <View style={styles.modalDetail_RowData}>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>Điểm thi giữa học phần</Text>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>{item.midterm}</Text>
+                          </View>
+                        ) : (
+                          <></>
+                        )
+                      }
+                      {
+                        (item.final != undefined) ? (
+                          <View style={styles.modalDetail_RowData}>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>Điểm thi kết thúc học phần</Text>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>{item.final}</Text>
+                          </View>
+                        ) : (
+                          <></>
+                        )
+                      }
+                    </>
+            
+                  )
+                }
+                return (
+                  <View style={styles.modalDetail}>
+                    <View style={styles.modalDetail_Header}>
+                      <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colContent]}>
+                        Điểm thành phần
+                      </Text>
+                      <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colPayAmount]}>
+                        Thang 10
+                      </Text>
+                    </View>
+                    {section()}
+                  </View>
+                )
+              });
+              setModalTitle(title);
+              setModalContent(content);
+              setOpen(true);
+            };
+            let overallScore = (item.attendence * item.percentAttendence) + (item.midterm * item.percentMidterm) + (item.final * item.percentFinal)
+            return (
+              <TouchableOpacity style={styles.listItem}
+              onPress={() => settingModal()}>
+                <View style={[styles.listItem_Markup, (overallScore >= 5) ? { backgroundColor: '#E3ECFF' } : { backgroundColor: '#FF967C' }]}></View>
+                <Text style={styles.listItem_SubjectName}>
+                  {item.courseName}
+                </Text><View style={styles.listItem_Content}>
+                  <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
+                  <Text style={styles.listItem_ContentData}>{overallScore}</Text>
+                </View>
+                <View style={styles.listItem_Content}>
+                  <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
+                  <Text style={styles.listItem_ContentData}>{((overallScore) >= 5) ? "Đạt" : "Chưa đạt"}</Text>
+                </View>
+                {/* <TouchableOpacity style={styles.listItem_ViewDetail}
+                  onPress={() => settingModal()}>
+                  <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
+                  <MaterialCommunityIcons
+                    name={'arrow-right-thin'}
+                    size={22}
+                    color={'#fff'}
+                  />
+                </TouchableOpacity> */}
+              </TouchableOpacity>
+            )
+          }}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.listSemester}>{title}</Text>
+          )}
+        />
 
 
       </View>
     </TouchableOpacity>
 
 
-
   );
 }
+
+
+
