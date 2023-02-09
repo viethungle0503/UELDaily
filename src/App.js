@@ -40,7 +40,7 @@ import SplashScreen from 'react-native-splash-screen';
 // Language
 import strings from './screen/Language';
 // Main
-
+import post_data from './screen/UEL';
 const RootStack = createStackNavigator();
 
 function App() {
@@ -90,7 +90,7 @@ const AppWrapper = () => {
   // User
   global.loggedIn = useSelector(state => state.user.loggedIn);
   global.currentUser = useSelector(state => state.user.currentUser);
-  global.scoreBoard = useSelector(state => state.user.scoreBoard);
+
   global.isDataReady = useSelector(state => state.user.isDataReady);
   global.atPreLogin1 = useSelector(state => state.user.atPreLogin1);
   global.atPreLogin2 = useSelector(state => state.user.atPreLogin2);
@@ -131,7 +131,7 @@ const AppWrapper = () => {
           if (element.data.email == account.email) {
             i = 1;
             dispatch(setCurrentUser(element));
-            dispatch(setScoreBoard(element.data.scoreboard));
+
             dispatch(setCurrentUserProfileImage(account.photoURL));
             dispatch(setLoggedIn(true));
             break;

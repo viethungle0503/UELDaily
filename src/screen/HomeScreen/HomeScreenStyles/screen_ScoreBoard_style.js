@@ -24,10 +24,6 @@ export default StyleSheet.create({
       justifyContent: 'space-evenly',
     },
   
-    list: {
-      flex: 6,
-    },
-  
     // dashboard
     dashboardHeader: {
       marginVertical: 20,

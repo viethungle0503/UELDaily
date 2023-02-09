@@ -5,7 +5,7 @@ export const userSlice = createSlice({
     initialState: {
         loggedIn: false,
         currentUser: {},
-        scoreBoard: [],
+        scoreBoard: [{title:"Hello",data:[]}],
         isDataReady: false,
         atPreLogin1: true,
         atPreLogin2: false,
@@ -27,12 +27,10 @@ export const userSlice = createSlice({
             state.scoreBoard = action.payload;
         },
         setScoreBoardByYear: (state, action) => {
-            state.scoreBoard = state.scoreBoard.filter(item => item.year_type == action.payload)
+            state.scoreBoard = state.scoreBoard.filter(item => item.data[0].startYear == action.payload)
         },
         setScoreBoardBySemester: (state, action) => {
-            state.scoreBoard.forEach(value => {
-                value.semester = value.semester.filter(item => item.semester_type == action.payload);
-            })
+            state.scoreBoard = state.scoreBoard.filter(item => item.data[0].semester == action.payload)
         },
         setIsDataReady: (state, action) => {
             state.isDataReady = action.payload;
