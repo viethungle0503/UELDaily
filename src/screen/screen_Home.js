@@ -12,7 +12,7 @@ import strings from './Language';
 
 const HomeStack = createStackNavigator();
 
-export default function Home() {
+export default function Home({navigation}) {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -64,7 +64,7 @@ export default function Home() {
                   navigation.navigate(initBy);
                 }
                 else {
-                  navigation.goBack();
+                  navigation.navigate("HomeDisplay");
                 }
 
               }}
