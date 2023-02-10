@@ -13,17 +13,15 @@ import { useEffect, useCallback } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {
   setScoreBoard,
-  setScoreBoardByYear,
-  setScoreBoardBySemester
 } from '../../redux_toolkit/userSlice';
 import styles from './HomeScreenStyles/screen_ScoreBoard_style';
 import strings from '../Language';
 import { useSelector, useDispatch } from 'react-redux';
 import post_data from '../UEL';
-import { groupBy } from '../GlobalFunction';
+import { groupBy, roundHalf } from '../GlobalFunction';
 
 export default function ScoreBoard({ navigation }) {
-  const [scoreBoardHolder,setScoreBoardHolder] = useState([]);
+  const [scoreBoardHolder, setScoreBoardHolder] = useState([]);
   const scoreBoard = useSelector(state => state.user.scoreBoard);
   const dispatch = useDispatch();
   const [openYear, setOpenYear] = useState(false);
@@ -49,8 +47,8 @@ export default function ScoreBoard({ navigation }) {
   const onSemesterOpen = useCallback(() => {
     setOpenYear(false);
   }, []);
-  const [year, setYear] = useState(currentUser.data.currentYear)
-  const [semester, setSemester] = useState(currentUser.data.currentSemester);
+  const [year, setYear] = useState(0)
+  const [semester, setSemester] = useState(0);
   // Score & Credits
   const [mediumScore, setMediumScore] = useState(0);
   const [passedCredit, setPassedCredit] = useState(0);
@@ -61,44 +59,65 @@ export default function ScoreBoard({ navigation }) {
   const [modalContent, setModalContent] = useState();
   useEffect(() => {
     post_data("scoreboard", currentUser.key).then((response) => {
-      var board = groupBy(response, item => item.startYear);
-      var size = board.size;
-      var sectionArray = []
-      board.forEach((value, key, map) => {
-        let semester = board.get(key)[0].semester;
-        let startYear = board.get(key)[0].startYear;
-        let endYear = board.get(key)[0].endYear;
-        let title = `Học kỳ ${semester} năm học ${startYear} - ${endYear}`
-        sectionArray = [...sectionArray, { title: title, data: value }];
-      })
+      var groupByYear = groupBy(response, item => item.startYear);
+      var yearArray = [];
+      var sectionArray = [];
+      groupByYear.forEach((year) => {
+        yearArray = [...yearArray, year];
+      });
+      yearArray.forEach((groupedYear) => {
+        var groupBySemester = groupBy(groupedYear, item => item.semester);
+        groupBySemester.forEach((value, key, map) => {
+          let semester = groupBySemester.get(key)[0].semester;
+          let startYear = groupBySemester.get(key)[0].startYear;
+          let endYear = groupBySemester.get(key)[0].endYear;
+          let title = `Học kỳ ${semester} năm học ${startYear} - ${endYear}`
+          sectionArray = [...sectionArray, { title: title, data: value }];
+        });
+      });
       setScoreBoardHolder(sectionArray);
       dispatch(setScoreBoard(sectionArray));
     })
   }, [])
   function changeView(xyear = 0, xsemester = 0) {
-    dispatch(setScoreBoard(scoreBoardHolder));
-    // if (xyear != 0) {
-    //   dispatch(setScoreBoardByYear(xyear));
-    // }
+    setScoreBoardHolder(scoreBoard);
+    if (xyear != 0) {
+      xyear = parseFloat(xyear) + parseFloat(currentUser.data.yearAdmission);
+      setScoreBoardHolder(item => item.filter(x => x.data[0].endYear == xyear));
+    }
     if (xsemester != 0) {
-      dispatch(setScoreBoardBySemester(xsemester));
+      setScoreBoardHolder(item => item.filter(x => x.data[0].semester == xsemester));
     }
   };
-  var temp1 = 0;
-  var temp2 = 0;
-  var temp3 = 0;
+  var creditHolder = 0;
+  var passedCreditHolder = 0;
+  var mediumScoreHolder = 0;
   useEffect(() => {
-    setCredit(temp1);
-    setPassedCredit(temp2);
-    if (temp1 != 0) {
-      setMediumScore((temp3 / temp1).toFixed(2));
+    scoreBoardHolder.forEach((section) => {
+      section.data.forEach((item) => {
+        let attendence = (item.attendence != undefined) ? item.attendence : null;
+        let percentAttendence = (item.percentAttendence != undefined) ? item.percentAttendence : null;
+        let midterm = (item.midterm != undefined) ? item.midterm : null;
+        let percentMidterm = (item.percentMidterm != undefined) ? item.percentMidterm : null;
+        let final = (item.final != undefined) ? item.final : null;
+        let percentFinal = (item.percentFinal != undefined) ? item.percentFinal : null;
+        let overallScore = parseFloat(attendence * percentAttendence) + parseFloat(midterm * percentMidterm) + parseFloat(final * percentFinal);
+        overallScore = roundHalf(overallScore);
+        creditHolder += item.credit;
+        if (overallScore >= 5) passedCreditHolder += item.credit
+        mediumScoreHolder += parseFloat(overallScore * item.credit);
+      })
+    })
+    setCredit(creditHolder);
+    setPassedCredit(passedCreditHolder);
+    if (creditHolder != 0) {
+      setMediumScore((mediumScoreHolder / creditHolder).toFixed(2));
     }
     else setMediumScore(0);
-
-    temp1 = 0;
-    temp2 = 0;
-    temp3 = 0;
-  }, [scoreBoard]);
+    creditHolder = 0;
+    passedCreditHolder = 0;
+    mediumScoreHolder = 0;
+  }, [scoreBoardHolder]);
   return (
     <TouchableOpacity activeOpacity={1} style={styles.body} onPress={() => {
       if (openSemester) {
@@ -223,99 +242,101 @@ export default function ScoreBoard({ navigation }) {
         {/* Selection */}
 
         {/* Main Content */}
-        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-          <View style={styles.dashboard}>
-            <Text style={styles.dashboardHeader}>{strings.Overall_GPA}</Text>
 
-            <View style={styles.dashboardItemView}>
-              {/* Credit */}
-              <View
-                style={[
-                  styles.dashboardItem,
-                  {
-                    backgroundColor: '#F7CAB7',
-                  },
-                ]}>
-                <Text style={styles.dashboardItem_IndicatorName}>
-                  {strings.passed_credits}
+        <View style={styles.dashboard}>
+          <Text style={styles.dashboardHeader}>
+            {(year != 0 && semester != 0) ? (strings.Overall_Semester) :
+              (year != 0 && semester == 0) ? (strings.Overall_Year) :
+                (year == 0 && semester != 0) ? (strings.Compare_the_same_period) : (strings.Overall_GPA)}
+          </Text>
+          <View style={styles.dashboardItemView}>
+            {/* Credit */}
+            <View
+              style={[
+                styles.dashboardItem,
+                {
+                  backgroundColor: '#F7CAB7',
+                },
+              ]}>
+              <Text style={styles.dashboardItem_IndicatorName}>
+                {strings.passed_credits}
+              </Text>
+
+              <View style={styles.dashboardItem_IndicatorResultView}>
+                <Image
+                  style={styles.dashboardItem_IndicatorImage}
+                  source={require('../../assets/scoreboard_tinchi.png')}
+                />
+                <Text style={styles.dashboardItem_IndicatorResult}>
+                  {(credit != 0) ? (`${passedCredit}/${credit}`) : ("Không có dữ liệu")}
                 </Text>
-
-                <View style={styles.dashboardItem_IndicatorResultView}>
-                  <Image
-                    style={styles.dashboardItem_IndicatorImage}
-                    source={require('../../assets/scoreboard_tinchi.png')}
-                  />
-                  <Text style={styles.dashboardItem_IndicatorResult}>
-                    {(credit != 0) ? (`${passedCredit}/${credit}`) : ("Không có dữ liệu")}
-                  </Text>
-                </View>
               </View>
-              {/* Credit */}
-
-              {/* Medium Score */}
-              <View
-                style={[
-                  styles.dashboardItem,
-                  {
-                    backgroundColor: '#E3ECFF',
-                  },
-                ]}>
-                <Text style={styles.dashboardItem_IndicatorName}>
-                  {strings.GPA}
-                </Text>
-
-                <View style={styles.dashboardItem_IndicatorResultView}>
-                  <Image
-                    style={styles.dashboardItem_IndicatorImage}
-                    source={require('../../assets/scoreboard_GPA.png')}
-                  />
-                  <Text style={styles.dashboardItem_IndicatorResult}>
-                    {(passedCredit != 0) ? (
-                      `${mediumScore}/10`
-                    ) : ("Không có dữ liệu")}
-                  </Text>
-                </View>
-              </View>
-              {/* Medium Score */}
-
-              {/* academic capacity */}
-              <View
-                style={[
-                  styles.dashboardItem,
-                  {
-                    backgroundColor: '#DEFFD3',
-                  },
-                ]}>
-                <Text style={styles.dashboardItem_IndicatorName}>
-                  {strings.classification}
-                </Text>
-
-                <View style={styles.dashboardItem_IndicatorResultView}>
-                  <Image
-                    style={styles.dashboardItem_IndicatorImage}
-                    source={require('../../assets/scoreboard_tinchi.png')}
-                  />
-                  <Text style={styles.dashboardItem_IndicatorResult}>
-                    {
-                      (credit != 0) ? (
-                        (mediumScore > 9) ? "Xuất sắc" :
-                          (mediumScore > 8) ? "Giỏi" :
-                            (mediumScore > 7) ? "Khá" :
-                              (mediumScore > 6) ? "Trung bình - Khá" :
-                                (mediumScore > 5) ? "Trung bình" : "Yếu"
-                      ) : "Không có dữ liệu"
-                    }
-                  </Text>
-                </View>
-              </View>
-              {/* academic capacity */}
             </View>
-          </View>
+            {/* Credit */}
 
-        </ScrollView>
+            {/* Medium Score */}
+            <View
+              style={[
+                styles.dashboardItem,
+                {
+                  backgroundColor: '#E3ECFF',
+                },
+              ]}>
+              <Text style={styles.dashboardItem_IndicatorName}>
+                {strings.GPA}
+              </Text>
+
+              <View style={styles.dashboardItem_IndicatorResultView}>
+                <Image
+                  style={styles.dashboardItem_IndicatorImage}
+                  source={require('../../assets/scoreboard_GPA.png')}
+                />
+                <Text style={styles.dashboardItem_IndicatorResult}>
+                  {(passedCredit != 0) ? (
+                    `${mediumScore}/10`
+                  ) : ("Không có dữ liệu")}
+                </Text>
+              </View>
+            </View>
+            {/* Medium Score */}
+
+            {/* academic capacity */}
+            <View
+              style={[
+                styles.dashboardItem,
+                {
+                  backgroundColor: '#DEFFD3',
+                },
+              ]}>
+              <Text style={styles.dashboardItem_IndicatorName}>
+                {strings.classification}
+              </Text>
+
+              <View style={styles.dashboardItem_IndicatorResultView}>
+                <Image
+                  style={styles.dashboardItem_IndicatorImage}
+                  source={require('../../assets/scoreboard_tinchi.png')}
+                />
+                <Text style={styles.dashboardItem_IndicatorResult}>
+                  {
+                    (credit != 0) ? (
+                      (mediumScore > 9) ? "Xuất sắc" :
+                        (mediumScore > 8) ? "Giỏi" :
+                          (mediumScore > 7) ? "Khá" :
+                            (mediumScore > 6) ? "Trung bình - Khá" :
+                              (mediumScore > 5) ? "Trung bình" : "Yếu"
+                    ) : "Không có dữ liệu"
+                  }
+                </Text>
+              </View>
+            </View>
+            {/* academic capacity */}
+          </View>
+        </View>
         {/* Main Content */}
         <SectionList
-          sections={scoreBoard}
+        initialNumToRender={5}
+          sections={scoreBoardHolder}
           keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => {
             function settingModal() {
@@ -359,7 +380,7 @@ export default function ScoreBoard({ navigation }) {
                         )
                       }
                     </>
-            
+
                   )
                 }
                 return (
@@ -380,10 +401,17 @@ export default function ScoreBoard({ navigation }) {
               setModalContent(content);
               setOpen(true);
             };
-            let overallScore = (item.attendence * item.percentAttendence) + (item.midterm * item.percentMidterm) + (item.final * item.percentFinal)
+            let attendence = (item.attendence != undefined) ? item.attendence : null;
+            let percentAttendence = (item.percentAttendence != undefined) ? item.percentAttendence : null;
+            let midterm = (item.midterm != undefined) ? item.midterm : null;
+            let percentMidterm = (item.percentMidterm != undefined) ? item.percentMidterm : null;
+            let final = (item.final != undefined) ? item.final : null;
+            let percentFinal = (item.percentFinal != undefined) ? item.percentFinal : null;
+            let overallScore = parseFloat(attendence * percentAttendence) + parseFloat(midterm * percentMidterm) + parseFloat(final * percentFinal);
+            overallScore = roundHalf(overallScore);
             return (
               <TouchableOpacity style={styles.listItem}
-              onPress={() => settingModal()}>
+                onPress={() => settingModal()}>
                 <View style={[styles.listItem_Markup, (overallScore >= 5) ? { backgroundColor: '#E3ECFF' } : { backgroundColor: '#FF967C' }]}></View>
                 <Text style={styles.listItem_SubjectName}>
                   {item.courseName}
@@ -419,6 +447,7 @@ export default function ScoreBoard({ navigation }) {
 
   );
 }
+
 
 
 
