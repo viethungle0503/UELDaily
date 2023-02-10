@@ -5,7 +5,7 @@ export const userSlice = createSlice({
     initialState: {
         loggedIn: false,
         currentUser: {},
-        scoreBoard: [{title:"Hello",data:[]}],
+        scoreBoard: [{ title: "Hello", data: [] }],
         isDataReady: false,
         atPreLogin1: true,
         atPreLogin2: false,
@@ -25,12 +25,6 @@ export const userSlice = createSlice({
         },
         setScoreBoard: (state, action) => {
             state.scoreBoard = action.payload;
-        },
-        setScoreBoardByYear: (state, action) => {
-            state.scoreBoard = state.scoreBoard.filter(item => item.data[0].startYear == action.payload)
-        },
-        setScoreBoardBySemester: (state, action) => {
-            state.scoreBoard = state.scoreBoard.filter(item => item.data[0].semester == action.payload)
         },
         setIsDataReady: (state, action) => {
             state.isDataReady = action.payload;
@@ -55,7 +49,7 @@ export const userSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { setLoggedIn, setCurrentUser, setCurrentUserProfileImage,
-    setScoreBoard, setScoreBoardByYear, setScoreBoardBySemester,
+    setScoreBoard,
     setIsDataReady, setAtPreLogin1, setAtPreLogin2,
     setCurrentLanguage,
     setModules,

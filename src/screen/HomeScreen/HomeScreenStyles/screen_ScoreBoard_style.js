@@ -14,13 +14,8 @@ export default StyleSheet.create({
       width: 16,
       height: 16,
     },
-  
-    container: {
-      flex: 1,
-    },
-  
+
     dashboard: {
-      flex: 3,
       justifyContent: 'space-evenly',
     },
   
