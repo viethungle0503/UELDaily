@@ -13,6 +13,7 @@ import { useEffect, useCallback } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {
   setScoreBoard,
+  setActivityScore
 } from '../../redux_toolkit/userSlice';
 import styles from './HomeScreenStyles/screen_ScoreBoard_style';
 import strings from '../Language';
@@ -22,6 +23,9 @@ import { groupBy, roundHalf } from '../GlobalFunction';
 
 export default function ScoreBoard({ navigation }) {
   const [scoreBoardHolder, setScoreBoardHolder] = useState([]);
+  const [activityScoreHolder, setActivityScoreHolder] = useState([]);
+  const currentUser = useSelector(state => state.user.currentUser);
+  const activityScore = useSelector(state => state.user.activityScore);
   const scoreBoard = useSelector(state => state.user.scoreBoard);
   const dispatch = useDispatch();
   const [openYear, setOpenYear] = useState(false);
@@ -58,35 +62,47 @@ export default function ScoreBoard({ navigation }) {
   const [modalTitle, setModalTitle] = useState();
   const [modalContent, setModalContent] = useState();
   useEffect(() => {
-    post_data("scoreboard", currentUser.key).then((response) => {
-      var groupByYear = groupBy(response, item => item.startYear);
-      var yearArray = [];
-      var sectionArray = [];
-      groupByYear.forEach((year) => {
-        yearArray = [...yearArray, year];
-      });
-      yearArray.forEach((groupedYear) => {
-        var groupBySemester = groupBy(groupedYear, item => item.semester);
-        groupBySemester.forEach((value, key, map) => {
-          let semester = groupBySemester.get(key)[0].semester;
-          let startYear = groupBySemester.get(key)[0].startYear;
-          let endYear = groupBySemester.get(key)[0].endYear;
-          let title = `Học kỳ ${semester} năm học ${startYear} - ${endYear}`
-          sectionArray = [...sectionArray, { title: title, data: value }];
+    if (scoreBoard[0].title == "Hello") {
+      post_data("scoreboard", currentUser.id).then((response) => {
+        var groupByYear = groupBy(response, item => item.startYear);
+        var sectionArray = [];
+        groupByYear.forEach((groupedYear) => {
+          var groupBySemester = groupBy(groupedYear, item => item.semester);
+          groupBySemester.forEach((value, key, map) => {
+            let semester = groupBySemester.get(key)[0].semester;
+            let startYear = groupBySemester.get(key)[0].startYear;
+            let endYear = groupBySemester.get(key)[0].endYear;
+            let title = `Học kỳ ${semester} năm học ${startYear} - ${endYear}`
+            sectionArray = [...sectionArray, { title: title, data: value }];
+          });
         });
+        setScoreBoardHolder(sectionArray);
+        dispatch(setScoreBoard(sectionArray));
       });
-      setScoreBoardHolder(sectionArray);
-      dispatch(setScoreBoard(sectionArray));
-    })
+      if(activityScore.length == 0) {
+        post_data("activityscore", currentUser.id).then((response) => {
+          dispatch(setActivityScore(response));
+          setActivityScoreHolder(response);
+        });
+      }
+
+    }
+    else {
+      setScoreBoardHolder(scoreBoard);
+    }
+
   }, [])
   function changeView(xyear = 0, xsemester = 0) {
     setScoreBoardHolder(scoreBoard);
+    setActivityScoreHolder(activityScore);
     if (xyear != 0) {
-      xyear = parseFloat(xyear) + parseFloat(currentUser.data.yearAdmission);
+      xyear = parseFloat(xyear) + parseFloat(currentUser.yearAdmission);
       setScoreBoardHolder(item => item.filter(x => x.data[0].endYear == xyear));
+      setActivityScoreHolder(item => item.filter(x => x.endYear == xyear));
     }
     if (xsemester != 0) {
       setScoreBoardHolder(item => item.filter(x => x.data[0].semester == xsemester));
+      setActivityScoreHolder(item => item.filter(x => x.semester == xsemester));
     }
   };
   var creditHolder = 0;
@@ -259,7 +275,8 @@ export default function ScoreBoard({ navigation }) {
                 },
               ]}>
               <Text style={styles.dashboardItem_IndicatorName}>
-                {strings.passed_credits}
+              {(year != 0 && semester != 0 && semester != 3) ? (strings.Activity_Score) :
+              (strings.passed_credits)}
               </Text>
 
               <View style={styles.dashboardItem_IndicatorResultView}>
@@ -268,7 +285,7 @@ export default function ScoreBoard({ navigation }) {
                   source={require('../../assets/scoreboard_tinchi.png')}
                 />
                 <Text style={styles.dashboardItem_IndicatorResult}>
-                  {(credit != 0) ? (`${passedCredit}/${credit}`) : ("Không có dữ liệu")}
+                  {(year != 0 && semester != 0 && semester != 3) ? (activityScoreHolder[0] != undefined ? (activityScoreHolder[0].score) : (null)) : ((credit != 0) ? (`${passedCredit}/${credit}`) : ("Không có dữ liệu"))}
                 </Text>
               </View>
             </View>
@@ -335,7 +352,7 @@ export default function ScoreBoard({ navigation }) {
         </View>
         {/* Main Content */}
         <SectionList
-        initialNumToRender={5}
+          initialNumToRender={5}
           sections={scoreBoardHolder}
           keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => {

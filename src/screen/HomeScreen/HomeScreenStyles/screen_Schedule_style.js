@@ -51,7 +51,7 @@ export default StyleSheet.create({
     },
     courseName: {
       fontWeight: 'bold',
-      color: 'black',
+      color: 'red',
     },
     textRoom: {
       color: '#FF6E35',

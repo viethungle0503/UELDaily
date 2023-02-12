@@ -14,6 +14,7 @@ import styles from './MediaStyles/screen_MediaNoti_style';
 import strings from '../Language';
 import { useSelector } from 'react-redux';
 export function MediaNoti({ navigation, route }) {
+  const news_Departments = useSelector(state => state.news.news_Departments);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const dispatch = useDispatch();
   var { searchUrl, uri, name} = route.params
@@ -43,7 +44,7 @@ export function MediaNoti({ navigation, route }) {
     });
     dispatch(setNews_Departments({ data: global.tempArray, identifier: searchUrl }));
   };
-  const index = global.news_Departments.findIndex(x => x.identifier == searchUrl);
+  const index = news_Departments.findIndex(x => x.identifier == searchUrl);
   if (index == -1) {
     loadGraphicCards(searchUrl);
   }
@@ -51,7 +52,7 @@ export function MediaNoti({ navigation, route }) {
     let timer = setTimeout(() => {
       var newbigPicture = [...bigPictureNews];
       var newsmallPicture = [...smallPictureNews];
-      var trueNews = global.news_Departments.find(x => x.identifier == searchUrl);
+      var trueNews = news_Departments.find(x => x.identifier == searchUrl);
       trueNews.data.forEach((value, index) => {
         Image.getSize(value.imageURL, (imgWidth, imgHeight) => {
           if (imgWidth <= imgHeight) {
@@ -151,6 +152,7 @@ export function MediaNoti({ navigation, route }) {
   );
 }
 export function MediaNoti1({ navigation, route }) {
+  const news_Departments = useSelector(state => state.news.news_Departments);
   const dispatch = useDispatch();
   var { searchUrl, uri, name} = route.params
   const cheerio = require('cheerio');
@@ -179,7 +181,7 @@ export function MediaNoti1({ navigation, route }) {
     });
     dispatch(setNews_Departments({ data: global.tempArray, identifier: searchUrl }));
   };
-  const index = global.news_Departments.findIndex(x => x.identifier == searchUrl);
+  const index = news_Departments.findIndex(x => x.identifier == searchUrl);
   if (index == -1) {
     loadGraphicCards(searchUrl);
   }
@@ -187,7 +189,7 @@ export function MediaNoti1({ navigation, route }) {
     let timer = setTimeout(() => {
       var newbigPicture = [...bigPictureNews];
       var newsmallPicture = [...smallPictureNews];
-      var trueNews = global.news_Departments.find(x => x.identifier == searchUrl);
+      var trueNews = news_Departments.find(x => x.identifier == searchUrl);
       trueNews.data.forEach((value, index) => {
         Image.getSize(value.imageURL, (imgWidth, imgHeight) => {
           if (imgWidth <= imgHeight) {

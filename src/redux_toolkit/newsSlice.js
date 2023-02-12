@@ -10,7 +10,7 @@ export const newsSlice = createSlice({
     },
     reducers: {
         setNews_UEL: (state, action) => {
-            state.news_UEL.push(action.payload);
+            state.news_UEL = (action.payload);
         },
         setNews_Departments: (state, action) => {
             state.news_Departments.push(action.payload);

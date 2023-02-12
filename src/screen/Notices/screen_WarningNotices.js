@@ -5,11 +5,15 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Animated
+  Animated,
+  FlatList,
+  SafeAreaView
 } from 'react-native';
-import styles from './NoticesStyles/screen_WarningNotices_style'
-
+import styles from './NoticesStyles/screen_WarningNotices_style';
+import { useSelector } from 'react-redux';
+import { dateDiffInDays } from '../GlobalFunction';
 import { Swipeable } from 'react-native-gesture-handler';
+import strings from '../Language';
 
 const deleteItem = () => {
   alert('Chắc xóa chưa?')
@@ -54,43 +58,35 @@ const renderRight = (progress, dragX) => {
 };
 
 export default function WarningNotices({ navigation, route }) {
+  const db_app = useSelector(state => state.database.db_app);
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
+  const currentUser = useSelector(state => state.user.currentUser);
   const [warningNotices, setWarningNotices] = useState([]);
   useEffect(() => {
     if (warningNotices.length == 0) {
       var warningNoticesHolder = [...warningNotices];
-      var trueUser = database_app.find(x => x.data.email == currentUser.data.email);
+      var trueUser = db_app.find(x => x.data.email == currentUser.email);
       trueUser.data.notices.filter(x => x.type == 0).forEach((value) => {
         warningNoticesHolder.push(value);
       })
       setWarningNotices(warningNoticesHolder);
     }
-  }, [warningNotices])
+  }, [warningNotices]);
+  
+  useEffect(() => {
+  }, [currentLanguage])
   function navigateToHomeWork() {
     navigation.navigate('Homework', { initBy: route.name })
   }
   return (
-    <View style={styles.body}>
-      <ScrollView style={styles.noti} showsVerticalScrollIndicator={false}>
-        {warningNotices.map((item, index) => {
-          let creTime = new Date(item.creTime);
-          let today = new Date();
-          let diff = new Date((Math.abs(today.getTime() - creTime.getTime())));
-          var days = 0;
-          var hours = diff / (1000 * 3600);
-          while (hours > 23) {
-            days += 1;
-            hours -= 24;
-          }
-          let time_gap = ``;
-          if (days != 0) {
-            time_gap = `${Math.floor(days)}d ${Math.floor(hours)}h`;
-          }
-          else {
-            time_gap = `${Math.floor(hours)}h`;
-          }
+    <SafeAreaView style={styles.body}>
+      <FlatList
+        style={styles.noti}
+        showsVerticalScrollIndicator={false}
+        data={warningNotices}
+        renderItem={({ item }) => {
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}
-              key={item._id + index}>
+            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
               <Animated.View
                 style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}
@@ -113,13 +109,13 @@ export default function WarningNotices({ navigation, route }) {
                             color: '#FF6E35',
                           },
                         ]}>
-                        Xem ngay
+                        {strings.watch_now}
                       </Text>
                     </TouchableOpacity>
 
                     <View style={styles.row}>
                       <Image source={require('../../assets/notiHistory.png')} />
-                      <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
+                      <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(),new Date(item.creTime))}</Text>
                     </View>
 
                   </View>
@@ -138,9 +134,10 @@ export default function WarningNotices({ navigation, route }) {
               </Animated.View>
             </Swipeable>
           )
-        })}
-      </ScrollView>
-    </View>
+        }}
+        keyExtractor={(item, index) => (item + index).toString()}
+      />
+    </SafeAreaView>
   );
 }
 

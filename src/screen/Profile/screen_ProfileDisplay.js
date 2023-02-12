@@ -21,6 +21,9 @@ import auth from '@react-native-firebase/auth';
 import styles from './ProfileStyles/screen_ProfileDisplay_style';
 import strings from '../Language';
 export default function ProfileDisplay({ navigation }) {
+  const loggedIn = useSelector(state => state.user.loggedIn);
+  const currentUser = useSelector(state => state.user.currentUser);
+  const profileImage = useSelector(state => state.user.profileImage);
   function showAlert() {
     Alert.alert(
       "Thông báo",
@@ -93,13 +96,13 @@ export default function ProfileDisplay({ navigation }) {
             <View style={styles.studentAvatarContainer}>
               <Image
                 style={styles.studentAvatar}
-                source={{ uri: currentUser.data.profileImage }}
+                source={{ uri: profileImage }}
               />
             </View>
 
-            {currentUser ? (
+            {(currentUser != {}) ? (
               <Text style={styles.studentName}>
-                {currentUser.data.lastName + ' ' + currentUser.data.firstName}
+                {currentUser.lastName + ' ' + currentUser.firstName}
               </Text>
             ) : null}
           </View>
@@ -153,7 +156,7 @@ export default function ProfileDisplay({ navigation }) {
           </View>
         </TouchableOpacity>
 
-        <Modal visible={openLanguageMenu} transparent={true}>
+        <Modal visible={openLanguageMenu} transparent={true} onRequestClose={() => setopenLanguageMenu(false)}>
           <View
             style={styles.langBackground}>
             <View style={styles.langContainer}>

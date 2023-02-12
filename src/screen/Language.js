@@ -57,6 +57,7 @@ const strings = new LocalizedStrings({
         Compare_the_same_period:"So sánh cùng kỳ",
         passed_credits: "Số tín chỉ đã đậu",
         GPA: "Điểm trung bình",
+        Activity_Score:"Điểm rèn luyện",
         classification: "Xếp loại học lực",
         // Exam
         exam_date: "Ngày thi",
@@ -79,6 +80,9 @@ const strings = new LocalizedStrings({
         // Notifications
         remind:"Nhắc nhở",
         update:"Cập nhật",
+        watch_now:"Xem ngay",
+        answer:"Trả lời",
+        no_corresponding_data:"Không có dữ liệu tương ứng",
     },
     en: {
         home: "Home",
@@ -136,6 +140,7 @@ const strings = new LocalizedStrings({
         Compare_the_same_period:"Compare the same period",
         passed_credits: "Number of passed credits ",
         GPA: "Grade Point Average",
+        Activity_Score:"Activity score",
         classification: "Classification",
         // Exam
         exam_date: "Exam date",
@@ -158,6 +163,9 @@ const strings = new LocalizedStrings({
         // Notifications
         remind:"Remind",
         update:"Update",
+        watch_now:"Watch now",
+        answer:"Answer",
+        no_corresponding_data:"No corresponding data",
     },
 
 });

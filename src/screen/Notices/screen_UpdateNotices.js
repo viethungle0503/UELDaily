@@ -6,11 +6,16 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
-  Animated
+  Animated,
+  SafeAreaView,
+  FlatList
 } from 'react-native';
 import styles from './NoticesStyles/screen_UpdateNotices_style'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Swipeable } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
+import { dateDiffInDays } from '../GlobalFunction';
+import strings from '../Language';
 
 const deleteItem = () => {
   alert('Chắc xóa chưa?')
@@ -55,18 +60,17 @@ const renderRight = (progress, dragX) => {
 };
 
 export default function UpdateNotices({ navigation }) {
-  // modal
-  // const [open, setOpen] = useState(false);
+  const db_app = useSelector(state => state.database.db_app);
+  const currentUser = useSelector(state => state.user.currentUser);
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
   const [openModalUpdateNoti, setopenModalUpdateNoti] = useState(false);
   const [modalData, setModalData] = useState();
-  // const [modalContent, setModalContent] = useState();
-  // modal
   const [updateNotices, setUpdateNotices] = useState([]);
   useEffect(() => {
     if (updateNotices.length == 0) {
       var updateNoticesHolder = [...updateNotices];
-      var trueUser = database_app.find(
-        x => x.data.email == currentUser.data.email,
+      var trueUser = db_app.find(
+        x => x.data.email == currentUser.email,
       );
       trueUser.data.notices
         .filter(x => x.type == 1)
@@ -76,12 +80,16 @@ export default function UpdateNotices({ navigation }) {
       setUpdateNotices(updateNoticesHolder);
     }
   }, [updateNotices]);
+
+  useEffect(() => {
+  }, [currentLanguage])
   return (
-    <View style={styles.body}>
+    <SafeAreaView style={styles.body}>
       <Modal
         animationType='slide'
         transparent={true}
         visible={openModalUpdateNoti}
+        onRequestClose={() => setopenModalUpdateNoti(false)}
       >
         <View style={styles.modalContainer}>
           {/* 2 effect */}
@@ -108,27 +116,11 @@ export default function UpdateNotices({ navigation }) {
           {modalData}
         </View>
       </Modal>
-
-      <ScrollView
+      <FlatList
         style={styles.noti}
-        showsVerticalScrollIndicator={false}>
-        {updateNotices.map((item, index) => {
-          let creTime = new Date(item.creTime);
-          let today = new Date();
-          let diff = new Date((Math.abs(today.getTime() - creTime.getTime())));
-          var days = 0;
-          var hours = diff / (1000 * 3600);
-          while (hours > 23) {
-            days += 1;
-            hours -= 24;
-          }
-          let time_gap = ``;
-          if (days != 0) {
-            time_gap = `${Math.floor(days)}d ${Math.floor(hours)}h`;
-          }
-          else {
-            time_gap = `${Math.floor(hours)}h`;
-          }
+        showsVerticalScrollIndicator={false}
+        data={updateNotices}
+        renderItem={({ item }) => {
           function settingModal() {
             const title = (() => (
               <ScrollView>
@@ -145,7 +137,7 @@ export default function UpdateNotices({ navigation }) {
                         {item.sendBy}
                       </Text>
                       <Text style={styles.modalHeader_DepartmentMail}>
-                       No corresponding data
+                       {strings.no_corresponding_data}
                       </Text>
                     </View>
                   </View>
@@ -159,7 +151,7 @@ export default function UpdateNotices({ navigation }) {
 
 
                 <TouchableOpacity style={styles.btnResponse}>
-                  <Text style={styles.btnResponseText}>Trả lời</Text>
+                  <Text style={styles.btnResponseText}>{strings.answer}</Text>
                 </TouchableOpacity>
 
               </ScrollView>
@@ -168,7 +160,7 @@ export default function UpdateNotices({ navigation }) {
             setModalData(title);
           }
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight} key={item._id + index}>
+            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
               <Animated.View
                 style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}
@@ -208,7 +200,7 @@ export default function UpdateNotices({ navigation }) {
 
                     <View style={styles.row}>
                       <Image source={require('../../assets/notiHistory.png')} />
-                      <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
+                      <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(),new Date(item.creTime))}</Text>
                     </View>
 
                   </View>
@@ -228,12 +220,12 @@ export default function UpdateNotices({ navigation }) {
             </Swipeable>
 
           );
-        })}
-      </ScrollView>
+        }}
+        keyExtractor={(item, index) => (item + index).toString()}
+      />
 
 
-
-    </View>
+    </SafeAreaView>
   );
 }
 
