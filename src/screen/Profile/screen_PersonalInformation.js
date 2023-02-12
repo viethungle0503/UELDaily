@@ -9,6 +9,7 @@ import strings from '../Language';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 export default function PersonalInformation({navigation}) {
+    const currentUser = useSelector(state => state.user.currentUser);
     const currentLanguage = useSelector(state => state.user.currentLanguage);
     useEffect(() => {
 
@@ -52,21 +53,21 @@ export default function PersonalInformation({navigation}) {
                             {strings.full_name}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            {currentUser.data.lastName + ' ' + currentUser.data.firstName}
+                            {currentUser.lastName + ' ' + currentUser.firstName}
                         </Text>
                     </View>
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>{strings.email}</Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            {currentUser.data.email}
+                            {currentUser.email}
                         </Text>
                     </View>
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>{strings.student_id}</Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            {currentUser.key}
+                            {currentUser.id}
                         </Text>
                     </View>
 
@@ -75,7 +76,7 @@ export default function PersonalInformation({navigation}) {
                             {strings.date_of_birth}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            {currentUser.data.dob}
+                            {currentUser.dob}
                         </Text>
                     </View>
 
@@ -84,7 +85,7 @@ export default function PersonalInformation({navigation}) {
                             {strings.place_of_origin}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            {currentUser.data.city}
+                            {currentUser.town}
                         </Text>
                     </View>
                 </View>
@@ -103,7 +104,7 @@ export default function PersonalInformation({navigation}) {
                             {strings.phone}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            {currentUser.data.selfPhone}
+                            {currentUser.selfPhone}
                         </Text>
                     </View>
 
@@ -112,7 +113,7 @@ export default function PersonalInformation({navigation}) {
                             {strings.personal_email}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            {currentUser.data.selfEmail}
+                            {currentUser.selfEmail}
                         </Text>
                     </View>
                 </View>
@@ -131,7 +132,7 @@ export default function PersonalInformation({navigation}) {
                             {strings.course}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            Khóa {currentUser.key.substr(1, 2)}
+                            Khóa {currentUser.id.substr(1, 2)}
                         </Text>
                     </View>
 
@@ -140,9 +141,9 @@ export default function PersonalInformation({navigation}) {
                             {strings.school_year}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            {currentUser.data.yearAdmission +
+                            {currentUser.yearAdmission +
                                 '-' +
-                                (currentUser.data.yearAdmission + 4)}
+                                (currentUser.yearAdmission + 4)}
                         </Text>
                     </View>
 
@@ -151,14 +152,14 @@ export default function PersonalInformation({navigation}) {
                             {strings.education_program}
                         </Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            {currentUser.data.major}
+                            {currentUser.major}
                         </Text>
                     </View>
 
                     <View style={styles.modalContentItem_RowInfo}>
                         <Text style={styles.modalContentItem_RowInfo_Title}>{strings.class}</Text>
                         <Text style={styles.modalContentItem_RowInfo_Data}>
-                            {currentUser.data.class}
+                            {`${currentUser.id.substr(0, 6)}${currentUser.email.substr(currentUser.email.indexOf("@st.uel.edu.vn") - 1,1)}`}
                         </Text>
                     </View>
                 </View>

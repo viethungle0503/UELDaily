@@ -6,6 +6,14 @@ export const userSlice = createSlice({
         loggedIn: false,
         currentUser: {},
         scoreBoard: [{ title: "Hello", data: [] }],
+        testSchedule: [],
+        activityScore: [],
+        tuition:[],
+        schedule:{},
+        unreadNotice:0,
+        course:[],
+        information:[],
+        profileImage:"",
         isDataReady: false,
         atPreLogin1: true,
         atPreLogin2: false,
@@ -20,8 +28,8 @@ export const userSlice = createSlice({
         setCurrentUser: (state, action) => {
             state.currentUser = action.payload
         },
-        setCurrentUserProfileImage: (state, action) => {
-            state.currentUser.data.profileImage = action.payload
+        setProfileImage: (state, action) => {
+            state.profileImage = action.payload
         },
         setScoreBoard: (state, action) => {
             state.scoreBoard = action.payload;
@@ -44,15 +52,36 @@ export const userSlice = createSlice({
         setLateModules: (state, action) => {
             state.lateModules = action.payload;
         },
+        setTestSchedule: (state, action) => {
+            state.testSchedule = action.payload
+        },
+        setActivityScore: (state, action) => {
+            state.activityScore = action.payload;
+        },
+        setTuition: (state, action) => {
+            state.tuition = action.payload;
+        },
+        setSchedule: (state, action) => {
+            state.schedule = action.payload;
+        },
+        setCourse: (state, action) => {
+            state.course = action.payload;
+        },
+        setInformation: (state, action) => {
+            state.information = action.payload;
+        },
+        setUnreadNotice: (state, action) => {
+            state.unreadNotice = action.payload;
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { setLoggedIn, setCurrentUser, setCurrentUserProfileImage,
+export const { setLoggedIn, setCurrentUser, setProfileImage,
     setScoreBoard,
     setIsDataReady, setAtPreLogin1, setAtPreLogin2,
-    setCurrentLanguage,
-    setModules,
+    setCurrentLanguage, setTestSchedule, setActivityScore, setTuition, setSchedule, setCourse, setInformation,
+    setModules, setUnreadNotice, 
     setLateModules } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -10,17 +10,21 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useCallback, useEffect, useState } from 'react';
 import styles from './HomeScreenStyles/screen_Exam_style';
 import strings from '../Language';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import post_data from '../UEL';
+import { setTestSchedule } from '../../redux_toolkit/userSlice';
 
 
 export default function Exam({ navigation }) {
-  const currentLanguage = useSelector(state => state.user.currentLanguage);
+  const dispatch = useDispatch();
+  const testSchedule = useSelector(state => state.user.testSchedule);
+  const currentUser = useSelector(state => state.user.currentUser);
   const [openYear, setOpenYear] = useState(false);
   const [valueYear, setValueYear] = useState(null);
   const [itemsYear, setItemsYear] = useState([
     { label: strings.first_year, value: '1' },
     { label: strings.second_year, value: '2' },
-    { label: strings.third_year, value: '3' },
+    { label: strings.third_year, value: '3'},
     { label: strings.fourth_year, value: '4' },
   ]);
   const onYearOpen = useCallback(() => {
@@ -36,28 +40,33 @@ export default function Exam({ navigation }) {
   const onSemesterOpen = useCallback(() => {
     setOpenYear(false);
   }, []);
-  const [year, setYear] = useState(currentUser.data.currentYear)
-  const [semester, setSemester] = useState(currentUser.data.currentSemester);
-  function changeView(year, semester) {
-    let examScheduleHolder = currentUser.data.test_schedules.filter(x => x.year_type == year && x.semester_type == semester);
-    setExamSchedule(examScheduleHolder);
+  const [year, setYear] = useState(0)
+  const [semester, setSemester] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  function changeView(xyear, xsemester) {
+    setExamSchedule(testSchedule);
+    xyear = parseFloat(xyear) + parseFloat(currentUser.yearAdmission);
+    setExamSchedule(item => item.filter(x => x.semester == xsemester && x.endYear == xyear));
   }
-  const [ready, setReady] = useState(null)
   const [examSchedule, setExamSchedule] = useState([]);
   useEffect(() => {
-    if (examSchedule.length == 0) {
-      setValueYear(currentUser.data.currentYear);
-      setValueSemester(currentUser.data.currentSemester);
-      let testSchedules = currentUser.data.test_schedules.filter(x => x.year_type == year && x.semester_type == semester);
-      var examScheduleHolder = [...examSchedule];
-      for (key in testSchedules) {
-        examScheduleHolder.push(testSchedules[key]);
-      }
-      setExamSchedule(examScheduleHolder);
+    setValueYear((new Date().getFullYear() - currentUser.yearAdmission).toString());
+    setValueSemester("2");
+    if(testSchedule.length == 0) {
+      post_data("testschedule", currentUser.id).then((response) => {
+        dispatch(setTestSchedule(response));
+        setExamSchedule(response);
+      });
     }
+    else {
+      setExamSchedule(testSchedule);
+    }
+    
+    setIsLoading(false);
   }, []);
   useEffect(() => {
-  },[currentLanguage])
+    changeView((new Date().getFullYear() - currentUser.yearAdmission),2);
+  },[isLoading])
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (openSemester) {
@@ -165,7 +174,7 @@ export default function Exam({ navigation }) {
                     style={styles.examIcon}
                     source={require('../../assets/ngaythi.png')}></Image>
                   <Text style={styles.monthi_Item__DetailTitle}>{`${strings.exam_date}: `}</Text>
-                  <Text style={styles.monthi_Item__DetailData}>{item.date}</Text>
+                  <Text style={styles.monthi_Item__DetailData}>{changeDateFormat(item.date)}</Text>
                 </View>
 
                 <View style={styles.monthi_Item__Detail}>
@@ -186,11 +195,16 @@ export default function Exam({ navigation }) {
               </View>
             )
           }}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => (item+index).toString()}
         />
       </View>
     </TouchableWithoutFeedback>
   );
+}
+
+function changeDateFormat(value) {
+  let date = new Date(value);
+  return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
 }
 
 

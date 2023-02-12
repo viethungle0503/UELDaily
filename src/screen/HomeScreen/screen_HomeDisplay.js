@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
+  FlatList,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import React, { useEffect, useState } from 'react';
@@ -12,10 +13,15 @@ import styles from './HomeScreenStyles/screen_HomeDisplay_style';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentLanguage } from '../../redux_toolkit/userSlice';
 import strings from '../Language';
+import { setNews_UEL } from '../../redux_toolkit/newsSlice';
 
 export default function HomeDisplay({ navigation }) {
-  const currentLanguage = useSelector(state => state.user.currentLanguage);
   const dispatch = useDispatch()
+  const currentUser = useSelector(state => state.user.currentUser);
+  const loggedIn = useSelector(state => state.user.loggedIn);
+  const profileImage = useSelector(state => state.user.profileImage);
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
+  const news_UEL = useSelector(state => state.news.news_UEL);
   const [openLanguageMenu, setopenLanguageMenu] = useState(false);
   const [VNLanguage, setVNLanguage] = useState((currentLanguage == "vn") ? true : false);
   const chooseVNLanguage = () => {
@@ -28,6 +34,29 @@ export default function HomeDisplay({ navigation }) {
     setENLanguage(!ENLanguage);
     setVNLanguage(!VNLanguage);
   };
+  const cheerio = require('cheerio');
+  async function loadGraphicCards(searchUrl) {
+    const baseURL = searchUrl.slice(0,searchUrl.lastIndexOf("/"));
+    const response = await fetch(searchUrl).catch(function(error) {
+      console.log('There has been a problem with your fetch operation: ' + error.message);
+       // ADD THIS THROW error
+        throw error;
+      });; // fetch page
+    const htmlString = await response.text(); // get response text
+    const $ = cheerio.load(htmlString); // parse HTML string
+    var newsHolder = [];
+    $('.PageColumns').remove();
+    $('#ctl08_ctl01_RadListView1_ClientState').remove();
+    $('#ctl08_ctl01_RadListView1').remove();
+    $('.nd_news > div').each(function (i, div) {
+      let title = $('h4 > a', div).text();
+      let time = $('h4 > span', div).text();
+      let imageURL = baseURL + $('img', div).attr('src');
+      let link = baseURL + $('h4 > a', div).attr('href');
+        newsHolder = [...newsHolder, {title: title, time: time, imageURL: imageURL, link: link}];
+    });
+    dispatch(setNews_UEL(newsHolder));
+  };
   useEffect(() => {
     strings.setLanguage(currentLanguage);
     if (currentLanguage == "vn") {
@@ -39,39 +68,18 @@ export default function HomeDisplay({ navigation }) {
       setENLanguage(true)
     }
   }, [currentLanguage]);
-  if(strings.getInterfaceLanguage().substring(3,5).toLowerCase() != currentLanguage) {
+  useEffect(() => {
+    if (news_UEL.length == 0) {
+      loadGraphicCards("https://uel.edu.vn/tin-tuc");
+    }
+  },[])
+  if (strings.getInterfaceLanguage().substring(3, 5).toLowerCase() != currentLanguage) {
     strings.setLanguage(currentLanguage);
   };
-  const news = news_UEL.map((item, index) => (
-    <TouchableOpacity
-      style={styles.row}
-      key={index}
-      onPress={() => {
-        navigation.navigate('NewsDetail', { link: item.link });
-      }}>
-      <Image style={styles.hoatdongImage} source={{ uri: item.imageURL }} />
-      <View style={styles.contentMain}>
-        <Text
-          style={styles.hoatdongTitle}
-          numberOfLines={3}
-          ellipsizeMode="tail">
-          {item.title}
-        </Text>
-        <View style={styles.timeBlock}>
-          <Image
-            style={styles.iconTime}
-            source={require('../../assets/clock.png')}
-          />
-          <Text style={styles.hoatdongTime}>{item.time.slice(1, 11)}</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  ));
-
   return (
     <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
 
-      <Modal visible={openLanguageMenu} transparent={true}>
+      <Modal visible={openLanguageMenu} transparent={true} onRequestClose={() => setopenLanguageMenu(false)}>
         <View
           style={styles.langBackground}>
           <View style={styles.langContainer}>
@@ -182,15 +190,15 @@ export default function HomeDisplay({ navigation }) {
 
           <Image
             style={styles.studentAvatar}
-            source={{ uri: currentUser.data.profileImage }}
+            source={{ uri: profileImage }}
           />
           <View>
-            {currentUser ? (
+            {(currentUser != {}) ? (
               <Text style={styles.studentName}>
-                {currentUser.data.lastName + ` ${currentUser.data.firstName}`}
+                {currentUser.lastName + ` ${currentUser.firstName}`}
               </Text>
             ) : null}
-            <Text>{currentUser.key}</Text>
+            <Text>{currentUser.id}</Text>
           </View>
 
           <TouchableOpacity
@@ -285,7 +293,33 @@ export default function HomeDisplay({ navigation }) {
 
       <View>
         <Text style={styles.hoatdongHeader}>{strings.recent_activity}</Text>
-        <View style={styles.hoatdong}>{news}</View>
+        <View style={styles.hoatdong}>
+          {news_UEL.map((item, index) => (
+            <TouchableOpacity
+              style={styles.row}
+              key={index}
+              onPress={() => {
+                navigation.navigate('NewsDetail', { link: item.link });
+              }}>
+              <Image style={styles.hoatdongImage} source={{ uri: item.imageURL }} />
+              <View style={styles.contentMain}>
+                <Text
+                  style={styles.hoatdongTitle}
+                  numberOfLines={3}
+                  ellipsizeMode="tail">
+                  {item.title}
+                </Text>
+                <View style={styles.timeBlock}>
+                  <Image
+                    style={styles.iconTime}
+                    source={require('../../assets/clock.png')}
+                  />
+                  <Text style={styles.hoatdongTime}>{item.time.slice(1, 11)}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     </ScrollView>
   );

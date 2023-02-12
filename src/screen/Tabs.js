@@ -2,7 +2,7 @@ import {Text,
 } from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import strings from './Language';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 // Font Materials
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,21 +11,34 @@ import Home from './screen_Home';
 import News from './screen_News';
 import Notifications from './screen_Notifications';
 import Profile from './screen_Profile';
+import { setUnreadNotice } from '../redux_toolkit/userSlice';
+
 
 const Tab = createBottomTabNavigator();
 export default function Tabs() {
+  const dispatch = useDispatch();
+  const db_app = useSelector(state => state.database.db_app);
+  const currentUser = useSelector(state => state.user.currentUser);
     const currentLanguage = useSelector(state => state.user.currentLanguage);
+    const unreadNotice = useSelector(state => state.user.unreadNotice);
     useEffect(()=> {
-    },[currentLanguage]);
-    var tabBarBadge = 3;
-    var trueUser = database_app.find(
-      x => x.data.email == currentUser.data.email,
-    );
-    trueUser.data.notices.forEach(value => {
-      if(value.seen == false) {
-        tabBarBadge += 1;
-      }
-    });
+    },[currentLanguage, unreadNotice]);
+    
+    useEffect(() => {
+      var trueUser = db_app.find(
+        x => x.data.email == currentUser.email,
+      );
+      if(trueUser !== undefined) {
+        var tabBarBadge = 3;
+        trueUser.data.notices.forEach(value => {
+          if(value.seen == false) {
+            tabBarBadge += 1;
+          }
+        });
+        dispatch(setUnreadNotice(tabBarBadge));
+      };
+    },[])
+    
     return (
       <Tab.Navigator
         initialRouteName="Home"
@@ -95,7 +108,7 @@ export default function Tabs() {
           name="Notifications"
           component={Notifications}
           options={{
-            tabBarBadge: tabBarBadge,
+            tabBarBadge: unreadNotice,
           }}
         />
         <Tab.Screen name="Profile" component={Profile} options={{}} />

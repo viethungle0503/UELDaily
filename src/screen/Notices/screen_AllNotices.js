@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, FlatList, SafeAreaView } from 'react-native';
 import {
   Image,
   View,
@@ -8,9 +8,11 @@ import {
   ScrollView,
   Animated
 } from 'react-native';
-import { red100 } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
+import strings from '../Language';
 import styles from './NoticesStyles/screen_AllNotices_style'
 import { Swipeable } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
+import { dateDiffInDays } from '../GlobalFunction';
 
 const deleteItem = () => {
   alert('Chắc xóa chưa?')
@@ -56,13 +58,14 @@ const renderRight = (progress, dragX) => {
 
 export default function Information({ navigation, route }) {
   const [allNotices, setAllNotices] = useState([]);
-
-
+  const db_app = useSelector(state => state.database.db_app);
+  const currentUser = useSelector(state => state.user.currentUser);
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
   useEffect(() => {
     if (allNotices.length == 0) {
       var allNoticesHolder = [...allNotices];
-      var trueUser = database_app.find(
-        x => x.data.email == currentUser.data.email,
+      var trueUser = db_app.find(
+        x => x.data.email == currentUser.email,
       );
       trueUser.data.notices.forEach(value => {
         allNoticesHolder.push(value);
@@ -70,34 +73,22 @@ export default function Information({ navigation, route }) {
       setAllNotices(allNoticesHolder);
     }
   }, [allNotices]);
+  
+  useEffect(() => {
+  }, [currentLanguage])
 
   function navigateToHomeWork() {
     navigation.navigate('Homework', { initBy: route.name })
   }
   return (
-    <View style={styles.body}>
-      <ScrollView style={styles.noti} showsVerticalScrollIndicator={false}>
-        {allNotices.map((item, index) => {
-          let creTime = new Date(item.creTime);
-          let today = new Date();
-          let diff = new Date((Math.abs(today.getTime() - creTime.getTime())));
-          var days = 0;
-          var hours = diff / (1000 * 3600);
-          while (hours > 23) {
-            days += 1;
-            hours -= 24;
-          }
-          let time_gap = ``;
-          if (days != 0) {
-            time_gap = `${Math.floor(days)}d ${Math.floor(hours)}h`;
-          }
-          else {
-            time_gap = `${Math.floor(hours)}h`;
-          }
-
+    <SafeAreaView style={styles.body}>
+      <FlatList
+        style={styles.noti}
+        showsVerticalScrollIndicator={false}
+        data={allNotices}
+        renderItem={({ item }) => {
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}
-              key={item._id + index}>
+            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
               <Animated.View
                 style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}
@@ -123,12 +114,12 @@ export default function Information({ navigation, route }) {
                             color: item.type == 0 ? '#FF6E35' : '#0065FF',
                           },
                         ]}>
-                        Xem ngay
+                        {strings.watch_now}
                       </Text>
                     </TouchableOpacity>
                     <View style={styles.row} >
                       <Image source={require('../../assets/notiHistory.png')} />
-                      <Text style={{ color: 'red' }}>&nbsp;{time_gap}</Text>
+                      <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(), new Date(item.creTime))}</Text>
                     </View>
 
                   </View>
@@ -150,9 +141,10 @@ export default function Information({ navigation, route }) {
               </Animated.View>
             </Swipeable>
           );
-        })}
-      </ScrollView>
-    </View>
+        }}
+        keyExtractor={(item, index) => (item + index).toString()}
+      />
+    </SafeAreaView>
   );
 }
 
