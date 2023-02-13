@@ -69,7 +69,9 @@ export default function WarningNotices({ navigation, route }) {
       trueUser.data.notices.filter(x => x.type == 0).forEach((value) => {
         warningNoticesHolder.push(value);
       })
-      setWarningNotices(warningNoticesHolder);
+      var sortedWarningNoticesHolder = [...warningNoticesHolder];
+      sortedWarningNoticesHolder.sort((a, b) => (new Date(b.creTime)).getTime() - (new Date(a.creTime)).getTime());
+      setWarningNotices(sortedWarningNoticesHolder);
     }
   }, [warningNotices]);
   

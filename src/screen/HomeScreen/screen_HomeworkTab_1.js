@@ -11,7 +11,7 @@ import { dateDiffInDays } from '../GlobalFunction';
 
 
 export default function HWTab1({ navigation, route }) {
-  const modules = useSelector(state => state.user.lateModules);
+  const modules = useSelector(state => state.user.modules);
   return (
     <View style={styles.body}>
       <FlatList

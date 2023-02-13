@@ -77,7 +77,9 @@ export default function UpdateNotices({ navigation }) {
         .forEach(value => {
           updateNoticesHolder.push(value);
         });
-      setUpdateNotices(updateNoticesHolder);
+      var sortedUpdateNoticesHolder = [...updateNoticesHolder];
+      sortedUpdateNoticesHolder.sort((a, b) => (new Date(b.creTime)).getTime() - (new Date(a.creTime)).getTime());
+      setUpdateNotices(sortedUpdateNoticesHolder);
     }
   }, [updateNotices]);
 
@@ -137,7 +139,7 @@ export default function UpdateNotices({ navigation }) {
                         {item.sendBy}
                       </Text>
                       <Text style={styles.modalHeader_DepartmentMail}>
-                       {strings.no_corresponding_data}
+                        {strings.no_corresponding_data}
                       </Text>
                     </View>
                   </View>
@@ -186,7 +188,8 @@ export default function UpdateNotices({ navigation }) {
                     <TouchableOpacity style={styles.notiItem_Content_Action}
                       onPress={() => {
                         settingModal();
-                        setopenModalUpdateNoti(true)}}>
+                        setopenModalUpdateNoti(true)
+                      }}>
                       <Text
                         style={[
                           styles.notiItem_Content_ActionText,
@@ -200,7 +203,7 @@ export default function UpdateNotices({ navigation }) {
 
                     <View style={styles.row}>
                       <Image source={require('../../assets/notiHistory.png')} />
-                      <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(),new Date(item.creTime))}</Text>
+                      <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(), new Date(item.creTime))}</Text>
                     </View>
 
                   </View>
