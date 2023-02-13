@@ -48,10 +48,10 @@ export default function Homework({ navigation }) {
                   var index = module.dates.findIndex(x => x.label == "Due:");
                   if (index != -1) {
                     if (((new Date().getTime() - new Date(module.dates[index].timestamp * 1000).getTime())) > 0) {
-                      setModulesArray(oldModules => [...oldModules, { fullname: course.fullname, information: module }]);
+                      setLateModulesArray(oldModules => [...oldModules, { fullname: course.fullname, information: module }]);
                     }
                     else {
-                      setLateModulesArray(oldModules => [...oldModules, { fullname: course.fullname, information: module }]);
+                      setModulesArray(oldModules => [...oldModules, { fullname: course.fullname, information: module }]);
                       
                     }
                   }
@@ -66,10 +66,20 @@ export default function Homework({ navigation }) {
     
   }, []);
   useEffect(() => {
-    dispatch(setModules(modulesArray));
+    var modulesHolder = [...modulesArray];
+    console.log(modulesHolder)
+    modulesHolder.sort((a, b) => {
+      return a.information.customdata.substr(a.information.customdata.indexOf(":") + 1,10) - b.information.customdata.substr(b.information.customdata.indexOf(":") + 1,10)
+    });
+    console.log(modulesHolder)
+    dispatch(setModules(modulesHolder));
   },[modulesArray]);
   useEffect(() => {
-    dispatch(setLateModules(lateModulesArray));
+    var lateModulesHolder = [...lateModulesArray];
+    lateModulesHolder.sort((a, b) => {
+      return b.information.customdata.substr(b.information.customdata.indexOf(":") + 1,10) - a.information.customdata.substr(a.information.customdata.indexOf(":") + 1,10)
+    });
+    dispatch(setLateModules(lateModulesHolder));
   },[lateModulesArray]);
   return (
     <View style={styles.body}>
