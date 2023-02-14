@@ -3,7 +3,6 @@ export default StyleSheet.create({
     body: {
       flex: 1,
       flexDirection: 'column',
-      marginBottom: 50,
     },
   
     col: {
@@ -24,7 +23,9 @@ export default StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       alignContent: 'flex-start',
-      marginTop: 12,
+      backgroundColor: '#FFF',
+      paddingHorizontal: 32,
+      paddingBottom: 12,
     },
   
     studentwelcome: {
@@ -148,14 +149,11 @@ export default StyleSheet.create({
       color: '#252525',
     },
   
-    hoatdong: {
-      flex: 4,
-      backgroundColor: '#FFF',
-      // marginTop: 10,
-      // paddingTop: 30,
-      paddingHorizontal: 32,
-      paddingBottom: 30,
-    },
+    // hoatdong: {
+    //   flex: 4,
+    //   backgroundColor: '#FFF',
+    //   paddingHorizontal: 32,
+    // },
   
     shape: {
       height: 8,

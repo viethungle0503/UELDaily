@@ -18,9 +18,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 // Redux
 import {useSelector, useDispatch} from 'react-redux';
 import {setDB_App, setDB_UEL, setDepartments} from './redux_toolkit/databaseSlice';
-import {
-  setIsDataReady,
-} from './redux_toolkit/userSlice';
+
 // Firebase
 import {firebase} from '@react-native-firebase/database';
 
@@ -74,16 +72,10 @@ function App() {
 }
 
 const AppWrapper = () => {
+  const dispatch = useDispatch();
   const database_uel = post_data("all_students");
-  // News
-  global.isDataReady = useSelector(state => state.user.isDataReady);
   global.atPreLogin1 = useSelector(state => state.user.atPreLogin1);
   global.atPreLogin2 = useSelector(state => state.user.atPreLogin2);
-  // Temporary Parameter
-  global.tempArray = [];
-  const dispatch = useDispatch();
-
-
   useEffect(() => {
       var RNFS = require('react-native-fs');
       firebase
@@ -117,8 +109,6 @@ const AppWrapper = () => {
             console.error(error);
           },
         );
-        dispatch(setIsDataReady(true));
-
       firebase
         .app()
         .database(

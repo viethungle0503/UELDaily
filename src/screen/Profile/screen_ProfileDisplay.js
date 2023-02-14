@@ -14,7 +14,6 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import {
   setLoggedIn,
   setCurrentUser,
-  setScoreBoard,
   setCurrentLanguage
 } from '../../redux_toolkit/userSlice';
 import auth from '@react-native-firebase/auth';
@@ -68,7 +67,6 @@ export default function ProfileDisplay({ navigation }) {
         .then(() => {
           dispatch(setLoggedIn(false));
           dispatch(setCurrentUser({}));
-          dispatch(setScoreBoard({}));
         });
     } catch (error) {
       console.error(error);
@@ -160,7 +158,7 @@ export default function ProfileDisplay({ navigation }) {
           <View
             style={styles.langBackground}>
             <View style={styles.langContainer}>
-              <Text style={styles.accountHeading}>Chọn ngôn ngữ</Text>
+              <Text style={styles.accountHeading}>{strings.select_language}</Text>
 
               <TouchableOpacity
                 onPress={chooseVNLanguage}
@@ -182,7 +180,7 @@ export default function ProfileDisplay({ navigation }) {
                     source={require('../../assets/account_lang_vie.png')}
                     style={styles.langNationIcon}
                   />
-                  <Text style={styles.accountText}>Tiếng Việt</Text>
+                  <Text style={styles.accountText}>{strings.vietnamese}</Text>
                 </View>
                 <Image
                   style={
@@ -220,7 +218,7 @@ export default function ProfileDisplay({ navigation }) {
                     style={styles.langNationIcon}
                   />
 
-                  <Text style={styles.accountText}>Tiếng Anh</Text>
+                  <Text style={styles.accountText}>{strings.english}</Text>
                 </View>
 
                 <Image

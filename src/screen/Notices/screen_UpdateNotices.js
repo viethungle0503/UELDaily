@@ -67,11 +67,11 @@ export default function UpdateNotices({ navigation }) {
   const [modalData, setModalData] = useState();
   const [updateNotices, setUpdateNotices] = useState([]);
   useEffect(() => {
-    if (updateNotices.length == 0) {
+    var trueUser = db_app.find(
+      x => x.data.email == currentUser.email,
+    );
+    if (trueUser != undefined) {
       var updateNoticesHolder = [...updateNotices];
-      var trueUser = db_app.find(
-        x => x.data.email == currentUser.email,
-      );
       trueUser.data.notices
         .filter(x => x.type == 1)
         .forEach(value => {
@@ -81,10 +81,10 @@ export default function UpdateNotices({ navigation }) {
       sortedUpdateNoticesHolder.sort((a, b) => (new Date(b.creTime)).getTime() - (new Date(a.creTime)).getTime());
       setUpdateNotices(sortedUpdateNoticesHolder);
     }
-  }, [updateNotices]);
+  }, [db_app]);
 
   useEffect(() => {
-  }, [currentLanguage])
+  }, [currentLanguage, updateNotices])
   return (
     <SafeAreaView style={styles.body}>
       <Modal

@@ -6,6 +6,7 @@ import {
   ScrollView,
   Modal,
   FlatList,
+  SafeAreaView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import React, { useEffect, useState } from 'react';
@@ -14,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentLanguage } from '../../redux_toolkit/userSlice';
 import strings from '../Language';
 import { setNews_UEL } from '../../redux_toolkit/newsSlice';
+import { loadGraphicCards } from '../GlobalFunction';
 
 export default function HomeDisplay({ navigation }) {
   const dispatch = useDispatch()
@@ -34,29 +36,126 @@ export default function HomeDisplay({ navigation }) {
     setENLanguage(!ENLanguage);
     setVNLanguage(!VNLanguage);
   };
-  const cheerio = require('cheerio');
-  async function loadGraphicCards(searchUrl) {
-    const baseURL = searchUrl.slice(0,searchUrl.lastIndexOf("/"));
-    const response = await fetch(searchUrl).catch(function(error) {
-      console.log('There has been a problem with your fetch operation: ' + error.message);
-       // ADD THIS THROW error
-        throw error;
-      });; // fetch page
-    const htmlString = await response.text(); // get response text
-    const $ = cheerio.load(htmlString); // parse HTML string
-    var newsHolder = [];
-    $('.PageColumns').remove();
-    $('#ctl08_ctl01_RadListView1_ClientState').remove();
-    $('#ctl08_ctl01_RadListView1').remove();
-    $('.nd_news > div').each(function (i, div) {
-      let title = $('h4 > a', div).text();
-      let time = $('h4 > span', div).text();
-      let imageURL = baseURL + $('img', div).attr('src');
-      let link = baseURL + $('h4 > a', div).attr('href');
-        newsHolder = [...newsHolder, {title: title, time: time, imageURL: imageURL, link: link}];
-    });
-    dispatch(setNews_UEL(newsHolder));
+  const renderHeader = () => {
+    return (
+      <SafeAreaView style={styles.body} showsVerticalScrollIndicator={false}>
+        {loggedIn && (
+          <View style={styles.studentwelcome}>
+
+            <Image
+              style={styles.studentAvatar}
+              source={{ uri: profileImage }}
+            />
+            <View>
+              {(currentUser != {}) ? (
+                <Text style={styles.studentName}>
+                  {currentUser.lastName + ` ${currentUser.firstName}`}
+                </Text>
+              ) : null}
+              <Text>{currentUser.id}</Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.btnLanguage}
+              onPress={() => setopenLanguageMenu(true)}>
+
+              <MaterialCommunityIcons
+                style={styles.svgLanguage}
+                name={'web'}
+                size={25}
+              />
+
+            </TouchableOpacity>
+
+
+            <Image
+              style={styles.effect}
+              source={require('../../assets/effectRound.png')}
+            />
+          </View>
+        )}
+        <View style={styles.tienich}>
+          <View style={styles.tienichHeader}>
+            <Text style={styles.tienichText}>{strings.utilities}</Text>
+            <TouchableOpacity style={styles.btnAllTienich}>
+              <MaterialCommunityIcons name={'tune-variant'} size={12} />
+              <Text style={{ color: 'black', marginLeft: 5 }}>{strings.all}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.col}>
+            <View style={styles.tienichIcon}>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('Schedule')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/tkbIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.schedule}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('ScoreBoard')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/xemdiemIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.scoreboard}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('Exam')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/lichthiIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.exam}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.tienichIcon}>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('Homework')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/baitapIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.homework}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('Tuition')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/hocphiIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.tuition}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('Ctxh')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/ctxhIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.ctxh}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <View style={styles.shape}></View>
+        <Text style={styles.hoatdongHeader}>{strings.recent_activity}</Text>
+        {/* <View style={styles.hoatdong}>
+        </View> */}
+      </SafeAreaView>
+    )
+  }
+  if (strings.getInterfaceLanguage().substring(3, 5).toLowerCase() != currentLanguage) {
+    strings.setLanguage(currentLanguage);
   };
+  if (news_UEL.length == 0) {
+    var news_UELHolder = loadGraphicCards("https://uel.edu.vn/tin-tuc");
+  }
   useEffect(() => {
     strings.setLanguage(currentLanguage);
     if (currentLanguage == "vn") {
@@ -70,21 +169,50 @@ export default function HomeDisplay({ navigation }) {
   }, [currentLanguage]);
   useEffect(() => {
     if (news_UEL.length == 0) {
-      loadGraphicCards("https://uel.edu.vn/tin-tuc");
+      news_UELHolder.then((returnValue) => {
+        dispatch(setNews_UEL(returnValue));
+      })
     }
-  },[])
-  if (strings.getInterfaceLanguage().substring(3, 5).toLowerCase() != currentLanguage) {
-    strings.setLanguage(currentLanguage);
-  };
+  }, [])
   return (
-    <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
-
+    <SafeAreaView>
+      <FlatList
+        keyExtractor={(item, index) => (item + index).toString()}
+        showsVerticalScrollIndicator={false}
+        data={news_UEL}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              style={styles.row}
+              onPress={() => {
+                navigation.navigate('NewsDetail', { link: item.link });
+              }}>
+              <Image style={styles.hoatdongImage} source={{ uri: item.imageURL }} />
+              <View style={styles.contentMain}>
+                <Text
+                  style={styles.hoatdongTitle}
+                  numberOfLines={3}
+                  ellipsizeMode="tail">
+                  {item.title}
+                </Text>
+                <View style={styles.timeBlock}>
+                  <Image
+                    style={styles.iconTime}
+                    source={require('../../assets/clock.png')}
+                  />
+                  <Text style={styles.hoatdongTime}>{item.time.slice(1, 11)}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )
+        }}
+        ListHeaderComponent={renderHeader}
+      />
       <Modal visible={openLanguageMenu} transparent={true} onRequestClose={() => setopenLanguageMenu(false)}>
         <View
           style={styles.langBackground}>
           <View style={styles.langContainer}>
             <Text style={styles.modalHeading}>{strings.select_language}</Text>
-
             <TouchableOpacity
               onPress={chooseVNLanguage}
               style={
@@ -182,146 +310,8 @@ export default function HomeDisplay({ navigation }) {
           </View>
         </View>
       </Modal>
+    </SafeAreaView>
 
-      {/* modal chọn ngôn ngữ */}
-
-      {loggedIn && (
-        <View style={styles.studentwelcome}>
-
-          <Image
-            style={styles.studentAvatar}
-            source={{ uri: profileImage }}
-          />
-          <View>
-            {(currentUser != {}) ? (
-              <Text style={styles.studentName}>
-                {currentUser.lastName + ` ${currentUser.firstName}`}
-              </Text>
-            ) : null}
-            <Text>{currentUser.id}</Text>
-          </View>
-
-          <TouchableOpacity
-            style={styles.btnLanguage}
-            onPress={() => setopenLanguageMenu(true)}>
-
-            <MaterialCommunityIcons
-              style={styles.svgLanguage}
-              name={'web'}
-              size={25}
-            />
-
-          </TouchableOpacity>
-
-
-          <Image
-            style={styles.effect}
-            source={require('../../assets/effectRound.png')}
-          />
-        </View>
-      )}
-      <View style={styles.tienich}>
-        <View style={styles.tienichHeader}>
-          <Text style={styles.tienichText}>{strings.utilities}</Text>
-          <TouchableOpacity style={styles.btnAllTienich}>
-            <MaterialCommunityIcons name={'tune-variant'} size={12} />
-            <Text style={{ color: 'black', marginLeft: 5 }}>{strings.all}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.col}>
-          <View style={styles.tienichIcon}>
-            <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Schedule')}>
-              <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/tkbIcon.png')}
-              />
-              <Text style={styles.tienichIcon__ItemText}>{strings.schedule}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('ScoreBoard')}>
-              <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/xemdiemIcon.png')}
-              />
-              <Text style={styles.tienichIcon__ItemText}>{strings.scoreboard}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Exam')}>
-              <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/lichthiIcon.png')}
-              />
-              <Text style={styles.tienichIcon__ItemText}>{strings.exam}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.tienichIcon}>
-            <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Homework')}>
-              <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/baitapIcon.png')}
-              />
-              <Text style={styles.tienichIcon__ItemText}>{strings.homework}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Tuition')}>
-              <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/hocphiIcon.png')}
-              />
-              <Text style={styles.tienichIcon__ItemText}>{strings.tuition}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Ctxh')}>
-              <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/ctxhIcon.png')}
-              />
-              <Text style={styles.tienichIcon__ItemText}>{strings.ctxh}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-      <View style={styles.shape}></View>
-
-      <View>
-        <Text style={styles.hoatdongHeader}>{strings.recent_activity}</Text>
-        <View style={styles.hoatdong}>
-          {news_UEL.map((item, index) => (
-            <TouchableOpacity
-              style={styles.row}
-              key={index}
-              onPress={() => {
-                navigation.navigate('NewsDetail', { link: item.link });
-              }}>
-              <Image style={styles.hoatdongImage} source={{ uri: item.imageURL }} />
-              <View style={styles.contentMain}>
-                <Text
-                  style={styles.hoatdongTitle}
-                  numberOfLines={3}
-                  ellipsizeMode="tail">
-                  {item.title}
-                </Text>
-                <View style={styles.timeBlock}>
-                  <Image
-                    style={styles.iconTime}
-                    source={require('../../assets/clock.png')}
-                  />
-                  <Text style={styles.hoatdongTime}>{item.time.slice(1, 11)}</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-    </ScrollView>
   );
 }
 
