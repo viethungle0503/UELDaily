@@ -37,6 +37,8 @@ const RootStack = createStackNavigator();
 
 function App() {
   const loggedIn = useSelector(state => state.user.loggedIn);
+  const atPreLogin1 = useSelector(state => state.user.atPreLogin1);
+  const atPreLogin2 = useSelector(state => state.user.atPreLogin2);
   return (
     <NavigationContainer>
       <RootStack.Navigator initialRouteName="PreLogin1">
@@ -74,8 +76,6 @@ function App() {
 const AppWrapper = () => {
   const dispatch = useDispatch();
   const database_uel = post_data("all_students");
-  global.atPreLogin1 = useSelector(state => state.user.atPreLogin1);
-  global.atPreLogin2 = useSelector(state => state.user.atPreLogin2);
   useEffect(() => {
       var RNFS = require('react-native-fs');
       firebase

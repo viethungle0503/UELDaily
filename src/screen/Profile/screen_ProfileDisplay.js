@@ -14,7 +14,8 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import {
   setLoggedIn,
   setCurrentUser,
-  setCurrentLanguage
+  setCurrentLanguage,
+  setProfileImage
 } from '../../redux_toolkit/userSlice';
 import auth from '@react-native-firebase/auth';
 import styles from './ProfileStyles/screen_ProfileDisplay_style';
@@ -67,6 +68,7 @@ export default function ProfileDisplay({ navigation }) {
         .then(() => {
           dispatch(setLoggedIn(false));
           dispatch(setCurrentUser({}));
+          dispatch(setProfileImage(""))
         });
     } catch (error) {
       console.error(error);
@@ -301,7 +303,7 @@ export default function ProfileDisplay({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.btnLogout} onPress={signOut}>
-          <Text style={styles.btnLogoutText}>Đăng xuất</Text>
+          <Text style={styles.btnLogoutText}>{strings.sign_out}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

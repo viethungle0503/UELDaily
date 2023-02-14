@@ -1,22 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Alert, FlatList, SafeAreaView } from 'react-native';
 import {
   Image,
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
-  Animated
+  Animated,
+  FlatList,
+  SafeAreaView,
+  Alert,
 } from 'react-native';
 import strings from '../Language';
 import styles from './NoticesStyles/screen_AllNotices_style'
-import { Swipeable } from 'react-native-gesture-handler';
+import { Swipeable,RectButton } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import { dateDiffInDays } from '../GlobalFunction';
+import { useRef } from 'react';
 
-const deleteItem = () => {
-  alert('Chắc xóa chưa?')
-}
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
     inputRange: [-50, 0.5],
@@ -34,17 +33,14 @@ const renderRight = (progress, dragX) => {
       style={{
         width: 80,
         height: '100%',
-
         backgroundColor: 'red',
         alignItems: 'center',
         justifyContent: 'center',
         borderTopRightRadius: 5,
         borderBottomRightRadius: 5,
-
         marginBottom: 20,
       }}
-      onPress={deleteItem}>
-
+    >
       <Animated.Text style={[Style, {
         color: '#FFF',
         fontWeight: 'bold',
@@ -81,64 +77,73 @@ const dateSort = function (a, b) {
   // }
 
 }
+
 export default function Information({ navigation, route }) {
   const [allNotices, setAllNotices] = useState([]);
   const db_app = useSelector(state => state.database.db_app);
   const currentUser = useSelector(state => state.user.currentUser);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
-  useEffect(() => {
-    var trueUser = db_app.find(
-      x => x.data.email == currentUser.email,
+  const swipeableRef = useRef(null);
+  const deleteItem = (index) => {
+    Alert.alert(
+      "Thông báo",
+      "Bạn có muốn xóa thông báo này?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => {
+          setAllNotices(allNotices.filter((_, i) => i !== index));
+        }, style: "default" }
+      ],
+      {
+        cancelable: true,
+        userInterfaceStyle: "dark",
+      }
     );
-    if (trueUser != undefined) {
-      var allNoticesHolder = [...allNotices];
-      trueUser.data.notices.forEach(value => {
-        allNoticesHolder.push(value);
-      });
-      var sortedAllNoticeHolder = [...allNoticesHolder];
-      sortedAllNoticeHolder.sort(dateSort);
-      setAllNotices(sortedAllNoticeHolder);
-    }
-  }, [db_app]);
-
+  }
   useEffect(() => {
-  }, [currentLanguage, allNotices])
+    if (allNotices.length == 0) {
+      var trueUser = db_app.find(
+        x => x.data.email == currentUser.email,
+      );
+      if (trueUser != undefined) {
+        var allNoticesHolder = [...allNotices];
+        trueUser.data.notices.forEach(value => {
+          allNoticesHolder.push(value);
+        });
+        var sortedAllNoticeHolder = [...allNoticesHolder];
+        sortedAllNoticeHolder.sort(dateSort);
+        setAllNotices(sortedAllNoticeHolder);
+      }
+    }
 
+  }, [db_app]);
+  useEffect(() => {
+  }, [currentLanguage])
+  useEffect(() =>{
+    console.log(swipeableRef.current)
+    if(swipeableRef.current != null) {
+      swipeableRef.current.close;
+    }
+  },[allNotices])
   function navigateToHomeWork() {
     navigation.navigate('Homework', { initBy: route.name })
   }
-  (function () {
-    if (typeof Object.defineProperty === 'function') {
-      try { Object.defineProperty(Array.prototype, 'sortBy', { value: sb }); } catch (e) { }
-    }
-    if (!Array.prototype.sortBy) Array.prototype.sortBy = sb;
-
-    function sb(f) {
-      for (var i = this.length; i;) {
-        var o = this[--i];
-        this[i] = [].concat(f.call(o, o, i), o);
-      }
-      this.sort(function (a, b) {
-        for (var i = 0, len = a.length; i < len; ++i) {
-          if (a[i] != b[i]) return a[i] < b[i] ? -1 : 1;
-        }
-        return 0;
-      });
-      for (var i = this.length; i;) {
-        this[--i] = this[i][this[i].length - 1];
-      }
-      return this;
-    }
-  })();
   return (
     <SafeAreaView style={styles.body}>
       <FlatList
         style={styles.noti}
         showsVerticalScrollIndicator={false}
         data={allNotices}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
+            <Swipeable overshootRight={true} 
+            onSwipeableOpen={() => deleteItem(index)} 
+            renderRightActions={renderRight}
+            ref={swipeableRef}
+            >
               <Animated.View
                 style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}

@@ -48,6 +48,7 @@ const strings = new LocalizedStrings({
         education_program: "Chương trình đào tạo",
         class: "Lớp",
         year: "Năm học",
+        sign_out:"Đăng xuất",
         // Scoreboard
         year: "Năm học",
         semester: "Học kỳ",
@@ -131,6 +132,7 @@ const strings = new LocalizedStrings({
         school_year: "School year",
         education_program: "Education program",
         class: "Class",
+        sign_out:"Sign out",
         // Scoreboard
         year: "Year",
         semester: "Semester",
