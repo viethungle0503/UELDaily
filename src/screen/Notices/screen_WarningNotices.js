@@ -4,7 +4,7 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
+  Alert,
   Animated,
   FlatList,
   SafeAreaView
@@ -15,9 +15,6 @@ import { dateDiffInDays } from '../GlobalFunction';
 import { Swipeable } from 'react-native-gesture-handler';
 import strings from '../Language';
 
-const deleteItem = () => {
-  alert('Chắc xóa chưa?')
-}
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
     inputRange: [-50, 0.5],
@@ -43,9 +40,7 @@ const renderRight = (progress, dragX) => {
         borderBottomRightRadius: 5,
 
         marginBottom: 20,
-      }}
-      onPress={deleteItem}>
-
+      }}>
       <Animated.Text style={[Style, {
         color: '#FFF',
         fontWeight: 'bold',
@@ -62,9 +57,30 @@ export default function WarningNotices({ navigation, route }) {
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const currentUser = useSelector(state => state.user.currentUser);
   const [warningNotices, setWarningNotices] = useState([]);
+  const deleteItem = (index) => {
+    Alert.alert(
+      "Thông báo",
+      "Bạn có muốn xóa thông báo này?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK", onPress: () => {
+            setWarningNotices(warningNotices.filter((_, i) => i !== index));
+          }, style: "default"
+        }
+      ],
+      {
+        cancelable: true,
+        userInterfaceStyle: "dark",
+      }
+    );
+  }
   useEffect(() => {
     var trueUser = db_app.find(x => x.data.email == currentUser.email);
-    if(trueUser != undefined) {
+    if (trueUser != undefined) {
       var warningNoticesHolder = [...warningNotices];
       trueUser.data.notices.filter(x => x.type == 0).forEach((value) => {
         warningNoticesHolder.push(value);
@@ -74,9 +90,9 @@ export default function WarningNotices({ navigation, route }) {
       setWarningNotices(sortedWarningNoticesHolder);
     }
   }, [db_app]);
-  
+
   useEffect(() => {
-  }, [currentLanguage,warningNotices])
+  }, [currentLanguage, warningNotices])
   function navigateToHomeWork() {
     navigation.navigate('Homework', { initBy: route.name })
   }
@@ -86,9 +102,9 @@ export default function WarningNotices({ navigation, route }) {
         style={styles.noti}
         showsVerticalScrollIndicator={false}
         data={warningNotices}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
+            <Swipeable overshootRight={true} onSwipeableOpen={() => deleteItem(index)} renderRightActions={renderRight}>
               <Animated.View
                 style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}
@@ -117,7 +133,7 @@ export default function WarningNotices({ navigation, route }) {
 
                     <View style={styles.row}>
                       <Image source={require('../../assets/notiHistory.png')} />
-                      <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(),new Date(item.creTime))}</Text>
+                      <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(), new Date(item.creTime))}</Text>
                     </View>
 
                   </View>

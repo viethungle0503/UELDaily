@@ -8,7 +8,8 @@ import {
   Modal,
   Animated,
   SafeAreaView,
-  FlatList
+  FlatList,
+  Alert,
 } from 'react-native';
 import styles from './NoticesStyles/screen_UpdateNotices_style'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,9 +18,6 @@ import { useSelector } from 'react-redux';
 import { dateDiffInDays } from '../GlobalFunction';
 import strings from '../Language';
 
-const deleteItem = () => {
-  alert('Chắc xóa chưa?')
-}
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
     inputRange: [-50, 0.5],
@@ -45,9 +43,7 @@ const renderRight = (progress, dragX) => {
         borderBottomRightRadius: 5,
 
         marginBottom: 20,
-      }}
-      onPress={deleteItem}>
-
+      }}>
       <Animated.Text style={[Style, {
         color: '#FFF',
         fontWeight: 'bold',
@@ -66,6 +62,25 @@ export default function UpdateNotices({ navigation }) {
   const [openModalUpdateNoti, setopenModalUpdateNoti] = useState(false);
   const [modalData, setModalData] = useState();
   const [updateNotices, setUpdateNotices] = useState([]);
+  const deleteItem = (index) => {
+    Alert.alert(
+      "Thông báo",
+      "Bạn có muốn xóa thông báo này?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => {
+          setUpdateNotices(updateNotices.filter((_, i) => i !== index));
+        }, style: "default" }
+      ],
+      {
+        cancelable: true,
+        userInterfaceStyle: "dark",
+      }
+    );
+  }
   useEffect(() => {
     var trueUser = db_app.find(
       x => x.data.email == currentUser.email,
@@ -122,7 +137,7 @@ export default function UpdateNotices({ navigation }) {
         style={styles.noti}
         showsVerticalScrollIndicator={false}
         data={updateNotices}
-        renderItem={({ item }) => {
+        renderItem={({ item,index }) => {
           function settingModal() {
             const title = (() => (
               <ScrollView>
@@ -162,7 +177,7 @@ export default function UpdateNotices({ navigation }) {
             setModalData(title);
           }
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={deleteItem} renderRightActions={renderRight}>
+            <Swipeable overshootRight={true} onSwipeableOpen={() => deleteItem(index)} renderRightActions={renderRight}>
               <Animated.View
                 style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}

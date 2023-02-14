@@ -1,5 +1,3 @@
-import { Image } from 'react-native';
-
 function dateDiffInDays(a, b) {
   const _Hours_PER_DAY = 24;
   const _Minutes_PER_DAY = 60 * _Hours_PER_DAY;
@@ -42,9 +40,9 @@ function countPropertiesMethod2(obj) {
 function countPropertiesMethod1(obj) {
   var count = 0;
 
-  for(var prop in obj) {
-      if(obj.hasOwnProperty(prop))
-          ++count;
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop))
+      ++count;
   }
 
   return count;
@@ -57,19 +55,19 @@ function output(inp) {
 function syntaxHighlight(json) {
   json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-      var cls = 'number';
-      if (/^"/.test(match)) {
-          if (/:$/.test(match)) {
-              cls = 'key';
-          } else {
-              cls = 'string';
-          }
-      } else if (/true|false/.test(match)) {
-          cls = 'boolean';
-      } else if (/null/.test(match)) {
-          cls = 'null';
+    var cls = 'number';
+    if (/^"/.test(match)) {
+      if (/:$/.test(match)) {
+        cls = 'key';
+      } else {
+        cls = 'string';
       }
-      return '<span class="' + cls + '">' + match + '</span>';
+    } else if (/true|false/.test(match)) {
+      cls = 'boolean';
+    } else if (/null/.test(match)) {
+      cls = 'null';
+    }
+    return '<span class="' + cls + '">' + match + '</span>';
   });
 }
 
@@ -122,7 +120,6 @@ async function loadGraphicCards(searchUrl) {
   return detailNewsHolder;
 };
 
-
 export {
   countPropertiesMethod1,
   countPropertiesMethod2,
@@ -130,5 +127,31 @@ export {
   groupBy,
   dateDiffInDays,
   oldDateDiffInDays,
-  loadGraphicCards
+  loadGraphicCards,
 }
+
+
+
+(function () {
+  if (typeof Object.defineProperty === 'function') {
+    try { Object.defineProperty(Array.prototype, 'sortBy', { value: sb }); } catch (e) { }
+  }
+  if (!Array.prototype.sortBy) Array.prototype.sortBy = sb;
+
+  function sb(f) {
+    for (var i = this.length; i;) {
+      var o = this[--i];
+      this[i] = [].concat(f.call(o, o, i), o);
+    }
+    this.sort(function (a, b) {
+      for (var i = 0, len = a.length; i < len; ++i) {
+        if (a[i] != b[i]) return a[i] < b[i] ? -1 : 1;
+      }
+      return 0;
+    });
+    for (var i = this.length; i;) {
+      this[--i] = this[i][this[i].length - 1];
+    }
+    return this;
+  }
+})();
