@@ -14,7 +14,6 @@ export const userSlice = createSlice({
         course:[],
         information:[],
         profileImage:"",
-        isDataReady: false,
         atPreLogin1: true,
         atPreLogin2: false,
         currentLanguage: "vn",
@@ -33,9 +32,6 @@ export const userSlice = createSlice({
         },
         setScoreBoard: (state, action) => {
             state.scoreBoard = action.payload;
-        },
-        setIsDataReady: (state, action) => {
-            state.isDataReady = action.payload;
         },
         setAtPreLogin1: (state, action) => {
             state.atPreLogin1 = action.payload;

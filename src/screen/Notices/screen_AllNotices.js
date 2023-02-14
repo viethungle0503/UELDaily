@@ -82,17 +82,16 @@ const dateSort = function (a, b) {
 
 }
 export default function Information({ navigation, route }) {
-  const [allNotices, setAllNotices] = useState(null);
+  const [allNotices, setAllNotices] = useState([]);
   const db_app = useSelector(state => state.database.db_app);
   const currentUser = useSelector(state => state.user.currentUser);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   useEffect(() => {
-    // if (allNotices.length == 0) {
-    if (true) {
-      var allNoticesHolder = [];
-      var trueUser = db_app.find(
-        x => x.data.email == currentUser.email,
-      );
+    var trueUser = db_app.find(
+      x => x.data.email == currentUser.email,
+    );
+    if (trueUser != undefined) {
+      var allNoticesHolder = [...allNotices];
       trueUser.data.notices.forEach(value => {
         allNoticesHolder.push(value);
       });
@@ -100,7 +99,7 @@ export default function Information({ navigation, route }) {
       sortedAllNoticeHolder.sort(dateSort);
       setAllNotices(sortedAllNoticeHolder);
     }
-  }, []);
+  }, [db_app]);
 
   useEffect(() => {
   }, [currentLanguage, allNotices])

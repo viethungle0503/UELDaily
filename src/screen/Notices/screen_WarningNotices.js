@@ -63,9 +63,9 @@ export default function WarningNotices({ navigation, route }) {
   const currentUser = useSelector(state => state.user.currentUser);
   const [warningNotices, setWarningNotices] = useState([]);
   useEffect(() => {
-    if (warningNotices.length == 0) {
+    var trueUser = db_app.find(x => x.data.email == currentUser.email);
+    if(trueUser != undefined) {
       var warningNoticesHolder = [...warningNotices];
-      var trueUser = db_app.find(x => x.data.email == currentUser.email);
       trueUser.data.notices.filter(x => x.type == 0).forEach((value) => {
         warningNoticesHolder.push(value);
       })
@@ -73,10 +73,10 @@ export default function WarningNotices({ navigation, route }) {
       sortedWarningNoticesHolder.sort((a, b) => (new Date(b.creTime)).getTime() - (new Date(a.creTime)).getTime());
       setWarningNotices(sortedWarningNoticesHolder);
     }
-  }, [warningNotices]);
+  }, [db_app]);
   
   useEffect(() => {
-  }, [currentLanguage])
+  }, [currentLanguage,warningNotices])
   function navigateToHomeWork() {
     navigation.navigate('Homework', { initBy: route.name })
   }

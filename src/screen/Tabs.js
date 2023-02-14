@@ -29,7 +29,7 @@ export default function Tabs() {
         x => x.data.email == currentUser.email,
       );
       if(trueUser !== undefined) {
-        var tabBarBadge = 3;
+        var tabBarBadge = 0;
         trueUser.data.notices.forEach(value => {
           if(value.seen == false) {
             tabBarBadge += 1;

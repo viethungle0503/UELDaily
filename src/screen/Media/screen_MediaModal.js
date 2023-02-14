@@ -4,7 +4,7 @@ import {
     Image,
     TouchableOpacity,
 } from 'react-native';
-import {MediaNoti, MediaNoti1} from './screen_MediaNoti';
+import MediaNoti from './screen_MediaNoti';
 import styles from './MediaStyles/screen_MediaModal_style';
 import MediaContact from './screen_MediaContact'
 import React, { useEffect } from 'react';
@@ -65,7 +65,7 @@ export default function MediaModal({ navigation,route }) {
                 <Tab.Screen
                     style={styles.notiHeader_Sort_btnActive}
                     name="MediaNoti"
-                    component={ready ? MediaNoti1 : MediaNoti}
+                    component={MediaNoti}
                     initialParams={{searchUrl:searchUrl,uri:uri,name:name}}
                     options={{
                         tabBarLabel: strings.news,

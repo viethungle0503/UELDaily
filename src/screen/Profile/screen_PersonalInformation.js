@@ -3,6 +3,7 @@ import {
     View,
     Text,
     TouchableOpacity,
+    ScrollView,
 } from 'react-native';
 import styles from './ProfileStyles/screen_PersonalInformation_style';
 import strings from '../Language';
@@ -15,7 +16,7 @@ export default function PersonalInformation({navigation}) {
 
     },[currentLanguage])
     return (
-        <View style={styles.modalContainer}>
+        <ScrollView style={styles.modalContainer}>
             <Image
                 style={styles.effectLeft}
                 source={require('../../assets/preLoginEffectLeft.png')}
@@ -164,6 +165,6 @@ export default function PersonalInformation({navigation}) {
                     </View>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     )
 };
