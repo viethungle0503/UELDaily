@@ -21,12 +21,15 @@ export const databaseSlice = createSlice({
     },
     setDepartments:(state,action) => {
       state.db_departments = action.payload;
-    }
+    },
+    setSeenTrue: (state, action) => {
+      state.db_app[action.payload[0]].data.notices[action.payload[1]].seen = true;
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setDB_App, setDB_UEL, setDepartments } = databaseSlice.actions;
+export const { setDB_App, setDB_UEL, setDepartments,setSeenTrue } = databaseSlice.actions;
 
 export default databaseSlice.reducer;
 

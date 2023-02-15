@@ -163,8 +163,8 @@ export default StyleSheet.create({
 
 
 
-    //modal 
-
+  
+    // Modal Section
     modalContainer: {
       flex: 1,
       backgroundColor: '#FFF',
@@ -182,17 +182,11 @@ export default StyleSheet.create({
     },
 
     btnBackContainer: {
-      // width: '100%',
-      // height: 40,
       padding: 10,
-      // backgroundColor: 'blue'
     },
    
     modalHeader: {
-      // backgroundColor: 'green',
       paddingHorizontal: 20,
-      // paddingVertical: 10,
-
     },
 
     modalHeader_TitleText:{
@@ -223,13 +217,11 @@ export default StyleSheet.create({
       color: '#252525',
     },
 
-   
     modalContent:{
       backgroundColor: '#F7F9FE',
       borderRadius: 10,
       margin: 15,
       padding: 20,
-
     }, 
     modalContentText:{
       color: '#252525',
@@ -247,12 +239,9 @@ export default StyleSheet.create({
       flexDirection: 'row',
       alignSelf: 'flex-end',
       marginRight: 15,
-
-
     },
     btnResponseText:{
       color: '#FFF',
       fontSize: 17,
-
-    }
+    },
   });
