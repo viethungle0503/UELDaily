@@ -57,6 +57,15 @@ export default function WarningNotices({ navigation, route }) {
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const currentUser = useSelector(state => state.user.currentUser);
   const [warningNotices, setWarningNotices] = useState([]);
+  let row = [];
+  let prevOpenedRow;
+  const closeRow = (index) => {
+    if (prevOpenedRow && prevOpenedRow !== row[index]) {
+      prevOpenedRow.close();
+    }
+    prevOpenedRow = row[index];
+    prevOpenedRow.close();
+  }
   const deleteItem = (index) => {
     Alert.alert(
       "Thông báo",
@@ -68,6 +77,7 @@ export default function WarningNotices({ navigation, route }) {
         },
         {
           text: "OK", onPress: () => {
+            closeRow(index);
             setWarningNotices(warningNotices.filter((_, i) => i !== index));
           }, style: "default"
         }
@@ -104,7 +114,11 @@ export default function WarningNotices({ navigation, route }) {
         data={warningNotices}
         renderItem={({ item, index }) => {
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={() => deleteItem(index)} renderRightActions={renderRight}>
+            <Swipeable overshootRight={true} 
+            onSwipeableOpen={() => deleteItem(index)} 
+            renderRightActions={renderRight}
+            ref={ref => row[index] = ref}
+            >
               <Animated.View
                 style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}
