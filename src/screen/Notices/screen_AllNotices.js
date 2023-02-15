@@ -11,10 +11,9 @@ import {
 } from 'react-native';
 import strings from '../Language';
 import styles from './NoticesStyles/screen_AllNotices_style'
-import { Swipeable,RectButton } from 'react-native-gesture-handler';
+import { Swipeable, RectButton } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import { dateDiffInDays } from '../GlobalFunction';
-import { useRef } from 'react';
 
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
@@ -83,25 +82,14 @@ export default function Information({ navigation, route }) {
   const db_app = useSelector(state => state.database.db_app);
   const currentUser = useSelector(state => state.user.currentUser);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
-  const swipeableRef = useRef(null);
-  const deleteItem = (index) => {
-    Alert.alert(
-      "Thông báo",
-      "Bạn có muốn xóa thông báo này?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        { text: "OK", onPress: () => {
-          setAllNotices(allNotices.filter((_, i) => i !== index));
-        }, style: "default" }
-      ],
-      {
-        cancelable: true,
-        userInterfaceStyle: "dark",
-      }
-    );
+  let row = [];
+  let prevOpenedRow;
+  const closeRow = (index) => {
+    if (prevOpenedRow && prevOpenedRow !== row[index]) {
+      prevOpenedRow.close();
+    }
+    prevOpenedRow = row[index];
+    prevOpenedRow.close();
   }
   useEffect(() => {
     if (allNotices.length == 0) {
@@ -122,12 +110,8 @@ export default function Information({ navigation, route }) {
   }, [db_app]);
   useEffect(() => {
   }, [currentLanguage])
-  useEffect(() =>{
-    console.log(swipeableRef.current)
-    if(swipeableRef.current != null) {
-      swipeableRef.current.close;
-    }
-  },[allNotices])
+  useEffect(() => {
+  }, [allNotices])
   function navigateToHomeWork() {
     navigation.navigate('Homework', { initBy: route.name })
   }
@@ -138,11 +122,33 @@ export default function Information({ navigation, route }) {
         showsVerticalScrollIndicator={false}
         data={allNotices}
         renderItem={({ item, index }) => {
+          const deleteItem = (index) => {
+            Alert.alert(
+              "Thông báo",
+              "Bạn có muốn xóa thông báo này?",
+              [
+                {
+                  text: "Cancel",
+                  style: "cancel",
+                },
+                {
+                  text: "OK", onPress: () => {
+                    closeRow(index);
+                    setAllNotices(allNotices.filter((_, i) => i !== index));
+                  }, style: "default"
+                }
+              ],
+              {
+                cancelable: true,
+                userInterfaceStyle: "dark",
+              }
+            );
+          }
           return (
-            <Swipeable overshootRight={true} 
-            onSwipeableOpen={() => deleteItem(index)} 
-            renderRightActions={renderRight}
-            ref={swipeableRef}
+            <Swipeable overshootRight={true}
+              onSwipeableOpen={() => deleteItem(index)}
+              renderRightActions={renderRight}
+              ref={ref => row[index] = ref}
             >
               <Animated.View
                 style={styles.notiItem}>

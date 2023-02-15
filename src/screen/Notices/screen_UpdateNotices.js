@@ -62,6 +62,15 @@ export default function UpdateNotices({ navigation }) {
   const [openModalUpdateNoti, setopenModalUpdateNoti] = useState(false);
   const [modalData, setModalData] = useState();
   const [updateNotices, setUpdateNotices] = useState([]);
+  let row = [];
+  let prevOpenedRow;
+  const closeRow = (index) => {
+    if (prevOpenedRow && prevOpenedRow !== row[index]) {
+      prevOpenedRow.close();
+    }
+    prevOpenedRow = row[index];
+    prevOpenedRow.close();
+  }
   const deleteItem = (index) => {
     Alert.alert(
       "Thông báo",
@@ -72,6 +81,7 @@ export default function UpdateNotices({ navigation }) {
           style: "cancel",
         },
         { text: "OK", onPress: () => {
+          closeRow(index);
           setUpdateNotices(updateNotices.filter((_, i) => i !== index));
         }, style: "default" }
       ],
@@ -177,7 +187,10 @@ export default function UpdateNotices({ navigation }) {
             setModalData(title);
           }
           return (
-            <Swipeable overshootRight={true} onSwipeableOpen={() => deleteItem(index)} renderRightActions={renderRight}>
+            <Swipeable overshootRight={true} onSwipeableOpen={() => deleteItem(index)} 
+            renderRightActions={renderRight}
+            ref={ref => row[index] = ref}
+            >
               <Animated.View
                 style={styles.notiItem}>
                 {item.seen ? <></> : <View style={styles.fadeItem}></View>}
