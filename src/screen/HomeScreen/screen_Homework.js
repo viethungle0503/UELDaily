@@ -25,6 +25,8 @@ const Tab = createMaterialTopTabNavigator();
 export default function Homework({ navigation }) {
   const dispatch = useDispatch();
   const currentUser = useSelector(state => state.user.currentUser);
+  const modules = useSelector(state => state.user.modules);
+  const lateModules = useSelector(state => state.user.lateModules);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   useEffect(() => {
   }, [currentLanguage])
@@ -36,25 +38,29 @@ export default function Homework({ navigation }) {
   const [userId, setUserId] = useState(0);
   useEffect(() => {
     // var token = "dd5cf5bf97da7bc9ae1ab6a3f53f43af";
-    get_web_service_token().then((value) => {
-      setToken(value.token);
-    });
+    if (modules.length == 0 || lateModules.length == 0) {
+      get_web_service_token().then((value) => {
+        setToken(value.token);
+      });
+    }
+    else {
+      setIsLoading(false);
+    };
   }, []);
   useEffect(() => {
-    if(token != "") {
-      core_user_get_users_by_field(token,"email",currentUser.email).then((value) => {
+    if (token != "") {
+      core_user_get_users_by_field(token, "email", currentUser.email).then((value) => {
         setUserId(value[0].id);
       })
-    }
-  },[token])
+    };
+  }, [token])
   useEffect(() => {
-    if(token != "" && userId != 0) {
-      core_user_get_course_user_profiles(token,1,userId).then((value) => {
+    if (token != "" && userId != 0) {
+      core_user_get_course_user_profiles(token, 1, userId).then((value) => {
         value[0].enrolledcourses.forEach((course) => {
           core_course_get_contents(token, course.id).then((sections) => {
             sections.forEach((section) => {
               if (section.modules.length > 0) {
-                var today = new Date()
                 section.modules.forEach((module) => {
                   if (module.modname == "assign" || module.modname == "quiz") {
                     var index = module.dates.findIndex(x => x.label == "Due:");
@@ -64,7 +70,7 @@ export default function Homework({ navigation }) {
                       }
                       else {
                         setModulesArray(oldModules => [...oldModules, { fullname: course.fullname, information: module }]);
-  
+
                       }
                     }
                   }
@@ -75,22 +81,25 @@ export default function Homework({ navigation }) {
         });
         setIsLoading(false);
       })
-    }
-
+    };
   }, [userId])
   useEffect(() => {
-    var modulesHolder = [...modulesArray];
-    modulesHolder.sort((a, b) => {
-      return a.information.customdata.substr(a.information.customdata.indexOf(":") + 1, 10) - b.information.customdata.substr(b.information.customdata.indexOf(":") + 1, 10)
-    });
-    dispatch(setModules(modulesHolder));
+    if (modulesArray.length != 0) {
+      var modulesHolder = [...modulesArray];
+      modulesHolder.sort((a, b) => {
+        return a.information.customdata.substr(a.information.customdata.indexOf(":") + 1, 10) - b.information.customdata.substr(b.information.customdata.indexOf(":") + 1, 10)
+      });
+      dispatch(setModules(modulesHolder));
+    }
   }, [modulesArray]);
   useEffect(() => {
-    var lateModulesHolder = [...lateModulesArray];
-    lateModulesHolder.sort((a, b) => {
-      return b.information.customdata.substr(b.information.customdata.indexOf(":") + 1, 10) - a.information.customdata.substr(a.information.customdata.indexOf(":") + 1, 10)
-    });
-    dispatch(setLateModules(lateModulesHolder));
+    if (lateModulesArray.length != 0) {
+      var lateModulesHolder = [...lateModulesArray];
+      lateModulesHolder.sort((a, b) => {
+        return b.information.customdata.substr(b.information.customdata.indexOf(":") + 1, 10) - a.information.customdata.substr(a.information.customdata.indexOf(":") + 1, 10)
+      });
+      dispatch(setLateModules(lateModulesHolder));
+    }
   }, [lateModulesArray]);
   return (
     <View style={styles.body}>

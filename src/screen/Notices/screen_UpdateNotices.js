@@ -19,7 +19,7 @@ import { dateDiffInDays } from '../GlobalFunction';
 import strings from '../Language';
 import { setUnreadNotice } from '../../redux_toolkit/userSlice';
 import { useDispatch } from 'react-redux';
-import { setSeenTrue } from '../../redux_toolkit/databaseSlice';
+import { setSeenTrue, deleteNotification } from '../../redux_toolkit/databaseSlice';
 
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
@@ -75,31 +75,6 @@ export default function UpdateNotices({ navigation }) {
     }
     prevOpenedRow = row[index];
     prevOpenedRow.close();
-  }
-  const deleteItem = (index) => {
-    Alert.alert(
-      "Thông báo",
-      "Bạn có muốn xóa thông báo này?",
-      [
-        {
-          text: "Cancel",
-          onPress: () => {
-            closeRow(index);
-          },
-          style: "cancel",
-        },
-        {
-          text: "OK", onPress: () => {
-            closeRow(index);
-            setUpdateNotices(updateNotices.filter((_, i) => i !== index));
-          }, style: "default"
-        }
-      ],
-      {
-        cancelable: true,
-        userInterfaceStyle: "dark",
-      }
-    );
   }
   useEffect(() => {
     // if (updateNotices.length == 0) {
@@ -160,6 +135,8 @@ export default function UpdateNotices({ navigation }) {
         showsVerticalScrollIndicator={false}
         data={updateNotices}
         renderItem={({ item, index }) => {
+          let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
+          let secondIndex = db_app[firstIndex]?.data?.notices?.findIndex(x => x.id == item.id);
           function settingModal() {
             const title = (() => (
               <ScrollView>
@@ -197,6 +174,35 @@ export default function UpdateNotices({ navigation }) {
 
             ));
             setModalData(title);
+          };
+          const deleteItem = (index) => {
+            Alert.alert(
+              "Thông báo",
+              "Bạn có muốn xóa thông báo này?",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => {
+                    closeRow(index);
+                  },
+                  style: "cancel",
+                },
+                {
+                  text: "OK", onPress: () => {
+                    closeRow(index);
+                    if(item.seen == false) {
+                      dispatch(setUnreadNotice(unreadNotice - 1));
+                    };
+                    // setUpdateNotices(updateNotices.filter((_, i) => i !== index));
+                    dispatch(deleteNotification([firstIndex,item.id]));
+                  }, style: "default"
+                }
+              ],
+              {
+                cancelable: true,
+                userInterfaceStyle: "dark",
+              }
+            );
           }
           return (
             <Swipeable overshootRight={true} onSwipeableOpen={() => deleteItem(index)}
@@ -209,8 +215,6 @@ export default function UpdateNotices({ navigation }) {
                     settingModal();
                     setopenModalUpdateNoti(true);
                     if (!item.seen) {
-                      let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
-                      let secondIndex = db_app[firstIndex].data.notices.findIndex(x => x.id == item.id);
                       dispatch(setSeenTrue([firstIndex, secondIndex]));
                       dispatch(setUnreadNotice(unreadNotice - 1));
                     };

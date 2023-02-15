@@ -11,9 +11,11 @@ import styles from './MediaStyles/screen_MediaMain_style';
 import strings from '../Language';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { dateDiffInDays } from '../GlobalFunction';
 export default function MediaMain({ navigation }) {
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const db_departments = useSelector(state => state.database.db_departments);
+  const news_Departments = useSelector(state => state.news.news_Departments);
   useEffect(() => {
   }, [currentLanguage])
   return (
@@ -31,11 +33,23 @@ export default function MediaMain({ navigation }) {
           {strings.news}
         </Text>
         <FlatList
+          initialNumToRender={15}
           showsVerticalScrollIndicator={false}
           data={db_departments}
-          renderItem={({ item }) => {
+          renderItem={({ item, index }) => {
             //let existImage = "asset:/departments/" + item.data.logoUrl;
             //let defaultImage = "asset:/departments/default.png";
+            let postDay = new Date();
+            if (news_Departments.length != 0) {
+              var element = news_Departments.find(x => x.identifier == item.data.newsLink)
+              let postTime = element.data[0].time;
+              postTime = postTime.substr(1, 10).replaceAll('/', '-');
+              postTime = `${postTime.substr(3, 2)}-${postTime.substr(0, 2)}-${postTime.substr(6, 4)}`;
+              if (postTime != "--") {
+                postDay = new Date(postTime)
+              }
+            }
+
             return (
               <TouchableOpacity
                 style={styles.mediaItem}
@@ -54,11 +68,9 @@ export default function MediaMain({ navigation }) {
                     <Text style={styles.mediaDepartmentName}>
                       {item.data.name}
                     </Text>
-
-                    <Text style={styles.mediaLastestTime}>9h</Text>
+                    <Text style={styles.mediaLastestTime}>{dateDiffInDays(new Date(), postDay)}</Text>
                   </View>
-
-                  <Text style={styles.mediaLastestNews}>Danh sách sinh viên được gia hạn đóng học phí</Text>
+                  <Text style={styles.mediaLastestNews}>{`${element.data[0].title.substr(0, 40)}...`}</Text>
                 </View>
               </TouchableOpacity>
             )
