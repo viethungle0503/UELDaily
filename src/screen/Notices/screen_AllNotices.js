@@ -18,7 +18,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { dateDiffInDays } from '../GlobalFunction';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { setUnreadNotice } from '../../redux_toolkit/userSlice';
-import { setSeenTrue } from '../../redux_toolkit/databaseSlice';
+import { setSeenTrue, deleteNotification } from '../../redux_toolkit/databaseSlice';
 
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
@@ -131,6 +131,8 @@ export default function Information({ navigation, route }) {
         showsVerticalScrollIndicator={false}
         data={allNotices}
         renderItem={({ item, index }) => {
+          let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
+          let secondIndex = db_app[firstIndex]?.data?.notices?.findIndex(x => x.id == item.id);
           const deleteItem = (index) => {
             Alert.alert(
               "Thông báo",
@@ -146,7 +148,11 @@ export default function Information({ navigation, route }) {
                 {
                   text: "OK", onPress: () => {
                     closeRow(index);
-                    setAllNotices(allNotices.filter((_, i) => i !== index));
+                    // setAllNotices(allNotices.filter((_, i) => i !== index));
+                    if(item.seen == false) {
+                      dispatch(setUnreadNotice(unreadNotice - 1));
+                    };
+                    dispatch(deleteNotification([firstIndex,item.id]));
                   }, style: "default"
                 }
               ],
@@ -214,8 +220,6 @@ export default function Information({ navigation, route }) {
                       //   });
                       //   return newState;
                       // });
-                      let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
-                      let secondIndex = db_app[firstIndex].data.notices.findIndex(x => x.id == item.id);
                       dispatch(setSeenTrue([firstIndex, secondIndex]));
                       dispatch(setUnreadNotice(unreadNotice - 1));
                     };
@@ -223,10 +227,13 @@ export default function Information({ navigation, route }) {
                   }
                     : () => {
                       navigateToHomeWork();
-                      let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
-                      let secondIndex = db_app[firstIndex].data.notices.findIndex(x => x.id == item.id);
-                      dispatch(setSeenTrue([firstIndex, secondIndex]));
-                      dispatch(setUnreadNotice(unreadNotice - 1));
+                      if (!item.seen) {
+                        let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
+                        let secondIndex = db_app[firstIndex].data.notices.findIndex(x => x.id == item.id);
+                        dispatch(setSeenTrue([firstIndex, secondIndex]));
+                        dispatch(setUnreadNotice(unreadNotice - 1));
+                      }
+
                     }}>
                   {item.seen ? <View style={styles.fadeItem}></View> : <></>}
                   <View style={styles.notiItem_Icon}>

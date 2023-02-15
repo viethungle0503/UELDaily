@@ -34,11 +34,9 @@ export default StyleSheet.create({
       paddingBottom: 3
     },
     mediaNoti_Lastest: {
-      flex: 1,
+      flex:1,
       marginTop: 20,
       marginLeft: 20,
-      flexDirection: 'row',
-      height: 300,
     },
     mediaNoti_All: {
       flex: 1,

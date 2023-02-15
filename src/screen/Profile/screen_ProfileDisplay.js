@@ -15,7 +15,8 @@ import {
   setLoggedIn,
   setCurrentUser,
   setCurrentLanguage,
-  setProfileImage
+  setProfileImage,
+  setUnreadNotice
 } from '../../redux_toolkit/userSlice';
 import auth from '@react-native-firebase/auth';
 import styles from './ProfileStyles/screen_ProfileDisplay_style';
@@ -69,6 +70,7 @@ export default function ProfileDisplay({ navigation }) {
           dispatch(setLoggedIn(false));
           dispatch(setCurrentUser({}));
           dispatch(setProfileImage(""))
+          dispatch(setUnreadNotice(0));
         });
     } catch (error) {
       console.error(error);

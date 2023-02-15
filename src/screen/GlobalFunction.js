@@ -100,7 +100,7 @@ async function loadGraphicCards(searchUrl) {
   var detailNewsHolder = [];
   const cheerio = require('cheerio');
   const baseURL = searchUrl.slice(0, searchUrl.lastIndexOf("/"));
-  const response = await fetch(searchUrl).catch(function (error) {
+  const response = await fetchRetry(searchUrl).catch(function (error) {
     console.log('There has been a problem with your fetch operation: ' + error.message);
     // ADD THIS THROW error
     throw error;
@@ -119,6 +119,22 @@ async function loadGraphicCards(searchUrl) {
   });
   return detailNewsHolder;
 };
+
+// Retry Fetch
+function wait(delay){
+  return new Promise((resolve) => setTimeout(resolve, delay));
+}
+
+function fetchRetry(url, delay = 3000, tries = 5, fetchOptions = {}) {
+  function onError(err){
+      triesLeft = tries - 1;
+      if(!triesLeft){
+          throw err;
+      }
+      return wait(delay).then(() => fetchRetry(url, delay, triesLeft, fetchOptions));
+  }
+  return fetch(url,fetchOptions).catch(onError);
+}
 
 export {
   countPropertiesMethod1,

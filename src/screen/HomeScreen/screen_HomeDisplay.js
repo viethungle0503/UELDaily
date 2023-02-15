@@ -153,9 +153,6 @@ export default function HomeDisplay({ navigation }) {
   if (strings.getInterfaceLanguage().substring(3, 5).toLowerCase() != currentLanguage) {
     strings.setLanguage(currentLanguage);
   };
-  if (news_UEL.length == 0) {
-    var news_UELHolder = loadGraphicCards("https://uel.edu.vn/tin-tuc");
-  }
   useEffect(() => {
     strings.setLanguage(currentLanguage);
     if (currentLanguage == "vn") {
@@ -169,7 +166,7 @@ export default function HomeDisplay({ navigation }) {
   }, [currentLanguage]);
   useEffect(() => {
     if (news_UEL.length == 0) {
-      news_UELHolder.then((returnValue) => {
+      loadGraphicCards("https://uel.edu.vn/tin-tuc").then((returnValue) => {
         dispatch(setNews_UEL(returnValue));
       })
     }
