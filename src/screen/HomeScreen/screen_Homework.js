@@ -43,7 +43,6 @@ export default function Homework({ navigation }) {
   useEffect(() => {
     if(token != "") {
       core_user_get_users_by_field(token,"email",currentUser.email).then((value) => {
-        console.log(value[0].id)
         setUserId(value[0].id);
       })
     }

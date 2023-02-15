@@ -8,12 +8,17 @@ import {
   FlatList,
   SafeAreaView,
   Alert,
+  ScrollView,
+  Modal,
 } from 'react-native';
 import strings from '../Language';
 import styles from './NoticesStyles/screen_AllNotices_style'
-import { Swipeable, RectButton } from 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
+import { Swipeable } from 'react-native-gesture-handler';
+import { useSelector, useDispatch } from 'react-redux';
 import { dateDiffInDays } from '../GlobalFunction';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { setUnreadNotice } from '../../redux_toolkit/userSlice';
+import { setSeenTrue } from '../../redux_toolkit/databaseSlice';
 
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
@@ -82,6 +87,10 @@ export default function Information({ navigation, route }) {
   const db_app = useSelector(state => state.database.db_app);
   const currentUser = useSelector(state => state.user.currentUser);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
+  const [openModalUpdateNoti, setopenModalUpdateNoti] = useState(false);
+  const [modalData, setModalData] = useState();
+  const unreadNotice = useSelector(state => state.user.unreadNotice);
+  const dispatch = useDispatch();
   let row = [];
   let prevOpenedRow;
   const closeRow = (index) => {
@@ -92,20 +101,20 @@ export default function Information({ navigation, route }) {
     prevOpenedRow.close();
   }
   useEffect(() => {
-    if (allNotices.length == 0) {
-      var trueUser = db_app.find(
-        x => x.data.email == currentUser.email,
-      );
-      if (trueUser != undefined) {
-        var allNoticesHolder = [...allNotices];
-        trueUser.data.notices.forEach(value => {
-          allNoticesHolder.push(value);
-        });
-        var sortedAllNoticeHolder = [...allNoticesHolder];
-        sortedAllNoticeHolder.sort(dateSort);
-        setAllNotices(sortedAllNoticeHolder);
-      }
+    // if (allNotices.length == 0) {
+    var trueUser = db_app.find(
+      x => x.data.email == currentUser.email,
+    );
+    if (trueUser != undefined) {
+      var allNoticesHolder = [];
+      trueUser.data.notices.forEach(value => {
+        allNoticesHolder.push(value);
+      });
+      var sortedAllNoticeHolder = [...allNoticesHolder];
+      sortedAllNoticeHolder.sort(dateSort);
+      setAllNotices(sortedAllNoticeHolder);
     }
+    // }
 
   }, [db_app]);
   useEffect(() => {
@@ -129,6 +138,9 @@ export default function Information({ navigation, route }) {
               [
                 {
                   text: "Cancel",
+                  onPress: () => {
+                    closeRow(index);
+                  },
                   style: "cancel",
                 },
                 {
@@ -144,30 +156,92 @@ export default function Information({ navigation, route }) {
               }
             );
           }
+          function settingModal() {
+            const title = (() => (
+              <ScrollView>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalHeader_TitleText}>
+                    {item.title}
+                  </Text>
+                  <View style={styles.modalHeader_Department}>
+                    <Image
+                      style={styles.modalHeader_Icon}
+                      source={require('../../assets/component_ModalUpdateNoti_Icon.png')} />
+                    <View>
+                      <Text style={styles.modalHeader_DepartmentName}>
+                        {item.sendBy}
+                      </Text>
+                      <Text style={styles.modalHeader_DepartmentMail}>
+                        {strings.no_corresponding_data}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.modalContent}>
+                  <Text style={styles.modalContentText}>
+                    {item.content}
+                  </Text>
+                </View>
+                <TouchableOpacity style={styles.btnResponse}>
+                  <Text style={styles.btnResponseText}>{strings.answer}</Text>
+                </TouchableOpacity>
+
+              </ScrollView>
+
+            ));
+            setModalData(title);
+          }
           return (
             <Swipeable overshootRight={true}
               onSwipeableOpen={() => deleteItem(index)}
               renderRightActions={renderRight}
               ref={ref => row[index] = ref}
             >
-              <Animated.View
-                style={styles.notiItem}>
-                {item.seen ? <></> : <View style={styles.fadeItem}></View>}
-                <View style={styles.notiItem_Icon}>
-                  {(item.type == 0) ?
-                    (<Image source={require('../../assets/notiNhacnho.png')} />) :
-                    (<Image source={require('../../assets/notiCapnhat.png')} />)}
-                </View>
-                <View style={styles.notiItem_Content}>
-                  <Text
-                    numberOfLines={4}
-                    ellipsizeMode="tail"
-                    style={styles.notiItem_Content_Title}>
-                    {item.title}
-                  </Text>
-                  <View style={styles.notiItem_Content_ActionTime}>
-                    <TouchableOpacity
-                      onPress={() => navigateToHomeWork()}>
+              <Animated.View>
+                <TouchableOpacity style={styles.notiItem}
+                  onPress={(item.type == 1) ? () => {
+                    settingModal();;
+                    setopenModalUpdateNoti(true);
+                    if (!item.seen) {
+                      // setAllNotices(prevState => {
+                      //   let i = 0;
+                      //   const newState = prevState.map(obj => {
+                      //     if (i == index) {
+                      //       return { ...obj, seen: true };
+                      //     }
+                      //     i++;
+                      //     return obj;
+                      //   });
+                      //   return newState;
+                      // });
+                      let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
+                      let secondIndex = db_app[firstIndex].data.notices.findIndex(x => x.id == item.id);
+                      dispatch(setSeenTrue([firstIndex, secondIndex]));
+                      dispatch(setUnreadNotice(unreadNotice - 1));
+                    };
+
+                  }
+                    : () => {
+                      navigateToHomeWork();
+                      let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
+                      let secondIndex = db_app[firstIndex].data.notices.findIndex(x => x.id == item.id);
+                      dispatch(setSeenTrue([firstIndex, secondIndex]));
+                      dispatch(setUnreadNotice(unreadNotice - 1));
+                    }}>
+                  {item.seen ? <View style={styles.fadeItem}></View> : <></>}
+                  <View style={styles.notiItem_Icon}>
+                    {(item.type == 0) ?
+                      (<Image source={require('../../assets/notiNhacnho.png')} />) :
+                      (<Image source={require('../../assets/notiCapnhat.png')} />)}
+                  </View>
+                  <View style={styles.notiItem_Content}>
+                    <Text
+                      numberOfLines={4}
+                      ellipsizeMode="tail"
+                      style={styles.notiItem_Content_Title}>
+                      {item.title}
+                    </Text>
+                    <SafeAreaView style={styles.notiItem_Content_ActionTime}>
                       <Text
                         style={[
                           styles.notiItem_Content_ActionText,
@@ -177,34 +251,64 @@ export default function Information({ navigation, route }) {
                         ]}>
                         {strings.watch_now}
                       </Text>
-                    </TouchableOpacity>
-                    <View style={styles.row} >
-                      <Image source={require('../../assets/notiHistory.png')} />
-                      <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(), new Date(item.creTime))}</Text>
+                      <View style={styles.row} >
+                        <Image source={require('../../assets/notiHistory.png')} />
+                        <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(), new Date(item.creTime))}</Text>
+                      </View>
+
+                    </SafeAreaView>
+                  </View>
+
+                  <View style={styles.notiItem_Status}>
+                    <View
+                      style={[
+                        styles.notiItem_Status_ReadIcon,
+                        {
+                          backgroundColor: !item.seen ? '#ffffff' : (item.type == 0 ? '#FF6E35' : '#0065FF'),
+                        },
+                      ]}>
+
                     </View>
 
                   </View>
-                </View>
-
-                <View style={styles.notiItem_Status}>
-                  <View
-                    style={[
-                      styles.notiItem_Status_ReadIcon,
-                      {
-                        backgroundColor: !item.seen ? '#ffffff' : (item.type == 0 ? '#FF6E35' : '#0065FF'),
-                      },
-                    ]}>
-
-                  </View>
-
-                </View>
-
+                </TouchableOpacity>
               </Animated.View>
             </Swipeable>
           );
         }}
         keyExtractor={(item, index) => (item + index).toString()}
       />
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={openModalUpdateNoti}
+        onRequestClose={() => setopenModalUpdateNoti(false)}
+      >
+        <View style={styles.modalContainer}>
+          {/* 2 effect */}
+          <Image
+            style={styles.modalEffectLeft}
+            source={require('../../assets/preLoginEffectLeft.png')}
+          />
+          <Image
+            style={styles.modalEffectRight}
+            source={require('../../assets/preLoginEffectRightBottom.png')}
+          />
+          {/* 2 effect */}
+
+          <TouchableOpacity
+            style={styles.btnBackContainer}
+            onPress={() => setopenModalUpdateNoti(false)}
+          >
+            <MaterialCommunityIcons
+              name={'keyboard-backspace'}
+              size={30}
+              color={'#000'}
+            />
+          </TouchableOpacity>
+          {modalData}
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

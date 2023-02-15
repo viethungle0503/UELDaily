@@ -14,6 +14,9 @@ import { useSelector } from 'react-redux';
 import { dateDiffInDays } from '../GlobalFunction';
 import { Swipeable } from 'react-native-gesture-handler';
 import strings from '../Language';
+import { setUnreadNotice } from '../../redux_toolkit/userSlice';
+import { useDispatch } from 'react-redux';
+import { setSeenTrue } from '../../redux_toolkit/databaseSlice';
 
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
@@ -57,6 +60,8 @@ export default function WarningNotices({ navigation, route }) {
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const currentUser = useSelector(state => state.user.currentUser);
   const [warningNotices, setWarningNotices] = useState([]);
+  const unreadNotice = useSelector(state => state.user.unreadNotice);
+  const dispatch = useDispatch();
   let row = [];
   let prevOpenedRow;
   const closeRow = (index) => {
@@ -73,6 +78,9 @@ export default function WarningNotices({ navigation, route }) {
       [
         {
           text: "Cancel",
+          onPress: () => {
+            closeRow(index);
+          },
           style: "cancel",
         },
         {
@@ -89,9 +97,10 @@ export default function WarningNotices({ navigation, route }) {
     );
   }
   useEffect(() => {
+    // if (warningNotices.length == 0) {
     var trueUser = db_app.find(x => x.data.email == currentUser.email);
     if (trueUser != undefined) {
-      var warningNoticesHolder = [...warningNotices];
+      var warningNoticesHolder = [];
       trueUser.data.notices.filter(x => x.type == 0).forEach((value) => {
         warningNoticesHolder.push(value);
       })
@@ -99,6 +108,7 @@ export default function WarningNotices({ navigation, route }) {
       sortedWarningNoticesHolder.sort((a, b) => (new Date(b.creTime)).getTime() - (new Date(a.creTime)).getTime());
       setWarningNotices(sortedWarningNoticesHolder);
     }
+    // }
   }, [db_app]);
 
   useEffect(() => {
@@ -114,26 +124,35 @@ export default function WarningNotices({ navigation, route }) {
         data={warningNotices}
         renderItem={({ item, index }) => {
           return (
-            <Swipeable overshootRight={true} 
-            onSwipeableOpen={() => deleteItem(index)} 
-            renderRightActions={renderRight}
-            ref={ref => row[index] = ref}
+            <Swipeable overshootRight={true}
+              onSwipeableOpen={() => deleteItem(index)}
+              renderRightActions={renderRight}
+              ref={ref => row[index] = ref}
             >
               <Animated.View
-                style={styles.notiItem}>
-                {item.seen ? <></> : <View style={styles.fadeItem}></View>}
-                <View style={styles.notiItem_Icon}>
-                  <Image source={require('../../assets/notiNhacnho.png')} />
-                </View>
+              >
+                <TouchableOpacity
+                  style={styles.notiItem}
+                  onPress={() => {
+                    navigateToHomeWork();
+                    if (!item.seen) {
+                      let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
+                      let secondIndex = db_app[firstIndex].data.notices.findIndex(x => x.id == item.id);
+                      dispatch(setSeenTrue([firstIndex, secondIndex]));
+                      dispatch(setUnreadNotice(unreadNotice - 1));
+                    };
+                  }}>
+                  {item.seen ? <View style={styles.fadeItem}></View> : <></>}
+                  <View style={styles.notiItem_Icon}>
+                    <Image source={require('../../assets/notiNhacnho.png')} />
+                  </View>
 
-                <View style={styles.notiItem_Content}>
-                  <Text style={styles.notiItem_Content_Title}>
-                    {item.title}
-                  </Text>
+                  <View style={styles.notiItem_Content}>
+                    <Text style={styles.notiItem_Content_Title}>
+                      {item.title}
+                    </Text>
 
-                  <View style={styles.notiItem_Content_ActionTime}>
-                    <TouchableOpacity
-                      onPress={() => navigateToHomeWork()}>
+                    <SafeAreaView style={styles.notiItem_Content_ActionTime}>
                       <Text
                         style={[
                           styles.notiItem_Content_ActionText,
@@ -143,26 +162,22 @@ export default function WarningNotices({ navigation, route }) {
                         ]}>
                         {strings.watch_now}
                       </Text>
-                    </TouchableOpacity>
-
-                    <View style={styles.row}>
-                      <Image source={require('../../assets/notiHistory.png')} />
-                      <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(), new Date(item.creTime))}</Text>
-                    </View>
-
+                      <View style={styles.row}>
+                        <Image source={require('../../assets/notiHistory.png')} />
+                        <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(), new Date(item.creTime))}</Text>
+                      </View>
+                    </SafeAreaView>
                   </View>
-
-                </View>
-
-                <View style={styles.notiItem_Status}>
-                  <View
-                    style={[
-                      styles.notiItem_Status_ReadIcon,
-                      {
-                        backgroundColor: item.seen ? '#FF6E35' : '#ffffff',
-                      },
-                    ]}></View>
-                </View>
+                  <View style={styles.notiItem_Status}>
+                    <View
+                      style={[
+                        styles.notiItem_Status_ReadIcon,
+                        {
+                          backgroundColor: item.seen ? '#FF6E35' : '#ffffff',
+                        },
+                      ]}></View>
+                  </View>
+                </TouchableOpacity>
               </Animated.View>
             </Swipeable>
           )
