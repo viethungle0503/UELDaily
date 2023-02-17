@@ -49,7 +49,7 @@ allprojects {
                 excludeGroup "com.facebook.react"
             }
         }
-        google()
+        google() //Google's Maven repository
         maven { url 'https://www.jitpack.io' }
     }
 }
