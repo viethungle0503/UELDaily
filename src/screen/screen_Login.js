@@ -93,6 +93,9 @@ export default function Login({navigation}) {
     // unsubscribe on unmount
     return subscriber;
   },[])
+  useEffect(() => {
+
+  },[db_uel])
   return (
     <View style={styles.body}>
       <View style={styles.sectionHeader}>

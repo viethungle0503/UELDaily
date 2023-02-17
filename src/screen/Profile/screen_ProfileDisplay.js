@@ -16,7 +16,14 @@ import {
   setCurrentUser,
   setCurrentLanguage,
   setProfileImage,
-  setUnreadNotice
+  setUnreadNotice,
+  setSchedule,
+  setScoreBoard,
+  setTestSchedule,
+  setModules,
+  setLateModules,
+  setTuition,
+  setActivityScore,
 } from '../../redux_toolkit/userSlice';
 import auth from '@react-native-firebase/auth';
 import styles from './ProfileStyles/screen_ProfileDisplay_style';
@@ -71,6 +78,13 @@ export default function ProfileDisplay({ navigation }) {
           dispatch(setCurrentUser({}));
           dispatch(setProfileImage(""))
           dispatch(setUnreadNotice(0));
+          dispatch(setSchedule({}));
+          dispatch(setScoreBoard([{ title: "Hello", data: [] }]));
+          dispatch(setTestSchedule([]));
+          dispatch(setModules([]));
+          dispatch(setLateModules([]));
+          dispatch(setTuition([]));
+          dispatch(setActivityScore([]))
         });
     } catch (error) {
       console.error(error);
