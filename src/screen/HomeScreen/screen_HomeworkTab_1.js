@@ -5,7 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import styles from './HomeScreenStyles/screen_HomeworkTab_1_style';
+import styles from './HomeScreenStyles/screen_Homework2Tab_style';
 import { useSelector } from 'react-redux';
 import { dateDiffInDays } from '../GlobalFunction';
 
@@ -15,6 +15,7 @@ export default function HWTab1({ navigation, route }) {
   return (
     <View style={styles.body}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={modules}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => {
@@ -47,12 +48,7 @@ export default function HWTab1({ navigation, route }) {
               <TouchableOpacity onPress={() => {
                 navigation.navigate('NewsDetail', { link: item.information.url });
               }}
-                style={[
-                  styles.hwItem,
-                  {
-                    marginTop: 25,
-                  },
-                ]}>
+                style={styles.hwItem}>
                 <Text style={styles.hwtext_subject}>{`${item.fullname}`}</Text>
 
                 <Text style={styles.hwtext_topic}>{`${item.information.name}`}</Text>

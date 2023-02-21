@@ -22,6 +22,7 @@ export default StyleSheet.create({
     examIcon: {
       width: 16,
       height: 16,
+      marginRight: 5,
     },
     monthi_Item: {
       backgroundColor: '#fff',
@@ -55,7 +56,7 @@ export default StyleSheet.create({
     monthi_Item__SubjectName: {
       fontWeight: 'bold',
       fontSize: 15,
-      color: '#080B09',
+      color: '#252525',
   
       marginBottom: 5,
     },
@@ -64,7 +65,7 @@ export default StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       paddingLeft: 10,
-      fontSize: 15,
+      fontSize: 16,
       marginVertical: 5,
     },
     monthi_Item__DetailTitle: {
@@ -96,7 +97,9 @@ export default StyleSheet.create({
       borderWidth: 1,
       borderStyle: 'solid',
       backgroundColor: 'transparent',
-      marginRight: 50
+      marginRight: 50,
+      minHeight: 38, 
+      // fix chiều cao btnSort
     },
     btnSortContainer: {
       width: 120,
