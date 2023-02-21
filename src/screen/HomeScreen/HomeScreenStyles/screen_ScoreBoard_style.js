@@ -18,6 +18,8 @@ export default StyleSheet.create({
 
     dashboard: {
       justifyContent: 'space-evenly',
+      paddingBottom: 20,
+      borderRadius: 10
     },
   
     // dashboard

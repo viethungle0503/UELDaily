@@ -40,7 +40,7 @@ export default StyleSheet.create({
         paddingVertical: 20,
 
         marginVertical: 9,
-        shadowColor: 'rgb(0, 101, 255)',
+        shadowColor: 'rgba(255, 150, 124, 0.8)',
         shadowOffset: {
             width: 0,
             height: 0.1,

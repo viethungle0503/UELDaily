@@ -439,8 +439,8 @@ export default function ScoreBoard({ navigation }) {
           return (
             <TouchableOpacity 
               style={[styles.listItem, (overallScore >= 5) ? 
-                { shadowColor: 'rgb(0, 101, 255)', } 
-                : { shadowColor: 'rgb(0, 101, 255)', }]}
+                { shadowColor: 'rgba(0, 101, 255, 0.4)', } 
+                : { shadowColor: 'rgba(255, 150, 124, 0.7)', }]}
               onPress={() => settingModal()}>
               
               <View style={[styles.listItem_Markup, (overallScore >= 5) ? { backgroundColor: '#E3ECFF' } : { backgroundColor: '#FF967C' }]}></View>
