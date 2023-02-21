@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 export default StyleSheet.create({
     body: {
-        paddingTop: 20, 
         backgroundColor: '#F6F8FE',
         flex: 1,
         flexDirection: 'column',
@@ -18,7 +17,8 @@ export default StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 20,
 
-        marginVertical: 9,
+        marginTop: 10,
+        marginBottom: 5,
     
         shadowColor: 'rgb(0, 101, 255)',
         shadowOffset: {
@@ -39,7 +39,9 @@ export default StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 20,
 
-        marginVertical: 9,
+        marginTop: 10,
+        marginBottom: 5,
+        
         shadowColor: 'rgba(255, 150, 124, 0.8)',
         shadowOffset: {
             width: 0,
