@@ -5,6 +5,7 @@ export default StyleSheet.create({
       flex: 1,
       flexDirection: 'column',
       position: 'relative',
+      marginBottom:50, 
     },
     // open item
     effectLeft: {
@@ -25,7 +26,7 @@ export default StyleSheet.create({
       alignItems: 'flex-start',
       marginHorizontal: 20,
       marginVertical: 10,
-      paddingRight: 10,
+      
     },
     mediaItem_Image: {
       width: 45,
@@ -34,28 +35,29 @@ export default StyleSheet.create({
       marginRight: 10,
     },
     mediaItem_Text: {
-      flexDirection: 'column',
       borderBottomWidth: 2,
       borderColor: '#F0F0F0',
-      justifyContent: 'space-between',
       paddingBottom: 25,
-      // paddingHorizontal: 10,
+      
     },
     mediaDepartment: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       flexWrap: 'wrap',
     },
     mediaDepartmentName: {
-      width: '80%',
+      width: '68%',
       fontWeight: '600',
       fontSize: 16,
-      color: 'red'
+      color: '#252525',
+      // backgroundColor: 'red'
     },
     mediaLastestTime: {
-      color:'blue',
+      color:'rgba(147, 143, 143, 1)',
+      width: '25%',
+      textAlign: "right"
+      // backgroundColor: 'green'
     },
     mediaLastestNews: {
-      color:'green',
+      color: '#252525'
     },
   });

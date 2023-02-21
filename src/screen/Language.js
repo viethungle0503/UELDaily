@@ -4,7 +4,7 @@ const strings = new LocalizedStrings({
         home: "Trang chủ",
         news: "Tin tức",
         notifications: "Thông báo",
-        profile: "Thông tin cá nhân",
+        profile: "Thông tin",
         // Home Display
         schedule: "Thời khóa biểu",
         scoreboard: "Xem điểm",

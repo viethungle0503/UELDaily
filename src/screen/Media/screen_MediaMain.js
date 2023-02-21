@@ -29,7 +29,7 @@ export default function MediaMain({ navigation }) {
         source={require('../../assets/preLoginEffectRightBottom.png')}
       />
       <SafeAreaView style={{ flex: 1 }}>
-        <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 20, color: 'red' }}>
+        <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 20, color: "#252525"}}>
           {strings.news}
         </Text>
         <FlatList

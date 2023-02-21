@@ -4,12 +4,14 @@ export default StyleSheet.create({
       backgroundColor: '#fff',
       flex: 1,
       flexDirection: 'column',
+      marginBottom: 50
     },
     lastestItem: {
       maxWidth: 220,
       maxHeight: '100%',
       flexDirection: 'column',
-      marginRight: 7
+      marginLeft: 17,
+    
     },
     lastestItem_ImageContainer: {
       height: '100%',
@@ -30,16 +32,18 @@ export default StyleSheet.create({
       marginBottom: 15
     },
     lastestItem_ContentText: {
-      color: 'red',
+      color: '#FFF',
       paddingBottom: 3
     },
     mediaNoti_Lastest: {
-      flex:1,
+      height: 300,
+      maxHeight: "40%",
+      // flex: 1,
       marginTop: 20,
-      marginLeft: 20,
+      // marginLeft: 20,
     },
     mediaNoti_All: {
-      flex: 1,
+      // flex: 1,
       marginHorizontal: 20,
     },
   
@@ -62,24 +66,29 @@ export default StyleSheet.create({
       textAlign: 'justify',
     },
     mediaNotiItem_Content: {
-      paddingRight: 32,
-      marginRight: 52,
+      // paddingRight: 32,
+      // marginRight: 52,
       flexDirection: 'column',
       justifyContent: 'space-between',
-      paddingBottom: 7
+      paddingBottom: 7,
+      width: '75%'
     },
     mediaNotiItem_DepartmentImage: {
       borderRadius: 100,
       width: 20,
       aspectRatio: 1,
-      resizeMode: 'contain'
+      resizeMode: 'contain',
+      marginRight: 5,
+      alignItems: 'center'
     },
     mediaNotiItem_ContentDepartment: {
-      color: '#FF6E35'
+      color: '#FF6E35',
+      width: '50%'
     },
     mediaNotiItem_ContentTime: {
-      marginLeft: 5,
-      color: 'red'
+      // marginLeft: 5,
+      color: '#433D3D',
+      width: '40%'
     },
     mediaNotiItem_Image: {
       width: 110,
@@ -88,7 +97,8 @@ export default StyleSheet.create({
       marginRight: 10, //cách hình
     },
     row: {
-      flexDirection: 'row'
+      flexDirection: 'row',
+      alignItems: 'center'
     }
   
   });

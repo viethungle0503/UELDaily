@@ -132,7 +132,7 @@ export default function ProfileDisplay({ navigation }) {
           onPress={() => navigation.navigate("PersonalInformation")}>
           <View style={styles.row}>
             <Image
-              source={require('../../assets/account_userinfo.png')}
+              source={require('../../assets/account_user.png')}
               style={styles.accountListItem_IconTitle}
             />
             <Text style={styles.accountText}>{strings.student_information}</Text>

@@ -93,7 +93,8 @@ export default function MediaNoti({ navigation, route }) {
   useEffect(() => {
   }, [currentLanguage, ready])
   return (
-    <SafeAreaView style={styles.body}>
+    <ScrollView style={styles.body} 
+    showsVerticalScrollIndicator={false}>
       {ready ? (<>
         {(bigPictureNews == null) ? (<></>) : (
           <FlatList
@@ -110,6 +111,7 @@ export default function MediaNoti({ navigation, route }) {
             horizontal={true}
             keyExtractor={(item, index) => (item + index).toString()}
             showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             data={bigPictureNews}
             renderItem={({ item }) => {
               return (
@@ -145,7 +147,11 @@ export default function MediaNoti({ navigation, route }) {
                         <Image style={styles.mediaNotiItem_DepartmentImage}
                           source={{ uri: uri }}>
                         </Image>
-                        <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;{name}</Text>
+                        
+                        <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;
+                       
+                        {name}
+                        </Text>
                         <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time}</Text>
                       </View>
                     </View>
@@ -191,7 +197,7 @@ export default function MediaNoti({ navigation, route }) {
           )}
 
         </View></>) : (<Text>Loading</Text>)}
-    </SafeAreaView>
+    </ScrollView>
   );
 }
 
