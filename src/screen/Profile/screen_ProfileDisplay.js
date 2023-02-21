@@ -28,6 +28,8 @@ import {
 import auth from '@react-native-firebase/auth';
 import styles from './ProfileStyles/screen_ProfileDisplay_style';
 import strings from '../Language';
+
+
 export default function ProfileDisplay({ navigation }) {
   const loggedIn = useSelector(state => state.user.loggedIn);
   const currentUser = useSelector(state => state.user.currentUser);
@@ -282,7 +284,11 @@ export default function ProfileDisplay({ navigation }) {
 
         <TouchableOpacity
           style={styles.accountListItem}
-          onPress={() => showAlert()}>
+          // onPress={() => showAlert()}
+          onPress={() => navigation.navigate('NullData')}
+          
+          
+          >
           <View style={styles.row}>
             <Image
               source={require('../../assets/account_hoidap.png')}
@@ -291,9 +297,12 @@ export default function ProfileDisplay({ navigation }) {
             <Text style={styles.policy_accountText}>{strings.QuestionAndAnswer}</Text>
           </View>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.accountListItem}
-          onPress={() => showAlert()}>
+          // onPress={() => showAlert()}
+          onPress={() => navigation.navigate('loading')}
+          >
           <View style={styles.row}>
             <Image
               source={require('../../assets/account_quydinh.png')}
