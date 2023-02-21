@@ -2273,8 +2273,7 @@
     "reselect" "^4.1.7"
 
 "@rneui/base-edge@github:react-native-elements/react-native-elements#base":
-  "integrity" "sha512-LrBHbmUQW0ZDqZ28dl6PEN3CCn0QBI1Fw08vr1oBK+/Ooi4SDVLWy//VFxwVTSYOUUDkg+7+TvP60PB7uzqqhQ=="
-  "resolved" "https://codeload.github.com/react-native-elements/react-native-elements/tar.gz/8e22245ce8e6796db240c54ac9359ed95ea19645"
+  "resolved" "git+ssh://git@github.com/react-native-elements/react-native-elements.git#8e22245ce8e6796db240c54ac9359ed95ea19645"
   "version" "4.0.0-rc.7"
   dependencies:
     "@types/react-native-vector-icons" "^6.4.10"
@@ -7606,6 +7605,11 @@
     "@callstack/react-theme-provider" "^3.0.8"
     "color" "^3.1.2"
     "use-event-callback" "^0.1.0"
+
+"react-native-progressbar@^1.0.4":
+  "integrity" "sha512-F9SVZ6rnQWmPdvzS2Vh1oGYXrPafhsSI5oOI54MxRma8gW26Q3S+xf3XvyGfXBnk8E2osdDw3k7uxF6/9HS52Q=="
+  "resolved" "https://registry.npmjs.org/react-native-progressbar/-/react-native-progressbar-1.0.4.tgz"
+  "version" "1.0.4"
 
 "react-native-ratings@^8.1.0":
   "integrity" "sha512-+QOJ4G3NjVkI1D+tk4EGx1dCvVfbD2nQdkrj9cXrcAoEiwmbep4z4bZbCKmWMpQ5h2dqbxABU8/eBnbDmvAc3g=="
