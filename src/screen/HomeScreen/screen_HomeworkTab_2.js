@@ -5,7 +5,7 @@ import {
     FlatList,
     TouchableOpacity,
 } from 'react-native';
-import styles from './HomeScreenStyles/screen_HomeworkTab_2_style';
+import styles from './HomeScreenStyles/screen_Homework2Tab_style';
 import { useSelector } from 'react-redux';
 import { dateDiffInDays } from '../GlobalFunction';
 
@@ -14,6 +14,7 @@ export default function HWTab2({ navigation, route }) {
     return (
         <View style={styles.body}>
             <FlatList
+                showsVerticalScrollIndicator={false}
                 data={lateModules}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => {
@@ -46,9 +47,7 @@ export default function HWTab2({ navigation, route }) {
                             <TouchableOpacity onPress={() => {
                                 navigation.navigate('NewsDetail', { link: item.information.url });
                             }}
-                                style={[styles.hwItem, {
-                                    marginTop: 25,
-                                }]}>
+                                style={styles.hwItem_late}>
                                 <Text style={styles.hwtext_subject}>
                                     {`${item.fullname}`}
                                 </Text>
@@ -56,10 +55,10 @@ export default function HWTab2({ navigation, route }) {
                                     {`${item.information.name}`}
                                 </Text>
                                 <View style={styles.row}>
-                                    <Text style={styles.hwtext_schedule_danger}>
+                                    <Text style={styles.hwtext_schedule_late}>
                                         {`${startDateFormat} - ${endDateFormat}`}
                                     </Text>
-                                    <View style={[styles.timedueContainer, styles.timedue_danger]}>
+                                    <View style={[styles.timedueContainer_late, styles.timedue_danger]}>
                                         <Image
                                             style={styles.timedueIcon}
                                             source={require('../../assets/hw_timedue_icon.png')}

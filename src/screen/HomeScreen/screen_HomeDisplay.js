@@ -172,8 +172,10 @@ export default function HomeDisplay({ navigation }) {
     }
   }, [])
   return (
-    <SafeAreaView>
-      <FlatList
+    <SafeAreaView style={{
+      marginBottom: 50
+    }}>
+      <FlatList  
         keyExtractor={(item, index) => (item + index).toString()}
         showsVerticalScrollIndicator={false}
         data={news_UEL}

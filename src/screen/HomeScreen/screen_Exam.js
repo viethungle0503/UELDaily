@@ -166,7 +166,8 @@ export default function Exam({ navigation }) {
               <View style={styles.monthi_Item}>
                 <View style={styles.monthi_Item_Markup}></View>
                 <Text style={styles.monthi_Item__SubjectName}>
-                  {item.course_name}
+                  {item.courseName}
+                  {/* lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem */}
                 </Text>
 
                 <View style={styles.monthi_Item__Detail}>

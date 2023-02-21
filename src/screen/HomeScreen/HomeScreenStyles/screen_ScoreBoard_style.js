@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
 export default StyleSheet.create({
     body: {
-      flex: 1,
-      flexDirection: 'column',
+      // flex: 1,
+      // flexDirection: 'column',
       backgroundColor: '#fff',
+      marginBottom: 50
     },
     fixItem: {
       paddingTop: 15,
@@ -91,7 +92,7 @@ export default StyleSheet.create({
       marginBottom: 10,
       marginHorizontal: 18,
   
-      shadowColor: 'rgb(0, 101, 255)',
+      
       shadowOffset: {
         width: 0,
         height: 0.1,
@@ -280,19 +281,19 @@ export default StyleSheet.create({
     },
     modalDetail_RowDataText: {
       color: '#252525',
-      fontSize: 16,
+      fontSize: 15,
     },
     modalDetail_HeaderText: {
-      fontSize: 16,
+      fontSize: 15,
       
       fontWeight: 'bold',
       color: '#252525',
     },
     modalDetail_colContent: {
-      minWidth: 150,
+      width: '75%',
     },
     modalDetail_colPayAmount: {
-      minWidth: 100,
+      width: '25%',
       textAlign: 'right',
     },
     
