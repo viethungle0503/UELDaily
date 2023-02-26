@@ -186,7 +186,7 @@ export default function WarningNotices({ navigation, route }) {
                               .ref(`/users/${childSnapshot.key}/notices/${needToUpdate}`).update({
                                 seen: true,
                               })
-                              .then(() => console.log('Data updated.'));
+                            // .then(() => console.log('Data updated.'));
                           }
                         }
                       })
@@ -210,12 +210,12 @@ export default function WarningNotices({ navigation, route }) {
                         let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
                         let secondIndex = db_app[firstIndex]?.data?.notices?.findIndex(x => x?.id == item.id);
                         switch (item?.redirectType) {
-                          case 1: navigation.navigate('Schedule'); break;
-                          case 2: navigation.navigate('ScoreBoard'); break;
-                          case 3: navigation.navigate('Exam'); break;
-                          case 4: navigateToHomeWork(); break;
-                          case 5: navigation.navigate('Tuition'); break;
-                          case 6: navigation.navigate('Ctxh'); break;
+                          case '1': navigation.navigate('Schedule'); break;
+                          case '2': navigation.navigate('ScoreBoard'); break;
+                          case '3': navigation.navigate('Exam'); break;
+                          case '4': navigateToHomeWork(); break;
+                          case '5': navigation.navigate('Tuition'); break;
+                          case '6': navigation.navigate('Ctxh'); break;
                           default: navigateToHomeWork();
                         }
 

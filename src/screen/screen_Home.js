@@ -27,34 +27,6 @@ export default function Home({ navigation }) {
       id: 'default',
       name: 'Default Channel',
     });
-    await firebase
-      .app()
-      .database(
-        'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
-      )
-      .ref('/users').once('value', async (snapshot) => {
-        snapshot.forEach(async (childSnapshot) => {
-          if (childSnapshot.val().id == currentUser?.id) {
-            await firebase
-              .app()
-              .database(
-                'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
-              )
-              .ref(`/users/${childSnapshot.key}/notices/${childSnapshot.val().notices.length}`).set({
-                creTime: remoteMessage.sentTime,
-                title: remoteMessage?.data?.title,
-                content: remoteMessage?.data?.body,
-                seen: false,
-                type: remoteMessage?.data?.type,
-                redirectType: remoteMessage?.data?.redirectType,
-                sendBy: remoteMessage?.data?.sendBy,
-                senderID: remoteMessage?.data?.senderID,
-                id: makeid(10)
-              })
-            // .then(() => console.log('Data set.'));
-          }
-        })
-      })
     // Display a notification
     await notifee.displayNotification({
       title: remoteMessage?.data?.title,
@@ -94,7 +66,10 @@ export default function Home({ navigation }) {
       );
     // }
   };
-  const asyncFunction = async () => {
+  const requestPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+  };
+  const asyncGetToken = async () => {
     await firebase
       .app()
       .database(
@@ -125,30 +100,23 @@ export default function Home({ navigation }) {
         },
       );
   };
-  const requestPermission = async () => {
-    const authStatus = await messaging().requestPermission();
-  };
-  function makeid(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
-  };
   useEffect(() => {
     requestPermission();
-    asyncFunction();
+    asyncGetToken();
+    console.log("do i have to run?");
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       // console.log('remoteMessage', JSON.stringify(remoteMessage))
       DisplayNotification(remoteMessage);
       // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
     });
     return unsubscribe;
-  }, [])
+  }, []);
+  useEffect(() => {
+    if(currentUser != null) {
+      console.log("Vừa khởi động lại");
+      asyncAppFn();
+    }
+  },[])
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
