@@ -49,9 +49,6 @@ export default StyleSheet.create({
     borderRadius: 5,
     zIndex: 1,
   },
-  notiItem_Content_ActionText: {
-    fontSize: 14,
-  },
   notiItem_Icon: {
     flex: 1,
     paddingTop: 2,
@@ -69,6 +66,7 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     color: '#080B09',
+    width: '95%'
   },
   notiItem_Content_ActionTime: {
     paddingTop: 5,

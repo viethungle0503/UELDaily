@@ -9,10 +9,146 @@ import ScoreBoard from './HomeScreen/screen_ScoreBoard';
 import Schedule from './HomeScreen/screen_Schedule';
 import { HeaderBackButton } from '@react-navigation/elements';
 import strings from './Language';
+import { useEffect } from 'react';
+import messaging from '@react-native-firebase/messaging';
+import notifee, { EventType } from '@notifee/react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { firebase } from '@react-native-firebase/database';
+import { setDB_App } from '../redux_toolkit/databaseSlice';
 
 const HomeStack = createStackNavigator();
 
-export default function Home({navigation}) {
+export default function Home({ navigation }) {
+  const dispatch = useDispatch();
+  const currentUser = useSelector(state => state.user.currentUser);
+  async function DisplayNotification(remoteMessage) {
+    // Create a channel
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+    await firebase
+      .app()
+      .database(
+        'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+      )
+      .ref('/users').once('value', async (snapshot) => {
+        snapshot.forEach(async (childSnapshot) => {
+          if (childSnapshot.val().id == currentUser?.id) {
+            await firebase
+              .app()
+              .database(
+                'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+              )
+              .ref(`/users/${childSnapshot.key}/notices/${childSnapshot.val().notices.length}`).set({
+                creTime: remoteMessage.sentTime,
+                title: remoteMessage?.data?.title,
+                content: remoteMessage?.data?.body,
+                seen: false,
+                type: remoteMessage?.data?.type,
+                redirectType: remoteMessage?.data?.redirectType,
+                sendBy: remoteMessage?.data?.sendBy,
+                senderID: remoteMessage?.data?.senderID,
+                id: makeid(10)
+              })
+            // .then(() => console.log('Data set.'));
+          }
+        })
+      })
+    // Display a notification
+    await notifee.displayNotification({
+      title: remoteMessage?.data?.title,
+      body: `\n${remoteMessage?.data?.body}`,
+      android: {
+        channelId,
+        smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+      },
+    });
+    setTimeout(async () => {
+      await asyncAppFn();
+    }, 2000)
+
+  };
+  const asyncAppFn = async () => {
+    // if (db_app.length == 0) {
+    await firebase
+      .app()
+      .database(
+        'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+      )
+      .ref('/users')
+      .once(
+        'value',
+        snapshot => {
+          var holder = [];
+          snapshot.forEach(childSnapshot => {
+            let childKey = childSnapshot.key;
+            let childData = childSnapshot.val();
+            holder = [...holder, { key: childKey, data: childData }];
+          });
+          dispatch(setDB_App(holder));
+        },
+        error => {
+          console.error(error);
+        },
+      );
+    // }
+  };
+  const asyncFunction = async () => {
+    await firebase
+      .app()
+      .database(
+        'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+      )
+      .ref('/tokens')
+      .once(
+        'value',
+        async (snapshot) => {
+          let token = await messaging().getToken()
+          if (snapshot.val().includes(token) == false) {
+            // console.log("Tạo token");
+            let length = (snapshot.val().length)
+            await firebase
+              .app()
+              .database(
+                'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+              )
+              .ref(`/tokens/${length}`)
+              .set(`${token}`)
+          }
+          else {
+            // console.log("Không tạo token");
+          }
+        },
+        error => {
+          console.error(error);
+        },
+      );
+  };
+  const requestPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+  };
+  function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+  };
+  useEffect(() => {
+    requestPermission();
+    asyncFunction();
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      // console.log('remoteMessage', JSON.stringify(remoteMessage))
+      DisplayNotification(remoteMessage);
+      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+    return unsubscribe;
+  }, [])
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -80,7 +216,10 @@ export default function Home({navigation}) {
       <HomeStack.Screen
         name="NewsDetail"
         component={NewsDetail}
-        options={{ headerShown:false }}
+        options={{
+          headerShown: true,
+          title: "Chi tiết"
+        }}
       />
     </HomeStack.Navigator>
   );

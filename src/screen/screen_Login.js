@@ -25,26 +25,28 @@ export default function Login({navigation}) {
   const dispatch = useDispatch();
   function onAuthStateChanged(account) {
     if (account !== null) {
-      if (account.email.search(/@st.uel.edu.vn/i) == -1) {
-        alert('Vui lòng sử mail email trường cấp');
-        signOut();
-      } else {
-        let i = 0;
-        for (let element of db_uel) {
-          if (element.email == account.email) {
-            i = 1;
-            dispatch(setCurrentUser(element));
-            dispatch(setProfileImage(account.photoURL));
-            dispatch(setLoggedIn(true));
-            break;
+      if(!loggedIn) {
+        if (account.email.search(/@st.uel.edu.vn/i) == -1) {
+          alert('Vui lòng sử mail email trường cấp');
+          signOut();
+        } else {
+          let i = 0;
+          for (let element of db_uel) {
+            if (element.email == account.email) {
+              i = 1;
+              dispatch(setCurrentUser(element));
+              dispatch(setProfileImage(account.photoURL));
+              dispatch(setLoggedIn(true));
+              break;
+            }
+          }
+          if (i == 0) {
+            alert(`Tài khoản với gmail ${account.email} không tồn tại'`);
+            signOut();
           }
         }
-        if (i == 0) {
-          alert(`Tài khoản với gmail ${account.email} không tồn tại'`);
-          signOut();
-        }
-      }
-    }
+      };
+    };
   };
   const signOut = async () => {
     try {
@@ -59,7 +61,7 @@ export default function Login({navigation}) {
       console.error(error);
     }
   };
-  _signIn = async () => {
+  const _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       //Get the user ID token

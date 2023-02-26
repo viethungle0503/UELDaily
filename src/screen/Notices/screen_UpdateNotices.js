@@ -20,7 +20,8 @@ import strings from '../Language';
 import { setUnreadNotice } from '../../redux_toolkit/userSlice';
 import { useDispatch } from 'react-redux';
 import { setSeenTrue, deleteNotification } from '../../redux_toolkit/databaseSlice';
-
+import NullDataScreen from '../../components/nullDataScreen';
+import { firebase } from '@react-native-firebase/database';
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
     inputRange: [-50, 0.5],
@@ -84,7 +85,7 @@ export default function UpdateNotices({ navigation }) {
     if (trueUser != undefined) {
       var updateNoticesHolder = [];
       trueUser.data.notices
-        .filter(x => x.type == 1)
+        .filter(x => x?.type == 1)
         .forEach(value => {
           updateNoticesHolder.push(value);
         });
@@ -99,6 +100,8 @@ export default function UpdateNotices({ navigation }) {
   }, [currentLanguage, updateNotices])
   return (
     <SafeAreaView style={styles.body}>
+      {(updateNotices.length == 0) ? (<NullDataScreen />) : (
+        <>
       <Modal
         animationType='slide'
         transparent={true}
@@ -136,7 +139,7 @@ export default function UpdateNotices({ navigation }) {
         data={updateNotices}
         renderItem={({ item, index }) => {
           let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
-          let secondIndex = db_app[firstIndex]?.data?.notices?.findIndex(x => x.id == item.id);
+          let secondIndex = db_app[firstIndex]?.data?.notices?.findIndex(x => x?.id == item.id);
           function settingModal() {
             const title = (() => (
               <ScrollView>
@@ -166,7 +169,27 @@ export default function UpdateNotices({ navigation }) {
                 </View>
 
 
-                <TouchableOpacity style={styles.btnResponse}>
+                <TouchableOpacity style={styles.btnResponse} 
+                onPress={() => {
+                  Alert.alert(
+                    "Thông báo",
+                    "Tính năng này vẫn trong giai đoạn phát triển. Mong bạn quay lại sau",
+                    [
+                      {
+                        text: "Cancel",
+                        onPress: () => {},
+                        style: "cancel",
+                      },
+                      {
+                        text: "OK", onPress: () => {}, style: "default"
+                      }
+                    ],
+                    {
+                      cancelable: true,
+                      userInterfaceStyle: "dark",
+                    }
+                  );
+                }}>
                   <Text style={styles.btnResponseText}>{strings.answer}</Text>
                 </TouchableOpacity>
 
@@ -176,6 +199,39 @@ export default function UpdateNotices({ navigation }) {
             setModalData(title);
           };
           const deleteItem = (index) => {
+            const asyncDelete = async () => {
+              await firebase
+                .app()
+                .database(
+                  'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+                )
+                .ref(`/users`)
+                .once(
+                  'value',
+                  async (snapshot) => {
+                    snapshot.forEach(async (childSnapshot) => {
+                      let userKey = childSnapshot?.child('id').val()
+                      if (userKey == currentUser.id) {
+                        let needToDelete = childSnapshot.child('notices').val().findIndex(x => x?.id == item.id);
+                        if (needToDelete != -1) {
+                          await firebase
+                            .app()
+                            .database(
+                              'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+                            )
+                            .ref(`/users/${childSnapshot.key}/notices/${needToDelete}`).remove(() => {
+                              // console.log('Operation Complete');
+                            });
+                        }
+                      }
+                    })
+                  },
+                  error => {
+                    console.error(error);
+                  },
+                );
+            }
+
             Alert.alert(
               "Thông báo",
               "Bạn có muốn xóa thông báo này?",
@@ -189,6 +245,7 @@ export default function UpdateNotices({ navigation }) {
                 },
                 {
                   text: "OK", onPress: () => {
+                    asyncDelete();
                     closeRow(index);
                     if(item.seen == false) {
                       dispatch(setUnreadNotice(unreadNotice - 1));
@@ -203,7 +260,40 @@ export default function UpdateNotices({ navigation }) {
                 userInterfaceStyle: "dark",
               }
             );
-          }
+          };
+          const updateSeen = async () => {
+            await firebase
+              .app()
+              .database(
+                'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+              )
+              .ref(`/users`)
+              .once(
+                'value',
+                async (snapshot) => {
+                  snapshot.forEach(async (childSnapshot) => {
+                    let userKey = childSnapshot?.child('id').val()
+                    if (userKey == currentUser.id) {
+                      let needToUpdate = childSnapshot.child('notices').val().findIndex(x => x?.id == item.id);
+                      if (needToUpdate != -1) {
+                        await firebase
+                          .app()
+                          .database(
+                            'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+                          )
+                          .ref(`/users/${childSnapshot.key}/notices/${needToUpdate}`).update({
+                            seen: true,
+                          })
+                          .then(() => console.log('Data updated.'));
+                      }
+                    }
+                  })
+                },
+                error => {
+                  console.error(error);
+                },
+              );
+          };
           return (
             <Swipeable overshootRight={true} onSwipeableOpen={() => deleteItem(index)}
               renderRightActions={renderRight}
@@ -212,9 +302,11 @@ export default function UpdateNotices({ navigation }) {
               <Animated.View>
                 <TouchableOpacity style={styles.notiItem}
                   onPress={() => {
+                    updateSeen();
                     settingModal();
                     setopenModalUpdateNoti(true);
                     if (!item.seen) {
+                      
                       dispatch(setSeenTrue([firstIndex, secondIndex]));
                       dispatch(setUnreadNotice(unreadNotice - 1));
                     };
@@ -226,7 +318,7 @@ export default function UpdateNotices({ navigation }) {
                   <View style={styles.notiItem_Content}>
                     <Text
                       style={styles.notiItem_Content_Title}
-                      numberOfLines={4}
+                      numberOfLines={2}
                       ellipsizeMode="tail">
                       {item.title}
                     </Text>
@@ -239,7 +331,6 @@ export default function UpdateNotices({ navigation }) {
                     <SafeAreaView style={styles.notiItem_Content_ActionTime}>
                       <Text
                         style={[
-                          styles.notiItem_Content_ActionText,
                           {
                             color: '#0065FF',
                           },
@@ -258,7 +349,7 @@ export default function UpdateNotices({ navigation }) {
                       style={[
                         styles.notiItem_Status_ReadIcon,
                         {
-                          backgroundColor: item.seen ? '#0065FF' : '#ffffff',
+                          backgroundColor: item.seen ? '#ffffff' : '#0065FF',
                         },
                       ]}></View>
 
@@ -271,8 +362,8 @@ export default function UpdateNotices({ navigation }) {
         }}
         keyExtractor={(item, index) => (item + index).toString()}
       />
-
-
+      </>
+      )}
     </SafeAreaView>
   );
 }

@@ -14,13 +14,18 @@ const rootPersistConfig = {
   key: 'root',
   storage : AsyncStorage,
 }
-const userPersistConfig = {
-  key: 'user',
-  storage: AsyncStorage,
-  stateReconciler: autoMergeLevel2,
-}
+// const userPersistConfig = {
+//   key: 'user',
+//   storage: AsyncStorage,
+//   stateReconciler: autoMergeLevel2,
+// }
+// const rootReducer = combineReducers({
+//   user: persistReducer(userPersistConfig, userReducer),
+//   database: databaseReducer,
+//   news: newsReducer,
+// })
 const rootReducer = combineReducers({
-  user: persistReducer(userPersistConfig, userReducer),
+  user: userReducer,
   database: databaseReducer,
   news: newsReducer,
 })

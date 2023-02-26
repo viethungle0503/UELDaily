@@ -16,10 +16,6 @@ export default function MediaModal({ navigation,route }) {
     const news_Departments = useSelector(state => state.news.news_Departments);
     const currentLanguage = useSelector(state => state.user.currentLanguage);
     var {name,searchUrl, email,phone,website,fanpage,uri} =  route.params;
-    var ready = false;
-    if(news_Departments.findIndex(x => x.identifier == searchUrl) != -1) {
-        ready = true;
-    };
     useEffect(() => {
     },[currentLanguage])
     return (

@@ -109,7 +109,7 @@ export default StyleSheet.create({
     display: 'flex',
     // justifyContent: 'center',
     alignItems: 'center',
-    width: 100,
+    width: 105,
   },
   tienichIcon__Item: {
     // display: 'flex',
@@ -135,7 +135,6 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 10,
     paddingVertical: 5,
-
     display: 'flex',
     // flexWrap: 'wrap',
     flexDirection: 'row',

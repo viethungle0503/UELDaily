@@ -12,10 +12,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import React, { useEffect, useState } from 'react';
 import styles from './HomeScreenStyles/screen_HomeDisplay_style';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentLanguage } from '../../redux_toolkit/userSlice';
+import { setCurrentLanguage, setLoggedIn } from '../../redux_toolkit/userSlice';
 import strings from '../Language';
 import { setNews_UEL } from '../../redux_toolkit/newsSlice';
 import { loadGraphicCards } from '../GlobalFunction';
+import { Alert } from 'react-native';
 
 export default function HomeDisplay({ navigation }) {
   const dispatch = useDispatch()
@@ -77,8 +78,11 @@ export default function HomeDisplay({ navigation }) {
         <View style={styles.tienich}>
           <View style={styles.tienichHeader}>
             <Text style={styles.tienichText}>{strings.utilities}</Text>
-            <TouchableOpacity style={styles.btnAllTienich}>
-              <MaterialCommunityIcons name={'tune-variant'} size={12} />
+            <TouchableOpacity style={styles.btnAllTienich} 
+            onPress={() => {
+              Alert.alert("Thông báo","Các tính năng khác cần có để sử dụng tính năng này");
+            }}>
+              <MaterialCommunityIcons name={'tune-variant'} size={25} style={{color:'black'}}/>
               <Text style={{ color: 'black', marginLeft: 5 }}>{strings.all}</Text>
             </TouchableOpacity>
           </View>
@@ -170,6 +174,7 @@ export default function HomeDisplay({ navigation }) {
         dispatch(setNews_UEL(returnValue));
       })
     }
+    // dispatch(setLoggedIn(false));
   }, [])
   return (
     <SafeAreaView style={{

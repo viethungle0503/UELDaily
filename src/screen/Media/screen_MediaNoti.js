@@ -16,6 +16,7 @@ import styles from './MediaStyles/screen_MediaNoti_style';
 import strings from '../Language';
 import { useSelector } from 'react-redux';
 import { loadGraphicCards } from '../GlobalFunction';
+import LoadingScreen from '../../components/loadingScreen';
 export default function MediaNoti({ navigation, route }) {
   const news_Departments = useSelector(state => state.news.news_Departments);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
@@ -24,79 +25,10 @@ export default function MediaNoti({ navigation, route }) {
   const [bigPictureNews, setBigPictureNews] = useState([]);
   const [smallPictureNews, setSmallPictureNews] = useState([]);
   const [ready, setReady] = useState(false);
-  useEffect(() => {
-    // dispatch(setNews_Departments([]));
-    const index = news_Departments.findIndex(x => x.identifier == searchUrl);
-    if (index == -1) {
-      loadGraphicCards(searchUrl).then((response) => {
-        dispatch(setSingleNews_Departments({ data: response, identifier: searchUrl }));
-        var newbigPicture = [...bigPictureNews];
-        var newsmallPicture = [...smallPictureNews];
-        response.forEach(async (value, index) => {
-          await Image.getSize(value.imageURL, (imgWidth, imgHeight) => {
-            if (imgWidth <= imgHeight) {
-              newbigPicture.push(value);
-              // setBigPictureNews([...bigPictureNews,value])
-            }
-            else {
-              newsmallPicture.push(value);
-              // setSmallPictureNews([...bigPictureNews,value])
-            }
-          });
-          setTimeout(() => {
-            setReady(true);
-          }, 500)
-          if (newbigPicture.length == 0) {
-            setBigPictureNews(null);
-          }
-          else {
-            setBigPictureNews(newbigPicture);
-          }
-          if (newsmallPicture.length == 0) {
-            setSmallPictureNews(null);
-          }
-          else {
-            setSmallPictureNews(newsmallPicture);
-          }
-        });
-      })
-    }
-    else {
-      var trueNews = news_Departments[index];
-      var newbigPicture = [...bigPictureNews];
-      var newsmallPicture = [...smallPictureNews];
-      trueNews.data.forEach(async (value, index) => {
-        await Image.getSize(value.imageURL, (imgWidth, imgHeight) => {
-          if (imgWidth <= imgHeight) {
-            newbigPicture.push(value);
-          }
-          else {
-            newsmallPicture.push(value);
-          }
-        }, (error) => {
-          console.log(error);
-        });
-      });
-      setTimeout(() => {
-        if (newbigPicture.length == 0) {
-          setBigPictureNews(null);
-        }
-        else {
-          setBigPictureNews(newbigPicture);
-        }
-        setSmallPictureNews(newsmallPicture);
-        setReady(true);
-      }, 500)
-
-    }
-  }, []);
-  useEffect(() => {
-  }, [currentLanguage, ready])
-  return (
-    <ScrollView style={styles.body} 
-    showsVerticalScrollIndicator={false}>
-      {ready ? (<>
-        {(bigPictureNews == null) ? (<></>) : (
+  const renderHeader = () => {
+    return (
+      <>
+        {bigPictureNews.length == 0 ? (<></>) : (
           <FlatList
             style={[styles.mediaNoti_Lastest]}
             ListEmptyComponent={() => {
@@ -141,18 +73,17 @@ export default function MediaNoti({ navigation, route }) {
                         {item.title}
                       </Text>
 
-                      <Text style={styles.lastestItem_ContentText}>Công ty Jabil Việt Nam tọa lạc tại Khu Công Nghệ Cao (SHTP)...</Text>
+                      {/* <Text style={styles.lastestItem_ContentText}>Công ty Jabil Việt Nam tọa lạc tại Khu Công Nghệ Cao (SHTP)...</Text> */}
 
                       <View style={styles.row}>
                         <Image style={styles.mediaNotiItem_DepartmentImage}
                           source={{ uri: uri }}>
                         </Image>
-                        
+
                         <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;
-                       
-                        {name}
+                          {name.split(/\s/).reduce((response, word) => response += word.slice(0, 1), '').toUpperCase()}
                         </Text>
-                        <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time}</Text>
+                        <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time.substr(1,10)}</Text>
                       </View>
                     </View>
                   </ImageBackground>
@@ -163,41 +94,112 @@ export default function MediaNoti({ navigation, route }) {
         )}
         <View style={styles.mediaNoti_All}>
           <Text style={styles.mediaNotiHeader}>{strings.general}</Text>
-          {(smallPictureNews == null) ? (<></>) : (
-            <FlatList
-              keyExtractor={(item, index) => (item + index).toString()}
-              showsVerticalScrollIndicator={false}
-              data={smallPictureNews}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity
-                    style={styles.mediaNotiItem}
-                    onPress={() => {
-                      navigation.navigate('MediaDetail', { link: item.link });
-                    }}>
-                    <Image style={styles.mediaNotiItem_Image} source={{ uri: item.imageURL }} />
+        </View>
 
-                    <View style={styles.mediaNotiItem_Content}>
+      </>
+    )
+  }
+  useEffect(() => {
+    // dispatch(setNews_Departments([]));''
+    const index = news_Departments.findIndex(x => x.identifier == searchUrl);
+    if (index == -1) {
+      loadGraphicCards(searchUrl).then((response) => {
+        dispatch(setSingleNews_Departments({ data: response, identifier: searchUrl }));
+        var newbigPicture = [...bigPictureNews];
+        var newsmallPicture = [...smallPictureNews];
+        response.forEach(async (value, index) => {
+          await Image.getSize(value.imageURL, (imgWidth, imgHeight) => {
+            if (imgWidth <= imgHeight) {
+              newbigPicture.push(value);
+              // setBigPictureNews([...bigPictureNews,value])
+            }
+            else {
+              newsmallPicture.push(value);
+              // setSmallPictureNews([...bigPictureNews,value])
+            }
+          });
+          if (newbigPicture.length == 0) {
+            setBigPictureNews(null);
+          }
+          else {
+            setBigPictureNews(newbigPicture);
+          }
+          if (newsmallPicture.length == 0) {
+            setSmallPictureNews(null);
+          }
+          else {
+            setSmallPictureNews(newsmallPicture);
+          }
+        });
 
-                      <Text style={styles.mediaNotiItem_ContentTitle}>{item.title}</Text>
+      }).then(() => {
+        setReady(true);
+      })
+    }
+    else {
+      var trueNews = news_Departments[index];
+      const bigNewsAsync = async () => {
+        var a = await trueNews.data.forEach(async (value, index) => {
+          await Image.getSize(value.imageURL, (imgWidth, imgHeight) => {
+            if (imgWidth <= imgHeight) {
+              // newbigPicture.push(value);
+              setBigPictureNews(prev => [...prev,value]);
+            }
+            else {
+              // newsmallPicture.push(value);
+              setSmallPictureNews(prev => [...prev,value]);
+            }
+          }, (error) => {
+            console.log(error);
+          });
+        });
+      }
+      bigNewsAsync().then(() => {
+        setTimeout(() => {
+          setReady(true)
+        },500)
+        
+      });
+    }
+  }, []);
+  useEffect(() => {
+  }, [currentLanguage, ready])
+  return (
+    <SafeAreaView style={styles.body}>
+      {(ready == true) ? (
+        <FlatList
+          ListHeaderComponent={renderHeader}
+          keyExtractor={(item, index) => (item + index).toString()}
+          showsVerticalScrollIndicator={false}
+          data={smallPictureNews}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                style={styles.mediaNotiItem}
+                onPress={() => {
+                  navigation.navigate('MediaDetail', { link: item.link });
+                }}>
+                <Image style={styles.mediaNotiItem_Image} source={{ uri: item.imageURL }} />
 
-                      <View style={styles.row}>
-                        <Image style={styles.mediaNotiItem_DepartmentImage}
-                          source={{ uri: uri }}>
-                        </Image>
-                        <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;{name}</Text>
-                        <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time}</Text>
-                      </View>
+                <View style={styles.mediaNotiItem_Content}>
 
-                    </View>
-                  </TouchableOpacity>
-                )
-              }}
-            />
-          )}
+                  <Text style={styles.mediaNotiItem_ContentTitle}>{item.title}</Text>
 
-        </View></>) : (<Text>Loading</Text>)}
-    </ScrollView>
+                  <View style={styles.row}>
+                    <Image style={styles.mediaNotiItem_DepartmentImage}
+                      source={{ uri: uri }}>
+                    </Image>
+                    <Text style={styles.mediaNotiItem_ContentDepartment}>&nbsp;{name.split(/\s/).reduce((response, word) => response += word.slice(0, 1), '').toUpperCase()}</Text>
+                    <Text style={styles.mediaNotiItem_ContentTime}>&nbsp;{item.time.substr(1,10)}</Text>
+                  </View>
+
+                </View>
+              </TouchableOpacity>
+            )
+          }}
+        />
+      ) : (<LoadingScreen />)}
+    </SafeAreaView>
   );
 }
 

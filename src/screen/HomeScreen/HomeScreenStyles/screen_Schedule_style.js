@@ -42,16 +42,15 @@ export default StyleSheet.create({
       flexDirection: 'row',
     },
     textLabel: {
-      // flex: 1,
-      minWidth: 80,
+      minWidth: 70,
+      color:'black'
     },
     textFocus: {
       color: 'black',
-      // flex: 3,
     },
     courseName: {
       fontWeight: 'bold',
-      color: 'red',
+      color: 'black',
     },
     textRoom: {
       color: '#FF6E35',

@@ -16,6 +16,25 @@ export default function MediaMain({ navigation }) {
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const db_departments = useSelector(state => state.database.db_departments);
   const news_Departments = useSelector(state => state.news.news_Departments);
+  const time = (item) => {
+    let postDay = new Date();
+    let today = new Date();
+    console.log(today);
+    var element = news_Departments?.find(x => x.identifier == item.data.newsLink)
+    let postTime = element?.data[0].time;
+    postTime = postTime?.substr(1, 10).replaceAll('/', '-');
+    postTime = `${postTime?.substr(6, 4)}-${postTime?.substr(3, 2)}-${postTime?.substr(0, 2)}`;
+    console.log(postTime);
+    if (postTime != "--") {
+      postDay = new Date(postTime)
+      console.log(postDay);
+    }
+    return <Text style={styles.mediaLastestTime}>{dateDiffInDays(today, postDay)}</Text>
+  };
+  const highlight = (item) => {
+    var element = news_Departments?.find(x => x.identifier == item.data.newsLink)
+    return <Text style={styles.mediaLastestNews}>{`${element?.data[0].title.substr(0, 40)}...`}</Text>;
+  };
   useEffect(() => {
   }, [currentLanguage])
   return (
@@ -29,27 +48,16 @@ export default function MediaMain({ navigation }) {
         source={require('../../assets/preLoginEffectRightBottom.png')}
       />
       <SafeAreaView style={{ flex: 1 }}>
-        <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 20, color: "#252525"}}>
+        <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 20, color: "#252525" }}>
           {strings.news}
         </Text>
         <FlatList
-          initialNumToRender={15}
+          initialNumToRender={8}
           showsVerticalScrollIndicator={false}
           data={db_departments}
           renderItem={({ item, index }) => {
             //let existImage = "asset:/departments/" + item.data.logoUrl;
             //let defaultImage = "asset:/departments/default.png";
-            let postDay = new Date();
-            if (news_Departments.length != 0) {
-              var element = news_Departments.find(x => x.identifier == item.data.newsLink)
-              let postTime = element.data[0].time;
-              postTime = postTime.substr(1, 10).replaceAll('/', '-');
-              postTime = `${postTime.substr(3, 2)}-${postTime.substr(0, 2)}-${postTime.substr(6, 4)}`;
-              if (postTime != "--") {
-                postDay = new Date(postTime)
-              }
-            }
-
             return (
               <TouchableOpacity
                 style={styles.mediaItem}
@@ -68,9 +76,9 @@ export default function MediaMain({ navigation }) {
                     <Text style={styles.mediaDepartmentName}>
                       {item.data.name}
                     </Text>
-                    <Text style={styles.mediaLastestTime}>{dateDiffInDays(new Date(), postDay)}</Text>
+                    {time(item)}
                   </View>
-                  <Text style={styles.mediaLastestNews}>{`${element.data[0].title.substr(0, 40)}...`}</Text>
+                  {highlight(item)}
                 </View>
               </TouchableOpacity>
             )
