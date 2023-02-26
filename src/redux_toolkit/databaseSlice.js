@@ -26,7 +26,7 @@ export const databaseSlice = createSlice({
       state.db_app[action.payload[0]].data.notices[action.payload[1]].seen = true;
     },
     deleteNotification: (state, action) => {
-      state.db_app[action.payload[0]].data.notices = state.db_app[action.payload[0]].data.notices.filter(x => x.id != action.payload[1]);
+      state.db_app[action.payload[0]].data.notices = state.db_app[action.payload[0]].data.notices.filter(x => x?.id != action.payload[1]);
     },
   },
 })

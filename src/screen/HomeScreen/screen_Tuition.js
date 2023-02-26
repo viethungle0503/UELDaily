@@ -13,6 +13,7 @@ import post_data from '../UEL';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTuition } from '../../redux_toolkit/userSlice';
 import { groupBy } from '../GlobalFunction';
+import strings from '../Language';
 
 export default function Tuition() {
     const dispatch = useDispatch();
@@ -35,7 +36,7 @@ export default function Tuition() {
                     groupBySemester.forEach((value, key, map) => {
                         moduleArray= [...moduleArray,value];
                     });
-                    let title = `Năm học ${groupedYear[0].startYear} - ${groupedYear[0].endYear}`
+                    let title = `${strings.year} ${groupedYear[0].startYear} - ${groupedYear[0].endYear}`
                     sectionArray = [...sectionArray, { title: title, data: moduleArray }];
                 });
                 setTuitionHolder(sectionArray);
@@ -130,7 +131,7 @@ export default function Tuition() {
                     return (
                         <TouchableOpacity style={styles.listItem} onPress={() => settingModal(totalAmount, totalPaid)}>
                             <View style={[styles.listItem_Markup, (totalPaid < totalAmount) ? { backgroundColor: '#FF967C' } : { backgroundColor: '#E3ECFF' }]}></View>
-                        <Text style={styles.listItem_SemesterTitle}>{`Học kỳ ${item[0].semester}`}</Text>
+                        <Text style={styles.listItem_SemesterTitle}>{`${strings.semester} ${item[0].semester}`}</Text>
                         <View style={styles.listItem_Content}>
                             <Text style={styles.listItem_ContentTitle}>Tổng tiền:&nbsp;</Text>
                             <Text style={styles.listItem_ContentData}>{totalAmount}</Text>
@@ -138,12 +139,7 @@ export default function Tuition() {
     
                         <View style={styles.listItem_Content}>
                             <Text style={styles.listItem_ContentTitle}>Tình trạng:&nbsp;</Text>
-                            {
-                                (totalPaid < totalAmount) ?
-                                    (<Text style={styles.listItem_ContentData}>Chưa đóng</Text>)
-                                    :
-                                    (<Text style={styles.listItem_ContentData}>Đã đóng</Text>)
-                            }
+                            <Text style={styles.listItem_ContentData}>{(totalPaid == totalAmount) ? (strings.paid) : (totalPaid == 0 ? (strings.unpaid) : (strings.owed))}</Text>
                         </View>
                         <TouchableOpacity
                             style={[styles.listItem_ViewDetail,(totalPaid < totalAmount) ? 

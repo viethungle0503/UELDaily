@@ -19,6 +19,9 @@ export const userSlice = createSlice({
         currentLanguage: "vn",
         modules: [],
         lateModules: [],
+        mediaIsReady:false,
+        notificationIsReady:false,
+        homeworkIsReady:false,
     },
     reducers: {
         setLoggedIn: (state, action) => {
@@ -69,6 +72,15 @@ export const userSlice = createSlice({
         setUnreadNotice: (state, action) => {
             state.unreadNotice = action.payload;
         },
+        setMediaIsReady: (state, action) => {
+            state.mediaIsReady = action.payload;
+        },
+        setNotificationIsReady: (state, action) => {
+            state.notificationIsReady = action.payload;
+        },
+        setHomeworkIsReady: (state, action) => {
+            state.homeworkIsReady = action.payload;
+        },
     },
 })
 
@@ -77,7 +89,7 @@ export const { setLoggedIn, setCurrentUser, setProfileImage,
     setScoreBoard,
     setIsDataReady, setAtPreLogin1, setAtPreLogin2,
     setCurrentLanguage, setTestSchedule, setActivityScore, setTuition, setSchedule, setCourse, setInformation,
-    setModules, setUnreadNotice, 
+    setModules, setUnreadNotice, setMediaIsReady, setNotificationIsReady, setHomeworkIsReady,
     setLateModules } = userSlice.actions;
 
 export default userSlice.reducer;

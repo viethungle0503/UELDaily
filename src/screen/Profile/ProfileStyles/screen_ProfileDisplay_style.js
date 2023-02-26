@@ -3,7 +3,7 @@ export default StyleSheet.create({
     body: {
         flex: 1,
         flexDirection: 'column',
-        marginBottom: 50,
+        backgroundColor:'#fff'
     },
     /* chia layout */
     accountHeader: {
@@ -11,10 +11,8 @@ export default StyleSheet.create({
         height: 300,
         // height: '100%',
         backgroundColor: '#FFF',
-
         flexDirection: 'column',
         justifyContent: 'center',
-
         alignItems: 'center',
         zIndex: 2,
     },
@@ -176,7 +174,7 @@ export default StyleSheet.create({
         alignContent: 'stretch',
     },
     btnLogout: {
-        marginTop: 20,
+        marginVertical:'5%',
         backgroundColor: 'rgba(255, 110, 53, 1)',
         paddingVertical: 10,
         borderRadius: 8,

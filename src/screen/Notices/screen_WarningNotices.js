@@ -17,7 +17,8 @@ import strings from '../Language';
 import { setUnreadNotice } from '../../redux_toolkit/userSlice';
 import { useDispatch } from 'react-redux';
 import { setSeenTrue, deleteNotification } from '../../redux_toolkit/databaseSlice';
-
+import NullDataScreen from '../../components/nullDataScreen';
+import { firebase } from '@react-native-firebase/database';
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
     inputRange: [-50, 0.5],
@@ -76,7 +77,7 @@ export default function WarningNotices({ navigation, route }) {
     var trueUser = db_app.find(x => x.data.email == currentUser.email);
     if (trueUser != undefined) {
       var warningNoticesHolder = [];
-      trueUser.data.notices.filter(x => x.type == 0).forEach((value) => {
+      trueUser.data.notices.filter(x => x?.type == 0).forEach((value) => {
         warningNoticesHolder.push(value);
       })
       var sortedWarningNoticesHolder = [...warningNoticesHolder];
@@ -92,101 +93,183 @@ export default function WarningNotices({ navigation, route }) {
   }
   return (
     <SafeAreaView style={styles.body}>
-      <FlatList
-        style={styles.noti}
-        showsVerticalScrollIndicator={false}
-        data={warningNotices}
-        renderItem={({ item, index }) => {
-          let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
-          let secondIndex = db_app[firstIndex]?.data?.notices?.findIndex(x => x.id == item.id);
-          const deleteItem = (index) => {
-            Alert.alert(
-              "Thông báo",
-              "Bạn có muốn xóa thông báo này?",
-              [
-                {
-                  text: "Cancel",
-                  onPress: () => {
-                    closeRow(index);
-                  },
-                  style: "cancel",
-                },
-                {
-                  text: "OK", onPress: () => {
-                    closeRow(index);
-                    if(item.seen == false) {
-                      dispatch(setUnreadNotice(unreadNotice - 1));
-                    };
-                    // setWarningNotices(warningNotices.filter((_, i) => i !== index));
-                    dispatch(deleteNotification([firstIndex,item.id]));
-                  }, style: "default"
+      {(warningNotices.length == 0) ? (<NullDataScreen />) : (
+        <>
+          <FlatList
+            style={styles.noti}
+            showsVerticalScrollIndicator={false}
+            data={warningNotices}
+            renderItem={({ item, index }) => {
+              const deleteItem = (index) => {
+                const asyncDelete = async () => {
+                  await firebase
+                    .app()
+                    .database(
+                      'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+                    )
+                    .ref(`/users`)
+                    .once(
+                      'value',
+                      async (snapshot) => {
+                        snapshot.forEach(async (childSnapshot) => {
+                          let userKey = childSnapshot?.child('id').val()
+                          if (userKey == currentUser.id) {
+                            let needToDelete = childSnapshot.child('notices').val().findIndex(x => x?.id == item.id);
+                            if (needToDelete != -1) {
+                              await firebase
+                                .app()
+                                .database(
+                                  'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+                                )
+                                .ref(`/users/${childSnapshot.key}/notices/${needToDelete}`).remove(() => {
+                                  // console.log('Operation Complete');
+                                });
+                            }
+                          }
+                        })
+                      },
+                      error => {
+                        console.error(error);
+                      },
+                    );
                 }
-              ],
-              {
-                cancelable: true,
-                userInterfaceStyle: "dark",
-              }
-            );
-          };
-          return (
-            <Swipeable overshootRight={true}
-              onSwipeableOpen={() => deleteItem(index)}
-              renderRightActions={renderRight}
-              ref={ref => row[index] = ref}
-            >
-              <Animated.View
-              >
-                <TouchableOpacity
-                  style={styles.notiItem}
-                  onPress={() => {
-                    navigateToHomeWork();
-                    if (!item.seen) {
-                      dispatch(setSeenTrue([firstIndex, secondIndex]));
-                      dispatch(setUnreadNotice(unreadNotice - 1));
-                    };
-                  }}>
-                  {item.seen ? <View style={styles.fadeItem}></View> : <></>}
-                  <View style={styles.notiItem_Icon}>
-                    <Image source={require('../../assets/notiNhacnho.png')} />
-                  </View>
+                Alert.alert(
+                  "Thông báo",
+                  "Bạn có muốn xóa thông báo này?",
+                  [
+                    {
+                      text: "Cancel",
+                      onPress: () => {
+                        closeRow(index);
+                      },
+                      style: "cancel",
+                    },
+                    {
+                      text: "OK", onPress: () => {
+                        let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
+                        asyncDelete();
+                        closeRow(index);
+                        if (item.seen == false) {
+                          dispatch(setUnreadNotice(unreadNotice - 1));
+                        };
+                        // setWarningNotices(warningNotices.filter((_, i) => i !== index));
+                        dispatch(deleteNotification([firstIndex, item.id]));
+                      }, style: "default"
+                    }
+                  ],
+                  {
+                    cancelable: true,
+                    userInterfaceStyle: "dark",
+                  }
+                );
+              };
+              const updateSeen = async () => {
+                await firebase
+                  .app()
+                  .database(
+                    'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+                  )
+                  .ref(`/users`)
+                  .once(
+                    'value',
+                    async (snapshot) => {
+                      snapshot.forEach(async (childSnapshot) => {
+                        let userKey = childSnapshot?.child('id').val()
+                        if (userKey == currentUser.id) {
+                          let needToUpdate = childSnapshot.child('notices').val().findIndex(x => x?.id == item.id);
+                          if (needToUpdate != -1) {
+                            await firebase
+                              .app()
+                              .database(
+                                'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+                              )
+                              .ref(`/users/${childSnapshot.key}/notices/${needToUpdate}`).update({
+                                seen: true,
+                              })
+                              .then(() => console.log('Data updated.'));
+                          }
+                        }
+                      })
+                    },
+                    error => {
+                      console.error(error);
+                    },
+                  );
+              };
+              return (
+                <Swipeable overshootRight={true}
+                  onSwipeableOpen={() => deleteItem(index)}
+                  renderRightActions={renderRight}
+                  ref={ref => row[index] = ref}
+                >
+                  <Animated.View
+                  >
+                    <TouchableOpacity
+                      style={styles.notiItem}
+                      onPress={() => {
+                        let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
+                        let secondIndex = db_app[firstIndex]?.data?.notices?.findIndex(x => x?.id == item.id);
+                        switch (item?.redirectType) {
+                          case 1: navigation.navigate('Schedule'); break;
+                          case 2: navigation.navigate('ScoreBoard'); break;
+                          case 3: navigation.navigate('Exam'); break;
+                          case 4: navigateToHomeWork(); break;
+                          case 5: navigation.navigate('Tuition'); break;
+                          case 6: navigation.navigate('Ctxh'); break;
+                          default: navigateToHomeWork();
+                        }
 
-                  <View style={styles.notiItem_Content}>
-                    <Text style={styles.notiItem_Content_Title}>
-                      {item.title}
-                    </Text>
-
-                    <SafeAreaView style={styles.notiItem_Content_ActionTime}>
-                      <Text
-                        style={[
-                          styles.notiItem_Content_ActionText,
-                          {
-                            color: '#FF6E35',
-                          },
-                        ]}>
-                        {strings.watch_now}
-                      </Text>
-                      <View style={styles.row}>
-                        <Image source={require('../../assets/notiHistory.png')} />
-                        <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(), new Date(item.creTime))}</Text>
+                        if (!item.seen) {
+                          updateSeen();
+                          dispatch(setSeenTrue([firstIndex, secondIndex]));
+                          dispatch(setUnreadNotice(unreadNotice - 1));
+                        };
+                      }}>
+                      {item.seen ? <View style={styles.fadeItem}></View> : <></>}
+                      <View style={styles.notiItem_Icon}>
+                        <Image source={require('../../assets/notiNhacnho.png')} />
                       </View>
-                    </SafeAreaView>
-                  </View>
-                  <View style={styles.notiItem_Status}>
-                    <View
-                      style={[
-                        styles.notiItem_Status_ReadIcon,
-                        {
-                          backgroundColor: item.seen ? '#FF6E35' : '#ffffff',
-                        },
-                      ]}></View>
-                  </View>
-                </TouchableOpacity>
-              </Animated.View>
-            </Swipeable>
-          )
-        }}
-        keyExtractor={(item, index) => (item + index).toString()}
-      />
+
+                      <View style={styles.notiItem_Content}>
+                        <Text style={styles.notiItem_Content_Title}
+                          numberOfLines={2}
+                          ellipsizeMode="tail">
+                          {item.title}
+                        </Text>
+
+                        <SafeAreaView style={styles.notiItem_Content_ActionTime}>
+                          <Text
+                            style={[
+                              {
+                                color: '#FF6E35',
+                              },
+                            ]}>
+                            {strings.watch_now}
+                          </Text>
+                          <View style={styles.row}>
+                            <Image source={require('../../assets/notiHistory.png')} />
+                            <Text style={{ color: 'red' }}>&nbsp;{dateDiffInDays(new Date(), new Date(item.creTime))}</Text>
+                          </View>
+                        </SafeAreaView>
+                      </View>
+                      <View style={styles.notiItem_Status}>
+                        <View
+                          style={[
+                            styles.notiItem_Status_ReadIcon,
+                            {
+                              backgroundColor: item.seen ? '#ffffff' : '#FF6E35',
+                            },
+                          ]}></View>
+                      </View>
+                    </TouchableOpacity>
+                  </Animated.View>
+                </Swipeable>
+              )
+            }}
+            keyExtractor={(item, index) => (item + index).toString()}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 }

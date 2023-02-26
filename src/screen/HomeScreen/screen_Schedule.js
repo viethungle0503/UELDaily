@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setSchedule } from '../../redux_toolkit/userSlice';
 import post_data from '../UEL';
 import { countPropertiesMethod2 } from '../GlobalFunction';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 LocaleConfig.locales['vi'] = {
@@ -120,15 +121,15 @@ export default function Schedule() {
                 {module.courseName}
               </Text>
               <View style={styles.textLine}>
-                <Text style={styles.textLabel}>{strings.time}</Text>
+                <Text style={styles.textLabel}>{`${strings.time}:`}</Text>
                 <Text style={styles.textFocus}>{`${module.timeStart} - ${module.timeEnd} ${module.timeFormat}`}</Text>
               </View>
               <View style={styles.textLine}>
-                <Text style={styles.textLabel}>{strings.room}</Text>
+                <Text style={styles.textLabel}>{`${strings.room}:`}</Text>
                 <Text style={[styles.textFocus, styles.textRoom]}>{module.room}</Text>
               </View>
               <View style={styles.textLine}>
-                <Text style={styles.textLabel}>{strings.lecturer}</Text>
+                <Text style={styles.textLabel}>{`${strings.lecturer}:`}</Text>
                 <Text style={styles.textFocus}>{module.teacherName}</Text>
               </View>
               {/* <Avatar.Text label={item.room} /> */}
@@ -142,14 +143,14 @@ export default function Schedule() {
   const renderEmptyDate = (day, item) => {
     return (
       <View style={styles.emptyDate}>
-        <Text style={styles.emptyText}>🥳 Ngày nghỉ!</Text>
+        <Text style={styles.emptyText}>{`🥳 ${strings.day_off}!`}</Text>
       </View>
     )
   }
   const rowHasChanged = (r1, r2) => {
     return r1.name !== r2.name;
   }
-  
+
   useEffect(() => {
     if (currentLanguage == "en") {
       LocaleConfig.defaultLocale = 'en';
@@ -157,10 +158,10 @@ export default function Schedule() {
     else {
       LocaleConfig.defaultLocale = 'vi';
     }
-  }, [currentLanguage,isLoading])
+  }, [currentLanguage, isLoading])
   useEffect(() => {
-    if(countPropertiesMethod2(schedule) == 0) {
-    // if (true) {
+    if (countPropertiesMethod2(schedule) == 0) {
+      // if (true) {
       post_data("schedule", currentUser.id).then((response) => {
         var scheduleArray = [];
         response.forEach((value) => {
@@ -169,7 +170,7 @@ export default function Schedule() {
           let strTime = (new Date(value.dateTime)).toISOString().split('T')[0];
           scheduleArray[strTime] = result;
         });
-        
+
         // Timestamp in milliseconds
         var today = Date.now();
         for (let i = -14; i < 14; i++) {
@@ -179,12 +180,12 @@ export default function Schedule() {
             scheduleArray[strTime] = [];
           };
           var objectHolder = Object.assign({}, scheduleArray);
-          
+
         };
         // var object = arr.reduce((obj, item) => Object.assign(obj, { [item.key]: item.value }), {});
         // var object = arr.reduce((obj, item) => ({...obj, [item.key]: item.value}) ,{});
         // var object = arr.reduce((obj, item) => (obj[item.key] = item.value, obj) ,{});
-        setScheduleHolder(scheduleHolder => ({...scheduleHolder,...objectHolder}));
+        setScheduleHolder(scheduleHolder => ({ ...scheduleHolder, ...objectHolder }));
         dispatch(setSchedule(objectHolder));
         setIsLoading(false);
       })
@@ -196,37 +197,51 @@ export default function Schedule() {
   }, [])
   return (
     <>
-    {isLoading ? (<ActivityIndicator/>) : (
-      <Agenda
-      items={scheduleHolder}
-      loadItemsForMonth={(day) => {}}
-      selected={getToday()}
-      minDate={minDate(2)}
-      maxDate={maxDate(2)}
-      renderItem={(item) => { return (renderItem(item)) }}
-      renderEmptyDate={renderEmptyDate}
-      rowHasChanged={rowHasChanged}
-      theme={{
-        agendaDayTextColor: 'black',
-        agendaDayNumColor: 'purple',
-        agendaTodayColor: 'orange',
-        agendaKnobColor: 'red',
-        indicatorColor: 'yellow',
-        arrowColor: '#7f3e1f',
-        selectedDayBackgroundColor: 'green',
-        calendarBackground: '#ffffff',
-        textDayHeaderFontWeight: 'bold',
-        textSectionTitleColor: 'black',
-        dotColor: '#49a65a',
-        todayDotColor: 'red',
-        todayBackgroundColor: 'black',
-        todayTextColor: 'yellow',
-      }}
-    // renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
-    />
-    )}
+      {isLoading ? (<ActivityIndicator />) : (
+        <Agenda
+          items={scheduleHolder}
+          loadItemsForMonth={(day) => { }}
+          selected={getToday()}
+          minDate={minDate(2)}
+          maxDate={maxDate(2)}
+          renderItem={(item) => { return (renderItem(item)) }}
+          renderEmptyDate={renderEmptyDate}
+          rowHasChanged={rowHasChanged}
+          theme={{
+            agendaDayTextColor: 'black',
+            agendaDayNumColor: 'purple',
+            agendaTodayColor: 'orange',
+            agendaKnobColor: 'red',
+            indicatorColor: 'yellow',
+            arrowColor: '#7f3e1f',
+            selectedDayBackgroundColor: 'green',
+            calendarBackground: '#ffffff',
+            textDayHeaderFontWeight: 'bold',
+            textSectionTitleColor: 'black',
+            dotColor: '#49a65a',
+            todayDotColor: 'red',
+            todayBackgroundColor: 'black',
+            todayTextColor: 'yellow',
+          }}
+          renderDay={(day, item) => {
+            console.log(day.getDay());
+            return (
+            <SafeAreaView style={{
+              width:55,
+              height:60,
+              top:25,
+              marginHorizontal:20
+              }}>
+              <Text style={{ color: '#FF6E35', fontSize:12, lineHeight:16 }}>{`Thứ ${day.getDay() + 1}`}
+              </Text>
+              <Text style={{ color: '#FF6E35', fontSize:20, lineHeight:22 }}>{`${day.getDate()}/${day.getMonth() + 1}`}
+              </Text>
+            </SafeAreaView>)
+          }}
+        />
+      )}
     </>
-    
+
   );
 };
 

@@ -37,19 +37,16 @@ export default StyleSheet.create({
     },
     mediaNoti_Lastest: {
       height: 300,
-      maxHeight: "40%",
-      // flex: 1,
       marginTop: 20,
-      // marginLeft: 20,
     },
     mediaNoti_All: {
-      // flex: 1,
       marginHorizontal: 20,
     },
   
     mediaNotiItem: {
       flexDirection: 'row',
       marginBottom: 10,
+      marginHorizontal: 20,
     },
     mediaNotiHeader: {
       fontSize: 20,
@@ -83,12 +80,12 @@ export default StyleSheet.create({
     },
     mediaNotiItem_ContentDepartment: {
       color: '#FF6E35',
-      width: '50%'
+      width: '40%'
     },
     mediaNotiItem_ContentTime: {
       // marginLeft: 5,
       color: '#433D3D',
-      width: '40%'
+      width: '50%'
     },
     mediaNotiItem_Image: {
       width: 110,

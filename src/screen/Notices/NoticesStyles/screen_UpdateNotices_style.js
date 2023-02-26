@@ -74,6 +74,7 @@ export default StyleSheet.create({
       fontWeight: 'bold',
       fontSize: 16,
       color: '#080B09',
+      width: '95%'
     },
     notiItem_Content_Describe: {
       color: 'red',

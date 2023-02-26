@@ -37,7 +37,8 @@ export default function ProfileDisplay({ navigation }) {
   function showAlert() {
     Alert.alert(
       "Thông báo",
-      "Tính năng này chưa được phát triển, đang đợi chị Ngân, chị Ngọc, chị Huyền và anh Bình cho biết thêm thông tin @@",
+      // "Tính năng này chưa được phát triển, đang đợi chị Ngân, chị Ngọc, chị Huyền và anh Bình cho biết thêm thông tin @@",
+      "Tính năng này hiện chưa được cập nhật thông tin",
       [
         {
           text: "Cancel",
@@ -69,24 +70,46 @@ export default function ProfileDisplay({ navigation }) {
     setVNLanguage(!VNLanguage);
   };
   const dispatch = useDispatch();
+  const confirmSignout = () => {
+    Alert.alert(
+      "Thông báo",
+      "Bạn có chắc chắn muốn đăng xuất?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => {return},
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => signOut() }
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => {return},
+      }
+    );
+  }
   const signOut = async () => {
+
     try {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       auth()
         .signOut()
         .then(() => {
-          dispatch(setLoggedIn(false));
-          dispatch(setCurrentUser({}));
-          dispatch(setProfileImage(""))
-          dispatch(setUnreadNotice(0));
-          dispatch(setSchedule({}));
-          dispatch(setScoreBoard([{ title: "Hello", data: [] }]));
-          dispatch(setTestSchedule([]));
-          dispatch(setModules([]));
-          dispatch(setLateModules([]));
-          dispatch(setTuition([]));
-          dispatch(setActivityScore([]))
+          setTimeout(() => {
+            dispatch(setLoggedIn(false));
+            dispatch(setCurrentUser({}));
+            dispatch(setProfileImage(""))
+            dispatch(setUnreadNotice(0));
+            dispatch(setSchedule({}));
+            dispatch(setScoreBoard([{ title: "Hello", data: [] }]));
+            dispatch(setTestSchedule([]));
+            dispatch(setModules([]));
+            dispatch(setLateModules([]));
+            dispatch(setTuition([]));
+            dispatch(setActivityScore([]))
+          },250)
+
         });
     } catch (error) {
       console.error(error);
@@ -127,7 +150,7 @@ export default function ProfileDisplay({ navigation }) {
         </ImageBackground>
       )}
       <View style={styles.accountInfoContainer}>
-        <Text style={styles.accountHeading}>{strings.information}</Text>
+        <Text style={styles.accountHeading}>{strings.account}</Text>
 
         <TouchableOpacity
           style={styles.accountListItem}
@@ -285,9 +308,7 @@ export default function ProfileDisplay({ navigation }) {
         <TouchableOpacity
           style={styles.accountListItem}
           // onPress={() => showAlert()}
-          onPress={() => navigation.navigate('NullData')}
-          
-          
+          onPress={() => navigation.navigate('NullDataScreen')}
           >
           <View style={styles.row}>
             <Image
@@ -301,7 +322,7 @@ export default function ProfileDisplay({ navigation }) {
         <TouchableOpacity
           style={styles.accountListItem}
           // onPress={() => showAlert()}
-          onPress={() => navigation.navigate('loading')}
+          onPress={() => navigation.navigate('NullDataScreen')}
           >
           <View style={styles.row}>
             <Image
@@ -315,7 +336,7 @@ export default function ProfileDisplay({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.accountListItem}
-          onPress={() => showAlert()}>
+          onPress={() => navigation.navigate('NullDataScreen')}>
           <View style={styles.row}>
             <Image
               source={require('../../assets/account_chinhsach.png')}
@@ -327,7 +348,7 @@ export default function ProfileDisplay({ navigation }) {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.btnLogout} onPress={signOut}>
+        <TouchableOpacity style={styles.btnLogout} onPress={confirmSignout}>
           <Text style={styles.btnLogoutText}>{strings.sign_out}</Text>
         </TouchableOpacity>
       </View>
