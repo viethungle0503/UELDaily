@@ -17,6 +17,7 @@ import post_data from './screen/UEL';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { EventType } from '@notifee/react-native';
 import NotificationService from './NotificationService';
+import RNBootSplash from "react-native-bootsplash";
 const RootStack = createStackNavigator();
 
 function App() {
@@ -166,7 +167,13 @@ const AppWrapper = () => {
     // checkToken();
     if (db_app.length == 0 || db_uel.length == 0) {
       asyncAppFn();
-      asyncUELFn();
+      asyncUELFn().finally(async () => {
+        await RNBootSplash.hide({ fade: true, duration: 500 });
+        console.log("Bootsplash has been hidden successfully");
+      });
+    }
+    else {
+      RNBootSplash.hide({ fade: true });
     }
   }, []);
   useEffect(() => {

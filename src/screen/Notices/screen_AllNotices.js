@@ -223,7 +223,7 @@ export default function Information({ navigation, route }) {
                               .ref(`/users/${childSnapshot.key}/notices/${needToUpdate}`).update({
                                 seen: true,
                               })
-                              .then(() => console.log('Data updated.'));
+                            // .then(() => console.log('Data updated.'));
                           }
                         }
                       })
@@ -321,12 +321,12 @@ export default function Information({ navigation, route }) {
                       }
                         : () => {
                           switch (item?.redirectType) {
-                            case 1: navigation.navigate('Schedule'); break;
-                            case 2: navigation.navigate('ScoreBoard'); break;
-                            case 3: navigation.navigate('Exam'); break;
-                            case 4: navigateToHomeWork(); break;
-                            case 5: navigation.navigate('Tuition'); break;
-                            case 6: navigation.navigate('Ctxh'); break;
+                            case '1': navigation.navigate('Schedule'); break;
+                            case '2': navigation.navigate('ScoreBoard'); break;
+                            case '3': navigation.navigate('Exam'); break;
+                            case '4': navigateToHomeWork(); break;
+                            case '5': navigation.navigate('Tuition'); break;
+                            case '6': navigation.navigate('Ctxh'); break;
                             default: navigateToHomeWork();
                           }
                           if (!item.seen) {

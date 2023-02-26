@@ -19,15 +19,12 @@ export default function MediaMain({ navigation }) {
   const time = (item) => {
     let postDay = new Date();
     let today = new Date();
-    console.log(today);
     var element = news_Departments?.find(x => x.identifier == item.data.newsLink)
     let postTime = element?.data[0].time;
     postTime = postTime?.substr(1, 10).replaceAll('/', '-');
     postTime = `${postTime?.substr(6, 4)}-${postTime?.substr(3, 2)}-${postTime?.substr(0, 2)}`;
-    console.log(postTime);
     if (postTime != "--") {
       postDay = new Date(postTime)
-      console.log(postDay);
     }
     return <Text style={styles.mediaLastestTime}>{dateDiffInDays(today, postDay)}</Text>
   };

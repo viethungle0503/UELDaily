@@ -284,7 +284,7 @@ export default function UpdateNotices({ navigation }) {
                           .ref(`/users/${childSnapshot.key}/notices/${needToUpdate}`).update({
                             seen: true,
                           })
-                          .then(() => console.log('Data updated.'));
+                          // .then(() => console.log('Data updated.'));
                       }
                     }
                   })
