@@ -30,7 +30,11 @@ export default function MediaMain({ navigation }) {
   };
   const highlight = (item) => {
     var element = news_Departments?.find(x => x.identifier == item.data.newsLink)
-    return <Text style={styles.mediaLastestNews}>{`${element?.data[0].title.substr(0, 40)}...`}</Text>;
+    return <Text
+      numberOfLines={1}
+      ellipsizeMode="tail" style={styles.mediaLastestNews}>
+      {`${element?.data[0].title.substr(0, 40)}...`}
+    </Text>;
   };
   useEffect(() => {
   }, [currentLanguage])

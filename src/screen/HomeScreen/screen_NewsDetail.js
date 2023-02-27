@@ -1,5 +1,4 @@
-import { render, WebView } from 'react-native-webview';
-import styles from './HomeScreenStyles/screen_NewsDetail_style'
+import { WebView } from 'react-native-webview';
 
 export default function NewsDetail({ navigation, route }) {
   const scripts = `
@@ -19,12 +18,12 @@ export default function NewsDetail({ navigation, route }) {
   } else {
     var { link } = route.params;
   }
-  console.log(link);
   if ((link.search("lms-uel.thanhbinhbent.com") != -1)) {
     return (
       <WebView
         userAgent={Platform.OS === 'android' ? 'Chrome/18.0.1025.133 Mobile Safari/535.19' : 'AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75'}
         useWebView2={true}
+        startInLoadingState={true}
         source={{ uri: link }}
       />
     )
@@ -36,6 +35,7 @@ export default function NewsDetail({ navigation, route }) {
         useWebView2={true}
         injectedJavaScript={scripts}
         javaScriptEnabledAndroid={true}
+        startInLoadingState={true}
         source={{ uri: link }}
       />
     );

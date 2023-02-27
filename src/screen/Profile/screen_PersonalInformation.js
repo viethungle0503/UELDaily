@@ -40,6 +40,7 @@ export default function PersonalInformation({navigation}) {
             </View>
 
             <View style={styles.modalContent}>
+                {/* Basic Information */}
                 <View style={[styles.modalContentItem, {}]}>
                     <View style={[styles.row, { marginBottom: 10 }]}>
                         <Image
@@ -90,7 +91,7 @@ export default function PersonalInformation({navigation}) {
                         </Text>
                     </View>
                 </View>
-
+                {/* Contact Information */}
                 <View style={[styles.modalContentItem, { marginVertical: 4 }]}>
                     <View style={[styles.row, { marginBottom: 10 }]}>
                         <Image
@@ -118,8 +119,8 @@ export default function PersonalInformation({navigation}) {
                         </Text>
                     </View>
                 </View>
-
-                <View style={[styles.modalContentItem, { flex: 3 }]}>
+                {/* Course Information */}
+                <View style={[styles.modalContentItem]}>
                     <View style={[styles.row, { marginBottom: 10 }]}>
                         <Image
                             source={require('../../assets/account_thongtin_khoahoc.png')}
