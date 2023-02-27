@@ -48,7 +48,7 @@ export default StyleSheet.create({
     backgroundColor: '#FFF',
     paddingHorizontal: 20,
     paddingTop: 15,
-    paddingBottom: 25,
+    paddingBottom: 40,
   },
   modalContentItem_Icon: {
     width: 35,

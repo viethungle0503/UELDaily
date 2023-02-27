@@ -224,19 +224,41 @@ export default function Schedule() {
             todayTextColor: 'yellow',
           }}
           renderDay={(day, item) => {
-            console.log(day.getDay());
+            let dayInWeeks = null;
+            let dayInInterger = (day.getDay() + 1)
+            if (currentLanguage == 'vn') {
+              if (dayInInterger == 1) {
+                dayInWeeks = `CN`
+              }
+              else {
+                dayInWeeks = `Thứ ${day.getDay() + 1}`
+              }
+            }
+            else {
+              switch (dayInInterger) {
+                case 1: dayInWeeks = `Sunday`; break;
+                case 2: dayInWeeks = `Monday`; break;
+                case 3: dayInWeeks = `Tuesday`; break;
+                case 4: dayInWeeks = `Wednesday`; break;
+                case 5: dayInWeeks = `Thursday`; break;
+                case 6: dayInWeeks = `Friday`; break;
+                case 7: dayInWeeks = `Saturday`; break;
+                default: dayInInterger = null;
+              }
+            }
             return (
-            <SafeAreaView style={{
-              width:55,
-              height:60,
-              top:25,
-              marginHorizontal:20
+              <SafeAreaView style={{
+                width: 55,
+                height: 60,
+                top: 25,
+                marginHorizontal: 20
               }}>
-              <Text style={{ color: '#FF6E35', fontSize:12, lineHeight:16 }}>{`Thứ ${day.getDay() + 1}`}
-              </Text>
-              <Text style={{ color: '#FF6E35', fontSize:20, lineHeight:22 }}>{`${day.getDate()}/${day.getMonth() + 1}`}
-              </Text>
-            </SafeAreaView>)
+                <Text numberOfLines={1}
+                  ellipsizeMode="tail" style={{ color: '#FF6E35', fontSize: 12, lineHeight: 16 }}>{dayInWeeks}
+                </Text>
+                <Text style={{ color: '#FF6E35', fontSize: 20, lineHeight: 22 }}>{`${day.getDate()}/${day.getMonth() + 1}`}
+                </Text>
+              </SafeAreaView>)
           }}
         />
       )}

@@ -82,7 +82,7 @@ export default function HomeDisplay({ navigation }) {
             onPress={() => {
               Alert.alert("Thông báo","Các tính năng khác cần có để sử dụng tính năng này");
             }}>
-              <MaterialCommunityIcons name={'tune-variant'} size={25} style={{color:'black'}}/>
+              <MaterialCommunityIcons name={'tune-variant'} size={14} style={{color:'black'}}/>
               <Text style={{ color: 'black', marginLeft: 5 }}>{strings.all}</Text>
             </TouchableOpacity>
           </View>

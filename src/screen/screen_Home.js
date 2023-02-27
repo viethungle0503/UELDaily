@@ -103,7 +103,7 @@ export default function Home({ navigation }) {
   useEffect(() => {
     requestPermission();
     asyncGetToken();
-    console.log("do i have to run?");
+    // console.log("do i have to run?");
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       // console.log('remoteMessage', JSON.stringify(remoteMessage))
       DisplayNotification(remoteMessage);
@@ -113,7 +113,7 @@ export default function Home({ navigation }) {
   }, []);
   useEffect(() => {
     if(currentUser != null) {
-      console.log("Vừa khởi động lại");
+      // console.log("Vừa khởi động lại");
       asyncAppFn();
     }
   },[])
