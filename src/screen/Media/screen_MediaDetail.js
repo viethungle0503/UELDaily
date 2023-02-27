@@ -8,7 +8,10 @@ export default function MediaDetail({ navigation, route }) {
   
 
   document.querySelector(".pagePhongBan .transparent .wrapper table tbody tr:first-child").style.display = 'none';
-  document.getElementById("pnBottom").parentElement.parentElement.style.display = 'none'
+  document.getElementById("pnBottom").parentElement.parentElement.style.display = 'none';
+  document.getElementById("ctl08_ctl01_pnCactinkhac").style.display = 'none';
+  document.getElementsByClassName("fb-like")[0].parentElement.style.display = 'none'
+
   
   document.querySelector("#pnCenterDisplay").style.width = '100%';
   document.querySelector(".content_detail").style.width = '100%';
@@ -26,8 +29,8 @@ export default function MediaDetail({ navigation, route }) {
   return <WebView
     userAgent="Mozilla/5.0 (Linux; Android 4.1.1; Galaxy Nexus Build/JRO03C) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19"
     useWebView2={true}
-    injectedJavaScript={scripts}
-    javaScriptEnabledAndroid={true}
+    // injectedJavaScript={scripts}
+    // javaScriptEnabledAndroid={true}
     startInLoadingState={true}
     source={{ uri: link }}
   />;

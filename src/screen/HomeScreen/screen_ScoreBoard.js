@@ -145,9 +145,10 @@ export default function ScoreBoard({ navigation }) {
       setOpenYear(false);
     }
   }}>
-    <View>
+    <ScrollView>
 
       <Modal
+      onRequestClose={() => setOpen(false)}
         visible={open}
         transparent={true}
         animationType='slide'
@@ -472,7 +473,7 @@ export default function ScoreBoard({ navigation }) {
       />
 
 
-    </View>
+    </ScrollView>
   </SafeAreaView>
 
 
