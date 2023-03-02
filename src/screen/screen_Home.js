@@ -127,26 +127,114 @@ export default function Home({ navigation }) {
       <HomeStack.Screen
         name="Schedule"
         component={Schedule}
-        options={{
+        options={({ navigation, route }) => ({
           title: strings.schedule,
-        }}
+          headerLeft: props => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => {
+                if (route.params == undefined) {
+                  var initBy = ""
+                }
+                else {
+                  var { initBy } = route.params;
+                }
+                if (initBy != "") {
+                  navigation.goBack();
+                  navigation.navigate(initBy);
+                }
+                else {
+                  navigation.navigate("HomeDisplay");
+                }
+
+              }}
+            />
+          )
+        })}
       />
       <HomeStack.Screen
         name="ScoreBoard"
         component={ScoreBoard}
-        options={{
+        options={({ navigation, route }) => ({
           title: strings.scoreboard,
-        }}
+          headerLeft: props => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => {
+                if (route.params == undefined) {
+                  var initBy = ""
+                }
+                else {
+                  var { initBy } = route.params;
+                }
+                if (initBy != "") {
+                  navigation.goBack();
+                  navigation.navigate(initBy);
+                }
+                else {
+                  navigation.navigate("HomeDisplay");
+                }
+
+              }}
+            />
+          )
+        })}
       />
       <HomeStack.Screen
         name="Exam"
         component={Exam}
-        options={{ title: strings.exam }}
+        options={({ navigation, route }) => ({
+          title: strings.exam,
+          headerLeft: props => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => {
+                if (route.params == undefined) {
+                  var initBy = ""
+                }
+                else {
+                  var { initBy } = route.params;
+                }
+                if (initBy != "") {
+                  navigation.goBack();
+                  navigation.navigate(initBy);
+                }
+                else {
+                  navigation.navigate("HomeDisplay");
+                }
+
+              }}
+            />
+          )
+        })}
       />
       <HomeStack.Screen
         name="Ctxh"
         component={Ctxh}
-        options={{ title: strings.ctxh }}
+        options={({ navigation, route }) => ({
+          title: strings.ctxh,
+          headerLeft: props => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => {
+                if (route.params == undefined) {
+                  var initBy = ""
+                }
+                else {
+                  var { initBy } = route.params;
+                }
+                if (initBy != "") {
+                  navigation.goBack();
+                  navigation.navigate(initBy);
+                }
+                else {
+                  navigation.navigate("HomeDisplay");
+                }
+
+              }}
+            />
+          )
+        })}
       />
       <HomeStack.Screen
         name="Homework"
@@ -179,7 +267,30 @@ export default function Home({ navigation }) {
       <HomeStack.Screen
         name="Tuition"
         component={Tuition}
-        options={{ title: strings.tuition }}
+        options={({ navigation, route }) => ({
+          title: strings.tuition,
+          headerLeft: props => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => {
+                if (route.params == undefined) {
+                  var initBy = ""
+                }
+                else {
+                  var { initBy } = route.params;
+                }
+                if (initBy != "") {
+                  navigation.goBack();
+                  navigation.navigate(initBy);
+                }
+                else {
+                  navigation.navigate("HomeDisplay");
+                }
+
+              }}
+            />
+          )
+        })}
       />
       <HomeStack.Screen
         name="NewsDetail"

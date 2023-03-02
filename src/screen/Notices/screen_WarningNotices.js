@@ -88,9 +88,6 @@ export default function WarningNotices({ navigation, route }) {
   }, [db_app]);
   useEffect(() => {
   }, [currentLanguage, warningNotices])
-  function navigateToHomeWork() {
-    navigation.navigate('Homework', { initBy: route.name })
-  }
   return (
     <SafeAreaView style={styles.body}>
       {(warningNotices.length == 0) ? (<NullDataScreen />) : (
@@ -210,13 +207,13 @@ export default function WarningNotices({ navigation, route }) {
                         let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
                         let secondIndex = db_app[firstIndex]?.data?.notices?.findIndex(x => x?.id == item.id);
                         switch (item?.redirectType) {
-                          case '1': navigation.navigate('Schedule'); break;
-                          case '2': navigation.navigate('ScoreBoard'); break;
-                          case '3': navigation.navigate('Exam'); break;
-                          case '4': navigateToHomeWork(); break;
-                          case '5': navigation.navigate('Tuition'); break;
-                          case '6': navigation.navigate('Ctxh'); break;
-                          default: navigateToHomeWork();
+                          case '1': navigation.navigate('Schedule', { initBy: route.name }); break;
+                          case '2': navigation.navigate('ScoreBoard', { initBy: route.name }); break;
+                          case '3': navigation.navigate('Exam', { initBy: route.name }); break;
+                          case '4': navigation.navigate('Homework', { initBy: route.name }); break;
+                          case '5': navigation.navigate('Tuition', { initBy: route.name }); break;
+                          case '6': navigation.navigate('Ctxh', { initBy: route.name }); break;
+                          default: navigation.navigate('Homework', { initBy: route.name });
                         }
 
                         if (!item.seen) {
