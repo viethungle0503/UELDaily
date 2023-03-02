@@ -28,7 +28,7 @@ export default function MediaNoti({ navigation, route }) {
   const renderHeader = () => {
     return (
       <>
-        {bigPictureNews.length == 0 ? (<></>) : (
+        {bigPictureNews?.length == 0 ? (<></>) : (
           <FlatList
             style={[styles.mediaNoti_Lastest]}
             ListEmptyComponent={() => {
@@ -100,40 +100,28 @@ export default function MediaNoti({ navigation, route }) {
     )
   }
   useEffect(() => {
-    // dispatch(setNews_Departments([]));''
     const index = news_Departments.findIndex(x => x.identifier == searchUrl);
     if (index == -1) {
       loadGraphicCards(searchUrl).then((response) => {
         dispatch(setSingleNews_Departments({ data: response, identifier: searchUrl }));
-        var newbigPicture = [...bigPictureNews];
-        var newsmallPicture = [...smallPictureNews];
-        response.forEach(async (value, index) => {
-          await Image.getSize(value.imageURL, (imgWidth, imgHeight) => {
-            if (imgWidth <= imgHeight) {
-              newbigPicture.push(value);
-              // setBigPictureNews([...bigPictureNews,value])
-            }
-            else {
-              newsmallPicture.push(value);
-              // setSmallPictureNews([...bigPictureNews,value])
-            }
+        const newsAsync = async () => {
+          var a = await response.forEach(async (value, index) => {
+            await Image.getSize(value.imageURL, (imgWidth, imgHeight) => {
+              if (imgWidth <= imgHeight) {
+                setBigPictureNews(prev => [...prev,value]);
+              }
+              else {
+                setSmallPictureNews(prev => [...prev,value]);
+              };
+            });
+            
           });
-          if (newbigPicture.length == 0) {
-            setBigPictureNews(null);
-          }
-          else {
-            setBigPictureNews(newbigPicture);
-          }
-          if (newsmallPicture.length == 0) {
-            setSmallPictureNews(null);
-          }
-          else {
-            setSmallPictureNews(newsmallPicture);
-          }
+        };
+        newsAsync().then(() => {
+          setTimeout(() => {
+            setReady(true)
+          },500)
         });
-
-      }).then(() => {
-        setReady(true);
       })
     }
     else {
