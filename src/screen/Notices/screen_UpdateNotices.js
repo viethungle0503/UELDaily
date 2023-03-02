@@ -156,7 +156,7 @@ export default function UpdateNotices({ navigation }) {
                         {item.sendBy}
                       </Text>
                       <Text style={styles.modalHeader_DepartmentMail}>
-                        {strings.no_corresponding_data}
+                        {(item.senderEmail != null) ? item.senderEmail : strings.no_corresponding_data}
                       </Text>
                     </View>
                   </View>

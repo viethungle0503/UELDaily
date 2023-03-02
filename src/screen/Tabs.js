@@ -111,7 +111,7 @@ export default function Tabs() {
         name="Notifications"
         component={Notifications}
         options={{
-          tabBarBadge: unreadNotice,
+          tabBarBadge: (unreadNotice != 0) ? unreadNotice : null,
         }}
       />
       <Tab.Screen name="Profile" component={Profile} options={{}} />
