@@ -15,7 +15,13 @@ import { firebase } from '@react-native-firebase/database';
 // Main
 import post_data from './screen/UEL';
 import messaging from '@react-native-firebase/messaging';
-import notifee, { EventType } from '@notifee/react-native';
+import notifee, {
+  AndroidImportance,
+  AndroidVisibility,
+  AndroidColor,
+  AndroidStyle,
+  EventType,
+} from '@notifee/react-native';
 import NotificationService from './NotificationService';
 import RNBootSplash from "react-native-bootsplash";
 const RootStack = createStackNavigator();
@@ -113,36 +119,6 @@ const AppWrapper = () => {
       });
     };
   };
-  async function localDisplayNotification() {
-    // Create a channel
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
-    });
-
-    // Display a notification
-    notifee.displayNotification({
-      title:
-        '<p style="color: #4caf50;"><b>Styled HTMLTitle</span></p></b></p> &#128576;',
-      subtitle: '&#129395;',
-      body: 'The <p style="text-decoration: line-through">body can</p> also be <p style="color: #ffffff; background-color: #9c27b0"><i>styled too</i></p> &#127881;!',
-      android: {
-        channelId,
-        color: '#4caf50',
-        actions: [
-          {
-            title: '<b>Dance</b> &#128111;',
-            pressAction: { id: 'dance' },
-          },
-          {
-            title: '<p style="color: #f44336;"><b>Cry</b> &#128557;</p>',
-            pressAction: { id: 'cry' },
-          },
-        ],
-      },
-    });
-  }
-
   const sendNotification = async () => {
     let notificationData = {
       title: 'First Notification',
@@ -163,13 +139,37 @@ const AppWrapper = () => {
     };
     await NotificationService.sendMultiDeviceNotification(notificationData);
   };
+  async function DisplayNotification(remoteMessage) {
+    // Create a channel
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+    // Display a notification
+    await notifee.displayNotification({
+      title: remoteMessage?.data?.title,
+      body: `${remoteMessage?.data?.body}`,
+      android: {
+        channelId,
+        smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+        style: { type: AndroidStyle.BIGTEXT, text: `${remoteMessage?.data?.body}` },
+      },
+    });
+    setTimeout(async () => {
+      await asyncAppFn();
+    }, 2000)
+
+  };
+  const requestPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+  };
   useEffect(() => {
     // checkToken();
     if (db_app.length == 0 || db_uel.length == 0) {
       asyncAppFn();
       asyncUELFn().finally(async () => {
         await RNBootSplash.hide({ fade: true, duration: 500 });
-        console.log("Bootsplash has been hidden successfully");
+        // console.log("Bootsplash has been hidden successfully");
       });
     }
     else {
@@ -179,6 +179,15 @@ const AppWrapper = () => {
   useEffect(() => {
 
   },[currentUser]);
+  useEffect(() => {
+    requestPermission();
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      // console.log('remoteMessage', JSON.stringify(remoteMessage))
+      DisplayNotification(remoteMessage);
+      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+    return unsubscribe;
+  }, []);
   // useEffect(() => {
   //   return notifee.onForegroundEvent(({ type, detail }) => {
   //     switch (type) {

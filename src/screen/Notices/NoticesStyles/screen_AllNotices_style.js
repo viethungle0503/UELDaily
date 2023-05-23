@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import {StyleSheet} from 'react-native';
 export default StyleSheet.create({
   body: {
     backgroundColor: '#fff',
@@ -13,7 +13,6 @@ export default StyleSheet.create({
   noti: {
     display: 'flex',
     flexDirection: 'column',
-
     paddingHorizontal: 15,
     paddingTop: 10,
     paddingBottom: 200,
@@ -66,11 +65,11 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     color: '#080B09',
-    width: '95%'
+    width: '95%',
   },
   notiItem_Content_ActionTime: {
     paddingTop: 5,
-    flexDirection: "row",
+    flexDirection: 'row',
     justifyContent: 'space-between',
   },
 
@@ -147,12 +146,12 @@ export default StyleSheet.create({
   modalEffectLeft: {
     position: 'absolute',
     top: '60%',
-    left: 0
+    left: 0,
   },
   modalEffectRight: {
     position: 'absolute',
     bottom: '10%',
-    right: 0
+    right: 0,
   },
 
   btnBackContainer: {
@@ -168,7 +167,7 @@ export default StyleSheet.create({
     color: '#252525',
     fontWeight: '600',
     marginBottom: 15,
-    textAlign: 'justify'
+    textAlign: 'justify',
   },
 
   modalHeader_Department: {
@@ -180,7 +179,6 @@ export default StyleSheet.create({
     width: 42,
     aspectRatio: 1,
     marginRight: 12,
-
   },
   modalHeader_DepartmentName: {
     fontSize: 18,
@@ -202,7 +200,7 @@ export default StyleSheet.create({
     fontSize: 17,
     fontWeight: '400',
     lineHeight: 20,
-    textAlign: 'justify'
+    textAlign: 'justify',
   },
   btnResponse: {
     paddingHorizontal: 35,
