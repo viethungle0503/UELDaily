@@ -28,7 +28,12 @@ import {
 import auth from '@react-native-firebase/auth';
 import styles from './ProfileStyles/screen_ProfileDisplay_style';
 import strings from '../Language';
-
+import notifee, {
+  AndroidImportance,
+  AndroidVisibility,
+  AndroidColor,
+  AndroidStyle,
+} from '@notifee/react-native';
 
 export default function ProfileDisplay({ navigation }) {
   const loggedIn = useSelector(state => state.user.loggedIn);
@@ -56,6 +61,41 @@ export default function ProfileDisplay({ navigation }) {
       }
     );
   }
+  async function onDisplayNotification() {
+    // Request permissions (required for iOS)
+    await notifee.requestPermission()
+
+    // Create a channel (required for Android)
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+      importance: AndroidImportance.HIGH,
+      visibility: AndroidVisibility.SECRET,
+    });
+
+    // Display a notification
+    await notifee.displayNotification({
+      title: `Notification Title: \n <p style="color: #4caf50;"><b>Styled HTMLTitle</span>&#127877;</p></b></p> &#128576;`,
+      body: `Main body content of the notification: \n The <p style="text-decoration: line-through">body can</p> also be <p style="color: #ffffff; background-color: #9c27b0"><i>styled too</i></p> &#127881;!`,
+      android: {
+        channelId,
+        color: AndroidColor.RED,
+        // color: '#E8210C', // red
+        // color: '#4caf50',
+        style: { type: AndroidStyle.BIGTEXT, text: 'Large volume of text shown in the expanded state' },
+        actions: [
+          {
+            title: '<b>Dance</b> &#128111;',
+            pressAction: { id: 'dance' },
+          },
+          {
+            title: '<p style="color: #f44336;"><b>Cry</b> &#128557;</p>',
+            pressAction: { id: 'cry' },
+          },
+        ],
+      },
+    });
+  }
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const [openLanguageMenu, setopenLanguageMenu] = React.useState(false);
   const [VNLanguage, setVNLanguage] = React.useState((currentLanguage == "vn") ? true : false);
@@ -77,14 +117,14 @@ export default function ProfileDisplay({ navigation }) {
       [
         {
           text: "Cancel",
-          onPress: () => {return},
+          onPress: () => { return },
           style: "cancel",
         },
         { text: "OK", onPress: () => signOut() }
       ],
       {
         cancelable: true,
-        onDismiss: () => {return},
+        onDismiss: () => { return },
       }
     );
   }
@@ -108,7 +148,7 @@ export default function ProfileDisplay({ navigation }) {
             dispatch(setLateModules([]));
             dispatch(setTuition([]));
             dispatch(setActivityScore([]))
-          },250)
+          }, 250)
 
         });
     } catch (error) {
@@ -150,7 +190,10 @@ export default function ProfileDisplay({ navigation }) {
         </ImageBackground>
       )}
       <View style={styles.accountInfoContainer}>
-        <Text style={styles.accountHeading}>{strings.account}</Text>
+        <TouchableOpacity onPress={() => onDisplayNotification()}>
+          <Text style={styles.accountHeading}>{strings.account}</Text>
+        </TouchableOpacity>
+
 
         <TouchableOpacity
           style={styles.accountListItem}
@@ -309,7 +352,7 @@ export default function ProfileDisplay({ navigation }) {
           style={styles.accountListItem}
           // onPress={() => showAlert()}
           onPress={() => navigation.navigate('NullDataScreen')}
-          >
+        >
           <View style={styles.row}>
             <Image
               source={require('../../assets/account_hoidap.png')}
@@ -323,7 +366,7 @@ export default function ProfileDisplay({ navigation }) {
           style={styles.accountListItem}
           // onPress={() => showAlert()}
           onPress={() => navigation.navigate('NullDataScreen')}
-          >
+        >
           <View style={styles.row}>
             <Image
               source={require('../../assets/account_quydinh.png')}

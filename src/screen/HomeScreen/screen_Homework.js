@@ -19,6 +19,12 @@ import {
 } from '../LMS';
 import { useDispatch } from 'react-redux';
 import { setModules, setLateModules } from '../../redux_toolkit/userSlice';
+import notifee,
+{
+  TimestampTrigger,
+  TriggerType,
+  AndroidStyle,
+} from '@notifee/react-native';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -29,13 +35,50 @@ export default function Homework({ navigation }) {
   const lateModules = useSelector(state => state.user.lateModules);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   useEffect(() => {
+    // onCreateTriggerNotification(1679058870000, "week5 objcet")
   }, [currentLanguage])
-
   const [isLoading, setIsLoading] = useState(true);
   const [modulesArray, setModulesArray] = useState([]);
   const [lateModulesArray, setLateModulesArray] = useState([]);
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState(0);
+  const _MINUTE_IN_TIMESTAMP = 60 * 1000;
+  const _HOUR_IN_TIMESTAMP = 60 * _MINUTE_IN_TIMESTAMP;
+  const _DAY_IN_TIMESTAMP = 24 * _HOUR_IN_TIMESTAMP;
+  const _WEEK_IN_TIMESTAMP = 7 * _DAY_IN_TIMESTAMP;
+  async function onCreateTriggerNotification(alertTimeStamp, title) {
+    let alertTime = new Date(alertTimeStamp);
+    alertTimeStamp -= _MINUTE_IN_TIMESTAMP * 10;
+    // Create a time-based trigger
+    const trigger = {
+      type: TriggerType.TIMESTAMP,
+      timestamp: alertTimeStamp,
+      alarmManager: {
+        allowWhileIdle: true,
+      },
+    };
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+    // Create a trigger notification
+    await notifee.createTriggerNotification(
+      {
+        title: 'You have a homework',
+        body: `<p>Its name is ${title} <br> Its deadline is today at ${alertTime.getHours()}:${alertTime.getMinutes()}<br></p>`,
+        android: {
+          channelId,
+          smallIcon: 'ic_launcher',
+          style: { type: AndroidStyle.BIGTEXT, text: `<p>Its name is ${title} <br> Its deadline is today at ${alertTime.getHours()}:${alertTime.getMinutes()}</p>` },
+          pressAction: {
+            launchActivity: "default",
+            id: "default"
+          }
+        },
+      },
+      trigger,
+    );
+  }
   useEffect(() => {
     // var token = "dd5cf5bf97da7bc9ae1ab6a3f53f43af";
     if (modules.length == 0 || lateModules.length == 0) {
@@ -65,12 +108,14 @@ export default function Homework({ navigation }) {
                   if (module.modname == "assign" || module.modname == "quiz") {
                     var index = module.dates.findIndex(x => x.label == "Due:");
                     if (index != -1) {
-                      if (((new Date().getTime() - new Date(module.dates[index].timestamp * 1000).getTime())) > 0) {
+                      let present = new Date().getTime();
+                      let destination = new Date(module.dates[index].timestamp * 1000).getTime();
+                      if ((present - destination) > 0) {
                         setLateModulesArray(oldModules => [...oldModules, { fullname: course.fullname, information: module }]);
                       }
                       else {
                         setModulesArray(oldModules => [...oldModules, { fullname: course.fullname, information: module }]);
-
+                        onCreateTriggerNotification(destination, module.name);
                       }
                     }
                   }

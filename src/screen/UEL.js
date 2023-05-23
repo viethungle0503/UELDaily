@@ -2,7 +2,9 @@ const requestOptions = {
   method: 'GET',
 };
 
-const domainName = 'https://uel.azurewebsites.net';
+// const domainName = 'https://uel.azurewebsites.net';
+// const domainName = 'http://thanhbinhbent-001-site1.gtempurl.com';
+const domainName = 'http://tranthanhbinh-001-site1.htempurl.com';
 
 const all_students = "/api/student/" //Dữ liệu trả về dạng JSON, hiển thị tất cả sinh viên UEL.
 const all_courses = "/api/course" //Dữ liệu trả về dạng JSON, hiển thị tất cả khoá học tại UEL.

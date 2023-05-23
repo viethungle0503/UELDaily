@@ -21,26 +21,6 @@ const HomeStack = createStackNavigator();
 export default function Home({ navigation }) {
   const dispatch = useDispatch();
   const currentUser = useSelector(state => state.user.currentUser);
-  async function DisplayNotification(remoteMessage) {
-    // Create a channel
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
-    });
-    // Display a notification
-    await notifee.displayNotification({
-      title: remoteMessage?.data?.title,
-      body: `\n${remoteMessage?.data?.body}`,
-      android: {
-        channelId,
-        smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
-      },
-    });
-    setTimeout(async () => {
-      await asyncAppFn();
-    }, 2000)
-
-  };
   const asyncAppFn = async () => {
     // if (db_app.length == 0) {
     await firebase
@@ -65,9 +45,6 @@ export default function Home({ navigation }) {
         },
       );
     // }
-  };
-  const requestPermission = async () => {
-    const authStatus = await messaging().requestPermission();
   };
   const asyncGetToken = async () => {
     await firebase
@@ -101,17 +78,8 @@ export default function Home({ navigation }) {
       );
   };
   useEffect(() => {
-    requestPermission();
     asyncGetToken();
     // console.log("do i have to run?");
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      // console.log('remoteMessage', JSON.stringify(remoteMessage))
-      DisplayNotification(remoteMessage);
-      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
-    return unsubscribe;
-  }, []);
-  useEffect(() => {
     if(currentUser != null) {
       // console.log("Vừa khởi động lại");
       asyncAppFn();

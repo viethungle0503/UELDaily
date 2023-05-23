@@ -208,20 +208,20 @@ export default function Schedule() {
           renderEmptyDate={renderEmptyDate}
           rowHasChanged={rowHasChanged}
           theme={{
-            agendaDayTextColor: 'black',
-            agendaDayNumColor: 'purple',
-            agendaTodayColor: 'orange',
-            agendaKnobColor: 'red',
-            indicatorColor: 'yellow',
-            arrowColor: '#7f3e1f',
-            selectedDayBackgroundColor: 'green',
-            calendarBackground: '#ffffff',
-            textDayHeaderFontWeight: 'bold',
-            textSectionTitleColor: 'black',
-            dotColor: '#49a65a',
-            todayDotColor: 'red',
-            todayBackgroundColor: 'black',
-            todayTextColor: 'yellow',
+            // agendaDayTextColor: 'black',
+            // agendaDayNumColor: 'purple',
+            // agendaTodayColor: 'orange',
+            // agendaKnobColor: 'red', //Màu thanh ngang để kéo agenda xuống
+            // indicatorColor: 'yellow',
+            // arrowColor: '#7f3e1f',
+            // selectedDayBackgroundColor: 'green',
+            // calendarBackground: '#ffffff',
+            // textDayHeaderFontWeight: 'bold',
+            // textSectionTitleColor: 'black',
+            // dotColor: '#49a65a',
+            // todayDotColor: 'red',
+            // todayBackgroundColor: 'black',
+            // todayTextColor: 'yellow',
           }}
           renderDay={(day, item) => {
             let dayInWeeks = null;

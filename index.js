@@ -5,13 +5,18 @@ import 'react-native-gesture-handler';
 import { AppRegistry } from 'react-native';
 import { name as appName } from './app.json';
 import Setup from './src/Setup';
-import notifee, { EventType } from '@notifee/react-native';
+import notifee, {
+  AndroidImportance,
+  AndroidVisibility,
+  AndroidColor,
+  AndroidStyle,
+  EventType,
+} from '@notifee/react-native';
 import { firebase } from '@react-native-firebase/database';
 import messaging from '@react-native-firebase/messaging';
 /* polyfills */
 /** URL polyfill */
 import 'react-native-url-polyfill/auto';
-
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   const channelId = await notifee.createChannel({
@@ -24,6 +29,7 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
     android: {
       channelId,
       smallIcon: 'ic_launcher',
+      style: { type: AndroidStyle.BIGTEXT, text: `${remoteMessage?.data?.body}` },
       pressAction: {
         launchActivity: "default",
         id: "default"
@@ -33,7 +39,7 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
 });
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   const { notification, pressAction } = detail;
-  console.log("Background service")
+  // console.log("Background service")
   switch (type) {
     case EventType.PRESS:
       // handle the notification and do something
