@@ -163,6 +163,15 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
   },
 
+  responseItem: {
+    backgroundColor: '#F7F9FE',
+    borderRadius: 10,
+    marginHorizontal: 15,
+    marginTop: 15,
+    padding: 20,
+
+  },
+
   modalHeader_TitleText: {
     fontSize: 20,
     color: '#252525',
@@ -174,7 +183,7 @@ export default StyleSheet.create({
   modalHeader_Department: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 8,
   },
   modalHeader_Icon: {
     width: 42,
@@ -191,10 +200,7 @@ export default StyleSheet.create({
   },
 
   modalContent: {
-    backgroundColor: '#F7F9FE',
-    borderRadius: 10,
-    margin: 15,
-    padding: 20,
+   
   },
   modalContentText: {
     color: '#252525',
@@ -202,7 +208,21 @@ export default StyleSheet.create({
     fontWeight: '400',
     lineHeight: 20,
     textAlign: 'justify',
+    // marginTop: 8
   },
+  userAvatar:{
+    width: 45,
+    height:45,
+    aspectRatio: 1,
+    borderRadius: 100,
+  },
+  btnResponseEmail:{
+    width: 25, 
+    height: 25
+  },
+
+
+
   btnResponse: {
     paddingHorizontal: 35,
     paddingVertical: 8,
@@ -217,4 +237,8 @@ export default StyleSheet.create({
     color: '#FFF',
     fontSize: 17,
   },
+  // row:{
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between'
+  // }
 });
