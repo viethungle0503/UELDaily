@@ -5,6 +5,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     paddingHorizontal: 14,
+    // marginBottom: 50
   },
   fixItem: {
     position: 'relative',
@@ -13,12 +14,12 @@ export default StyleSheet.create({
   noti: {
     display: 'flex',
     flexDirection: 'column',
-    paddingHorizontal: 15,
-    paddingTop: 10,
-    paddingBottom: 200,
+    paddingHorizontal: 20,
+    // paddingTop: 10,
+    // paddingBottom: 200,
     backgroundColor: '#F7F9FE',
     borderRadius: 10,
-    marginBottom: 50,
+    marginBottom: 50
   },
   notiItem: {
     flex: 1,
@@ -27,7 +28,7 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 5,
     padding: 15,
-    marginBottom: 5,
+    marginVertical: 4,
     shadowColor: 'rgb(0, 101, 255)',
     shadowOffset: {
       width: 0,

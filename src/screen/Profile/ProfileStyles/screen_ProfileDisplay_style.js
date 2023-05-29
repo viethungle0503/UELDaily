@@ -3,7 +3,8 @@ export default StyleSheet.create({
     body: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor:'#fff'
+        backgroundColor:'#fff',
+        marginBottom: 50
     },
     /* chia layout */
     accountHeader: {
@@ -186,6 +187,7 @@ export default StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
         textAlign: 'center',
+        // marginVertical: 50
     },
     /* section điều khoản sử dụng */
 });
