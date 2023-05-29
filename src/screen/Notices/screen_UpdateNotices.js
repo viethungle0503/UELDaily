@@ -11,17 +11,22 @@ import {
   FlatList,
   Alert,
 } from 'react-native';
-import styles from './NoticesStyles/screen_UpdateNotices_style'
+import styles from './NoticesStyles/screen_AllNotices_style'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import { dateDiffInDays } from '../GlobalFunction';
 import strings from '../Language';
-import { setUnreadNotice } from '../../redux_toolkit/userSlice';
+import { 
+  setUnreadNotice,
+  setCurrentUser,
+  setProfileImage
+} from '../../redux_toolkit/userSlice';
 import { useDispatch } from 'react-redux';
 import { setSeenTrue, deleteNotification } from '../../redux_toolkit/databaseSlice';
 import NullDataScreen from '../../components/nullDataScreen';
 import { firebase } from '@react-native-firebase/database';
+
 const renderRight = (progress, dragX) => {
   const scale = dragX.interpolate({
     inputRange: [-50, 0.5],
@@ -62,6 +67,7 @@ const renderRight = (progress, dragX) => {
 export default function UpdateNotices({ navigation }) {
   const db_app = useSelector(state => state.database.db_app);
   const currentUser = useSelector(state => state.user.currentUser);
+const profileImage = useSelector(state => state.user.profileImage);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const [openModalUpdateNoti, setopenModalUpdateNoti] = useState(false);
   const [modalData, setModalData] = useState();
@@ -140,6 +146,8 @@ export default function UpdateNotices({ navigation }) {
         renderItem={({ item, index }) => {
           let firstIndex = db_app.findIndex(x => x.data.email == currentUser.email);
           let secondIndex = db_app[firstIndex]?.data?.notices?.findIndex(x => x?.id == item.id);
+          
+          // cục modal
           function settingModal() {
             const title = (() => (
               <ScrollView>
@@ -147,29 +155,76 @@ export default function UpdateNotices({ navigation }) {
                   <Text style={styles.modalHeader_TitleText}>
                     {item.title}
                   </Text>
+                </View>
+                
+                <View style={ styles.responseItem}>
+                
                   <View style={styles.modalHeader_Department}>
                     <Image
                       style={styles.modalHeader_Icon}
                       source={require('../../assets/component_ModalUpdateNoti_Icon.png')} />
-                    <View>
-                      <Text style={styles.modalHeader_DepartmentName}>
-                        {item.sendBy}
-                      </Text>
-                      <Text style={styles.modalHeader_DepartmentMail}>
-                        {(item.senderEmail != null) ? item.senderEmail : strings.no_corresponding_data}
-                      </Text>
+                    <View style={styles.row}>
+                      <View>
+
+                        <Text style={styles.modalHeader_DepartmentName}>
+                          {item.sendBy}
+                        </Text>
+                        {/* <Text style={styles.modalHeader_DepartmentMail}>
+                          {(item.senderEmail != null) ? item.senderEmail : strings.no_corresponding_data}
+                        </Text> */}
+                        <Text style={styles.modalHeader_DepartmentMail}>
+                          Đến: {currentUser.email}
+                        </Text>
+                      </View>
+
+                      <TouchableOpacity 
+                      style={styles.btnResponseEmail}
+                      onPress={() => {
+                  Alert.alert("hiện input phản hồi")}}>
+                        <Image style={styles.btnResponseEmail} source={require('../../assets/btnReplyEmail.png')}/>
+                      </TouchableOpacity>
                     </View>
                   </View>
+                  <View style={styles.modalContent}>
+                    <Text style={styles.modalContentText}>
+                      {item.content}
+
+                    </Text>
+                  </View>
+
                 </View>
-                <View style={styles.modalContent}>
-                  <Text style={styles.modalContentText}>
-                    {item.content}
 
-                  </Text>
+                <View style={ styles.responseItem}>
+
+                  <View style={styles.modalHeader_Department}>
+                   <Image
+                      style={styles.userAvatar}
+                      source={{ uri: profileImage }} />
+
+                    <View>
+                      <Text style={styles.modalHeader_DepartmentName}>
+                      {currentUser.lastName + ' ' + currentUser.firstName}
+                      </Text>
+
+                     
+                      <Text style={styles.modalHeader_DepartmentMail}>
+                        Đến: {(item.senderEmail != null) ? item.senderEmail : strings.no_corresponding_data}
+                      </Text>
+                    </View>
+
+                   
+                  </View>
+                  <View style={styles.modalContent}>
+                    <Text style={styles.modalContentText}>
+                      {item.content}
+
+                    </Text>
+                  </View>
+
                 </View>
 
 
-                <TouchableOpacity style={styles.btnResponse} 
+                {/* <TouchableOpacity style={styles.btnResponse} 
                 onPress={() => {
                   Alert.alert(
                     "Thông báo",
@@ -191,7 +246,7 @@ export default function UpdateNotices({ navigation }) {
                   );
                 }}>
                   <Text style={styles.btnResponseText}>{strings.answer}</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
               </ScrollView>
 
