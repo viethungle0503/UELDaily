@@ -12,7 +12,7 @@ export default function Sweepable() {
       tabBarOptions={
         style = { display: "none" }
       }
-      initialRouteName="PreLgin1">
+      initialRouteName="PreLogin1">
       <SweepableScreens.Screen
         name="PreLogin1"
         component={PreLogin1}

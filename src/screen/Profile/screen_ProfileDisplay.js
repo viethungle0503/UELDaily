@@ -35,6 +35,8 @@ import notifee, {
   AndroidStyle,
 } from '@notifee/react-native';
 
+import StudentCard from './screen_StudentCard';
+
 export default function ProfileDisplay({ navigation }) {
   const loggedIn = useSelector(state => state.user.loggedIn);
   const currentUser = useSelector(state => state.user.currentUser);
@@ -213,6 +215,48 @@ export default function ProfileDisplay({ navigation }) {
             />
           </View>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.accountListItem}
+          onPress={() => navigation.navigate("StudentCard")}>
+          <View style={styles.row}>
+            <Image
+              source={require('../../assets/account_thesinhvien.png')}
+              style={styles.accountListItem_IconTitle}
+            />
+            {/* <Text style={styles.accountText}>{strings.student_information}</Text> */}
+            <Text style={styles.accountText}>Thẻ sinh viên điện tử</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Image
+              source={require('../../assets/account_btnOpen.png')}
+              style={styles.accountListItem_IconOpen}
+            />
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.accountListItem}
+          onPress={() => navigation.navigate("PersonalCard")}>
+          <View style={styles.row}>
+            <Image
+              source={require('../../assets/account_thesinhvien.png')}
+              style={styles.accountListItem_IconTitle}
+            />
+            {/* <Text style={styles.accountText}>{strings.student_information}</Text> */}
+            <Text style={styles.accountText}>Thẻ sinh viên điện tử</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Image
+              source={require('../../assets/account_btnOpen.png')}
+              style={styles.accountListItem_IconOpen}
+            />
+          </View>
+        </TouchableOpacity>
+
+
       </View>
 
       {/* cài đặt section */}

@@ -292,7 +292,7 @@ export default function ScoreBoard({ navigation }) {
                   source={require('../../assets/scoreboard_tinchi.png')}
                 />
                 <Text style={styles.dashboardItem_IndicatorResult}>
-                  {(year != 0 && semester != 0 && semester != 3) ? (activityScoreHolder[0] != undefined ? (activityScoreHolder[0].score) : (null)) : ((credit != 0) ? (`${passedCredit}/${credit}`) : ("Không có dữ liệu"))}
+                  {(year != 0 && semester != 0 && semester != 3) ? (activityScoreHolder[0] != undefined ? (activityScoreHolder[0].score) : (null)) : ((credit != 0) ? (`${passedCredit}/${credit}`) : ("Trống"))}
                 </Text>
               </View>
             </View>
@@ -318,7 +318,7 @@ export default function ScoreBoard({ navigation }) {
                 <Text style={styles.dashboardItem_IndicatorResult}>
                   {(passedCredit != 0) ? (
                     `${mediumScore}/10`
-                  ) : ("Không có dữ liệu")}
+                  ) : ("Trống")}
                 </Text>
               </View>
             </View>
@@ -347,9 +347,9 @@ export default function ScoreBoard({ navigation }) {
                       (mediumScore > 9) ? "Xuất sắc" :
                         (mediumScore > 8) ? "Giỏi" :
                           (mediumScore > 7) ? "Khá" :
-                            (mediumScore > 6) ? "Trung bình - Khá" :
-                              (mediumScore > 5) ? "Trung bình" : "Yếu"
-                    ) : "Không có dữ liệu"
+                            (mediumScore > 6) ? "TB - Khá" :
+                              (mediumScore > 5) ? "TB" : "Yếu"
+                    ) : "Trống"
                   }
                 </Text>
               </View>
