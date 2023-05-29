@@ -31,11 +31,15 @@ export default async function post_data(dataName, studentId = "") {
       default: link = "gg";
     };
     const response = await fetch(link, requestOptions);
+    if (!response.ok) {
+      throw new Error('Something is wrong')
+    }
     const json = await response.json();
     return json;
   }
   catch (error) {
     console.log(error);
+    throw new Error('Network request failed')
   }
   finally {
 
