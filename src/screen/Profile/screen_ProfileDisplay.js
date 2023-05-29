@@ -35,8 +35,6 @@ import notifee, {
   AndroidStyle,
 } from '@notifee/react-native';
 
-import StudentCard from './screen_StudentCard';
-
 export default function ProfileDisplay({ navigation }) {
   const loggedIn = useSelector(state => state.user.loggedIn);
   const currentUser = useSelector(state => state.user.currentUser);
@@ -245,7 +243,7 @@ export default function ProfileDisplay({ navigation }) {
               style={styles.accountListItem_IconTitle}
             />
             {/* <Text style={styles.accountText}>{strings.student_information}</Text> */}
-            <Text style={styles.accountText}>Thẻ sinh viên điện tử</Text>
+            <Text style={styles.accountText}>Thẻ sinh viên điện tử trống</Text>
           </View>
 
           <View style={styles.row}>

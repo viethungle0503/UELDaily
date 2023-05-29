@@ -1,6 +1,7 @@
 /**
  * @format
  */
+// @flow
 import 'react-native-gesture-handler';
 import { AppRegistry } from 'react-native';
 import { name as appName } from './app.json';
@@ -14,6 +15,7 @@ import notifee, {
 } from '@notifee/react-native';
 import { firebase } from '@react-native-firebase/database';
 import messaging from '@react-native-firebase/messaging';
+import React from 'react';
 /* polyfills */
 /** URL polyfill */
 import 'react-native-url-polyfill/auto';

@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadGraphicCards } from './GlobalFunction';
 import { setNews_Departments, setSingleNews_Departments } from '../redux_toolkit/newsSlice';
-import { setDB_App, setDB_UEL, setDB_Departments } from '../redux_toolkit/databaseSlice';
+import { setDB_Departments } from '../redux_toolkit/databaseSlice';
 import { firebase } from '@react-native-firebase/database';
 
 const MediaStack = createStackNavigator();

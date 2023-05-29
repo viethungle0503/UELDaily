@@ -13,10 +13,14 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import auth from '@react-native-firebase/auth';
-import { setLoggedIn, setCurrentUser, setProfileImage } from '../redux_toolkit/userSlice';
+import {
+  setLoggedIn,
+  setCurrentUser,
+  setProfileImage,
+} from '../redux_toolkit/userSlice';
 
 export default function Login({navigation}) {
   const db_uel = useSelector(state => state.database.db_uel);
@@ -24,30 +28,33 @@ export default function Login({navigation}) {
   const loggedIn = useSelector(state => state.user.loggedIn);
   const dispatch = useDispatch();
   function onAuthStateChanged(account) {
-    if (account !== null) {
-      if(!loggedIn) {
-        if (account.email.search(/@st.uel.edu.vn/i) == -1) {
-          alert('Vui lòng sử mail email trường cấp');
-          signOut();
-        } else {
-          let i = 0;
-          for (let element of db_uel) {
-            if (element.email == account.email) {
-              i = 1;
-              dispatch(setCurrentUser(element));
-              dispatch(setProfileImage(account.photoURL));
-              dispatch(setLoggedIn(true));
-              break;
-            }
-          }
-          if (i == 0) {
-            alert(`Tài khoản với gmail ${account.email} không tồn tại'`);
-            signOut();
-          }
-        }
-      };
-    };
-  };
+    if (account === null || loggedIn === true) {
+      return;
+    }
+    if (db_uel.length === 0) {
+      Alert.alert('Warning', 'Something not right, please try again');
+      return;
+    }
+    if (account.email.search(/@st.uel.edu.vn/i) == -1) {
+      alert('Vui lòng sử mail email trường cấp');
+      signOut();
+      return;
+    }
+    let i = 0;
+    for (let element of db_uel) {
+      if (element.email === account.email) {
+        i = 1;
+        dispatch(setCurrentUser(element));
+        dispatch(setProfileImage(account.photoURL));
+        dispatch(setLoggedIn(true));
+        break;
+      }
+    }
+    if (i == 0) {
+      alert(`Tài khoản với gmail ${account.email} không tồn tại'`);
+      signOut();
+    }
+  }
   const signOut = async () => {
     try {
       await GoogleSignin.revokeAccess();
@@ -94,10 +101,7 @@ export default function Login({navigation}) {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     // unsubscribe on unmount
     return subscriber;
-  },[])
-  useEffect(() => {
-
-  },[db_uel])
+  }, []);
   return (
     <View style={styles.body}>
       <View style={styles.sectionHeader}>

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native"; 
+import {StyleSheet} from 'react-native';
 export default StyleSheet.create({
   /* user info */
   modalContainer: {
@@ -43,6 +43,10 @@ export default StyleSheet.create({
   },
   modalContent: {
     flex: 1,
+    left: 0,
+    right: 0,
+    justifyContent: 'center', //Centered vertically
+    alignItems: 'center', //Centered horizontally
   },
   modalContentItem: {
     backgroundColor: '#FFF',
@@ -89,4 +93,4 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-})
+});

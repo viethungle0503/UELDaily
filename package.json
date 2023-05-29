@@ -3,15 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --port 8500",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "react-native run-android --variant=release"
   },
   "dependencies": {
     "@notifee/react-native": "^7.1.0",
     "@react-native-async-storage/async-storage": "^1.17.11",
+    "@react-native-community/netinfo": "^9.3.10",
     "@react-native-firebase/app": "^17.3.0",
     "@react-native-firebase/auth": "^17.3.0",
     "@react-native-firebase/database": "^17.3.0",
@@ -26,8 +28,10 @@
     "@react-navigation/stack": "^6.3.2",
     "@reduxjs/toolkit": "^1.8.6",
     "@rneui/base": "^0.0.0-edge.2",
+    "@tanstack/react-query": "^4.29.7",
     "cheerio": "^1.0.0-rc.12",
     "firebase": "^9.13.0",
+    "qs": "^6.11.2",
     "react": "18.1.0",
     "react-native": "0.70.3",
     "react-native-bootsplash": "^4.5.2",
