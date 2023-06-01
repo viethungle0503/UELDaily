@@ -93,6 +93,7 @@ export default function Information({navigation, route}) {
   const [allNotices, setAllNotices] = useState([]);
   const db_app = useSelector(state => state.database.db_app);
   const currentUser = useSelector(state => state.user.currentUser);
+  const profileImage = useSelector(state => state.user.profileImage);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const [openModalUpdateNoti, setopenModalUpdateNoti] = useState(false);
   const [modalData, setModalData] = useState();
@@ -256,65 +257,108 @@ export default function Information({navigation, route}) {
                       <Text style={styles.modalHeader_TitleText}>
                         {item.title}
                       </Text>
+                    </View>
+
+                    <View style={styles.responseItem}>
                       <View style={styles.modalHeader_Department}>
                         <Image
                           style={styles.modalHeader_Icon}
                           source={require('../../assets/component_ModalUpdateNoti_Icon.png')}
                         />
+                        <View style={styles.row}>
+                          <View>
+                            <Text style={styles.modalHeader_DepartmentName}>
+                              {item.sendBy}
+                            </Text>
+                            {/* <Text style={styles.modalHeader_DepartmentMail}>
+                              {(item.senderEmail != null) ? item.senderEmail : strings.no_corresponding_data}
+                            </Text> */}
+                            <Text style={styles.modalHeader_DepartmentMail}>
+                              Đến: {currentUser.email}
+                            </Text>
+                          </View>
+
+                          <TouchableOpacity
+                            style={styles.btnResponseEmail}
+                            onPress={() => {
+                              Alert.alert('Chức năng đang phát triển');
+                              // sendEmail(
+                              //   `younghungold@gmail.com`,
+                              //   `This a test message from our app. Just ignore it`,
+                              //   `Hey, we need 2 minutes of your time to fill this quick survey [link]`,
+                              //   {
+                              //     cc: `huyenntp20406c@st.uel.edu.vn; ngocptb20406c@st.uel.edu.vn; ngannst20406c@st.uel.edu.vn;binhtt20406c@st.uel.edu.vn;hunglv20406c@st.uel.edu.vn`,
+                              //   },
+                              // ).then(() => {
+                              //   console.log(
+                              //     'Your message was successfully sent!',
+                              //   );
+                              // });
+                            }}>
+                            <Image
+                              style={styles.btnResponseEmail}
+                              source={require('../../assets/btnReplyEmail.png')}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                      <View style={styles.modalContent}>
+                        <Text style={styles.modalContentText}>
+                          {item.content}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.responseItem}>
+                      <View style={styles.modalHeader_Department}>
+                        <Image
+                          style={styles.userAvatar}
+                          source={{uri: profileImage}}
+                        />
+
                         <View>
                           <Text style={styles.modalHeader_DepartmentName}>
-                            {item.sendBy}
+                            {currentUser.lastName + ' ' + currentUser.firstName}
                           </Text>
+
                           <Text style={styles.modalHeader_DepartmentMail}>
+                            Đến:{' '}
                             {item.senderEmail != null
                               ? item.senderEmail
                               : strings.no_corresponding_data}
                           </Text>
                         </View>
                       </View>
+                      <View style={styles.modalContent}>
+                        <Text style={styles.modalContentText}>
+                          {item.content}
+                        </Text>
+                      </View>
                     </View>
-                    <View style={styles.modalContent}>
-                      <Text style={styles.modalContentText}>
-                        {item.content}
-                      </Text>
-                    </View>
-                    <TouchableOpacity
-                      style={styles.btnResponse}
-                      onPress={() => {
-                        // Alert.alert(
-                        //   "Thông báo",
-                        //   "Tính năng này vẫn trong giai đoạn phát triển. Mong bạn quay lại sau",
-                        //   [
-                        //     {
-                        //       text: "Cancel",
-                        //       onPress: () => { },
-                        //       style: "cancel",
-                        //     },
-                        //     {
-                        //       text: "OK", onPress: () => { }, style: "default"
-                        //     }
-                        //   ],
-                        //   {
-                        //     cancelable: true,
-                        //     userInterfaceStyle: "dark",
-                        //   }
-                        // );
-                        
-                        sendEmail(
-                          `younghungold@gmail.com`,
-                          `This a test message from our app. Just ignore it`,
-                          `Hey, we need 2 minutes of your time to fill this quick survey [link]`,
+
+                    {/* <TouchableOpacity style={styles.btnResponse} 
+                    onPress={() => {
+                      Alert.alert(
+                        "Thông báo",
+                        "Tính năng này vẫn trong giai đoạn phát triển. Mong bạn quay lại sau",
+                        [
                           {
-                            cc: `huyenntp20406c@st.uel.edu.vn; ngocptb20406c@st.uel.edu.vn; ngannst20406c@st.uel.edu.vn;binhtt20406c@st.uel.edu.vn;hunglv20406c@st.uel.edu.vn`,
+                            text: "Cancel",
+                            onPress: () => {},
+                            style: "cancel",
                           },
-                        ).then(() => {
-                          console.log('Your message was successfully sent!');
-                        });
-                      }}>
-                      <Text style={styles.btnResponseText}>
-                        {strings.answer}
-                      </Text>
-                    </TouchableOpacity>
+                          {
+                            text: "OK", onPress: () => {}, style: "default"
+                          }
+                        ],
+                        {
+                          cancelable: true,
+                          userInterfaceStyle: "dark",
+                        }
+                      );
+                    }}>
+                      <Text style={styles.btnResponseText}>{strings.answer}</Text>
+                    </TouchableOpacity> */}
                   </ScrollView>
                 );
                 setModalData(title);

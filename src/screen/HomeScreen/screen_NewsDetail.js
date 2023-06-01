@@ -18,7 +18,7 @@ export default function NewsDetail({ navigation, route }) {
   } else {
     var { link } = route.params;
   }
-  if ((link.search("lms-uel.thanhbinhbent.com") != -1)) {
+  if ((link.search("https://lms-uel.thanhbinhbent.com") != -1)) {
     return (
       <WebView
         userAgent={Platform.OS === 'android' ? 'Chrome/18.0.1025.133 Mobile Safari/535.19' : 'AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75'}

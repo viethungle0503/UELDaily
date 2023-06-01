@@ -1,6 +1,7 @@
 import {
   View,
   ActivityIndicator,
+  SafeAreaView
 } from 'react-native';
 
 import React from 'react';
@@ -80,18 +81,19 @@ export default function Homework({ navigation }) {
     );
   }
   useEffect(() => {
-    // var token = "dd5cf5bf97da7bc9ae1ab6a3f53f43af";
-    if (modules.length == 0 || lateModules.length == 0) {
-      get_web_service_token().then((value) => {
-        setToken(value.token);
-      });
-    }
-    else {
-      setIsLoading(false);
-    };
+    // if (modules.length == 0 || lateModules.length == 0) {
+    //   // get_web_service_token().then((value) => {
+    //   //   setToken(value.token);
+    //   // });
+    //   setToken("cae18480750e39a2cf52c7577ffef1e5");
+    // }
+    // else {
+    //   setIsLoading(false);
+    // };
+    setToken("cae18480750e39a2cf52c7577ffef1e5");
   }, []);
   useEffect(() => {
-    if (token != "") {
+    if (token != undefined) {
       core_user_get_users_by_field(token, "email", currentUser.email).then((value) => {
         setUserId(value[0].id);
       })
@@ -147,7 +149,7 @@ export default function Homework({ navigation }) {
     }
   }, [lateModulesArray]);
   return (
-    <View style={styles.body}>
+    <SafeAreaView style={styles.body}>
       {isLoading ? (<></>) : (
         <Tab.Navigator
           initialRouteName="HWTab1"
@@ -183,7 +185,6 @@ export default function Homework({ navigation }) {
           />
         </Tab.Navigator>
       )}
-
-    </View>
+    </SafeAreaView>
   );
 }
