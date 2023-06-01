@@ -14,6 +14,13 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-UELDaily-UELDailyTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-UELDaily-UELDailyTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		EA454389856940A69C243D98 /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = F70B7303748C4533BFF7F655 /* default.png */; };
+		A5373639F3AD462FB139A985 /* dp0001.png in Resources */ = {isa = PBXBuildFile; fileRef = 581802EBC4244183AEE074BC /* dp0001.png */; };
+		F4933B3EF8AF4C1D97A551B4 /* dp0002.png in Resources */ = {isa = PBXBuildFile; fileRef = A3C08EBD94A144D2963A5FC5 /* dp0002.png */; };
+		BFB504198E1F4D8EAC84E606 /* dp0005.png in Resources */ = {isa = PBXBuildFile; fileRef = F964D8E2CF01423286BEA7A4 /* dp0005.png */; };
+		02AD2EFFD4AF484198B98263 /* dp0007.png in Resources */ = {isa = PBXBuildFile; fileRef = 5123462FA9DE469695677D1B /* dp0007.png */; };
+		D52D1EA609EA4E169B50AFF0 /* dp0012.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D7D27344B484677809BA392 /* dp0012.png */; };
+		9CC0C78C53514E75AE69ACE3 /* dp0014.png in Resources */ = {isa = PBXBuildFile; fileRef = 11FF7AEEAAB34521B9026BF5 /* dp0014.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +51,13 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = UELDaily/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-UELDaily-UELDailyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UELDaily-UELDailyTests.release.xcconfig"; path = "Target Support Files/Pods-UELDaily-UELDailyTests/Pods-UELDaily-UELDailyTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F70B7303748C4533BFF7F655 /* default.png */ = {isa = PBXFileReference; name = "default.png"; path = "../android/app/src/main/assets/departments/default.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		581802EBC4244183AEE074BC /* dp0001.png */ = {isa = PBXFileReference; name = "dp0001.png"; path = "../android/app/src/main/assets/departments/dp0001.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A3C08EBD94A144D2963A5FC5 /* dp0002.png */ = {isa = PBXFileReference; name = "dp0002.png"; path = "../android/app/src/main/assets/departments/dp0002.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F964D8E2CF01423286BEA7A4 /* dp0005.png */ = {isa = PBXFileReference; name = "dp0005.png"; path = "../android/app/src/main/assets/departments/dp0005.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5123462FA9DE469695677D1B /* dp0007.png */ = {isa = PBXFileReference; name = "dp0007.png"; path = "../android/app/src/main/assets/departments/dp0007.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4D7D27344B484677809BA392 /* dp0012.png */ = {isa = PBXFileReference; name = "dp0012.png"; path = "../android/app/src/main/assets/departments/dp0012.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		11FF7AEEAAB34521B9026BF5 /* dp0014.png */ = {isa = PBXFileReference; name = "dp0014.png"; path = "../android/app/src/main/assets/departments/dp0014.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +136,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				D4BD0E743CFE496689620A4D /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -147,6 +162,21 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		D4BD0E743CFE496689620A4D /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				F70B7303748C4533BFF7F655 /* default.png */,
+				581802EBC4244183AEE074BC /* dp0001.png */,
+				A3C08EBD94A144D2963A5FC5 /* dp0002.png */,
+				F964D8E2CF01423286BEA7A4 /* dp0005.png */,
+				5123462FA9DE469695677D1B /* dp0007.png */,
+				4D7D27344B484677809BA392 /* dp0012.png */,
+				11FF7AEEAAB34521B9026BF5 /* dp0014.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -244,6 +274,13 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				EA454389856940A69C243D98 /* default.png in Resources */,
+				A5373639F3AD462FB139A985 /* dp0001.png in Resources */,
+				F4933B3EF8AF4C1D97A551B4 /* dp0002.png in Resources */,
+				BFB504198E1F4D8EAC84E606 /* dp0005.png in Resources */,
+				02AD2EFFD4AF484198B98263 /* dp0007.png in Resources */,
+				D52D1EA609EA4E169B50AFF0 /* dp0012.png in Resources */,
+				9CC0C78C53514E75AE69ACE3 /* dp0014.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

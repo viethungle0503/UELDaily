@@ -1,0 +1,33 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "android/app/src/main/assets/departments/default.png",
+      "sha1": "1033c1347835d53850739527b37cd8f87628275a"
+    },
+    {
+      "path": "android/app/src/main/assets/departments/dp0001.png",
+      "sha1": "188e77287507a48959062380ed7ba65fe681854d"
+    },
+    {
+      "path": "android/app/src/main/assets/departments/dp0002.png",
+      "sha1": "ef13191ab4b794220c6155eadf38b0693b38fcd3"
+    },
+    {
+      "path": "android/app/src/main/assets/departments/dp0005.png",
+      "sha1": "64ff47286411d8a574ce380eb4effd1e3b3677d9"
+    },
+    {
+      "path": "android/app/src/main/assets/departments/dp0007.png",
+      "sha1": "6b3c068507db968e11e710d61b8b15f62e0f5659"
+    },
+    {
+      "path": "android/app/src/main/assets/departments/dp0012.png",
+      "sha1": "f3deb66bc6459355871bc3650a3e3415c0fe4562"
+    },
+    {
+      "path": "android/app/src/main/assets/departments/dp0014.png",
+      "sha1": "f0c1fec2d12ec0665d3d4964da6cfde1d84047d0"
+    }
+  ]
+}

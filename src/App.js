@@ -1,147 +1,76 @@
 // React component
-import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import React, {useEffect, useState} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 // Screen
-import Home from './screen/HomeScreen/screen_Home';
-import Services from './screen/screen_Services';
-import News from './screen/screen_News';
-import Information from './screen/screen_Information';
 import Login from './screen/screen_Login';
 import PreLogin1 from './screen/screen_PreLogin1';
 import PreLogin2 from './screen/screen_PreLogin2';
-
-// font Materials
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Tabs from './screen/Tabs';
 // Redux
-import { useSelector, useDispatch } from 'react-redux';
-import { getDatabaseAccount, getStudent } from './redux_toolkit/databaseSlice';
-import { setLoggedIn, setCurrentUser, setCurrentUserProfileImage } from './redux_toolkit/userSlice';
-import { setNews_UEL } from './redux_toolkit/newsSlice';
-// Firebase
-import { firebase } from '@react-native-firebase/database';
-
-import auth from '@react-native-firebase/auth';
+import {useSelector, useDispatch} from 'react-redux';
 import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-
+  setDB_App,
+  setDB_UEL,
+} from './redux_toolkit/databaseSlice';
+import { setCurrentUser } from './redux_toolkit/userSlice';
+// Firebase
+import {firebase} from '@react-native-firebase/database';
 // Main
-const Tab = createBottomTabNavigator();
+import post_data from './screen/UEL';
+import messaging from '@react-native-firebase/messaging';
+import notifee, {
+  AndroidImportance,
+  AndroidVisibility,
+  AndroidColor,
+  AndroidStyle,
+  EventType,
+} from '@notifee/react-native';
+import NotificationService from './NotificationService';
+import RNBootSplash from 'react-native-bootsplash';
+import {
+  View,
+  Text,
+  Button,
+  Alert,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
 const RootStack = createStackNavigator();
-
-function Tabs() {
-  return (
-    <Tab.Navigator
-      style={styles.navBottom_container}
-      initialRouteName="Home"
-      screenOptions={({ route }) => ({
-        activeTintColor: '#0065FF',
-        inactiveTintColor: '#777777',
-        labelStyle: { fontSize: 15, fontWeight: 'bold' },
-        tabBarLabel: ({ focused, size, tintColor }) => {
-          let labelName;
-          if (route.name === 'Home') {
-            labelName = 'Trang chủ';
-            size = focused ? 10 : 8;
-            tintColor = focused ? 'red' : 'gray';
-          } else if (route.name === 'Services') {
-            labelName = 'Cập nhật';
-            size = focused ? 10 : 8;
-            tintColor = focused ? 'red' : 'gray';
-          } else if (route.name === 'Information') {
-            labelName = 'Thông báo';
-            size = focused ? 10 : 8;
-            tintColor = focused ? 'red' : 'gray';
-          }
-          else if (route.name === 'Profile') {
-            labelName = 'Profile';
-            size = focused ? 10 : 8;
-            tintColor = focused ? 'red' : 'gray';
-          }
-          return <Text style={{ color: tintColor, fontSize: size }}>{labelName}</Text>;
-        },
-        tabBarIcon: ({ focused, size, color }) => {
-          let iconName;
-          if (route.name === 'Home') {
-            iconName = 'home-variant-outline';
-            size = focused ? 25 : 20;
-          } else if (route.name === 'Services') {
-            iconName = 'earth';
-            size = focused ? 25 : 20;
-          } else if (route.name === 'Information') {
-            iconName = 'bell-outline';
-            size = focused ? 25 : 20;
-          }
-          else if (route.name === 'Profile') {
-            iconName = 'account-outline';
-            size = focused ? 25 : 20;
-          }
-          return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
-        },
-        headerShown: false
-      })}>
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-        }}
-
-      />
-      <Tab.Screen
-        name="Services"
-        component={Services}
-        options={{
-        }}
-      />
-      <Tab.Screen
-        name="Information"
-        component={Information}
-        options={{
-          tabBarBadge: 3,
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={News}
-        options={{
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
 
 function App() {
   const loggedIn = useSelector(state => state.user.loggedIn);
+  const atPreLogin1 = useSelector(state => state.user.atPreLogin1);
+  const atPreLogin2 = useSelector(state => state.user.atPreLogin2);
   return (
     <NavigationContainer>
-      <RootStack.Navigator
-        initialRouteName="PreLogin1"
-        >
+      <RootStack.Navigator initialRouteName="PreLogin1">
         {!loggedIn ? (
           <RootStack.Group>
-            <RootStack.Screen
-              name="PreLogin1"
-              component={PreLogin1}
-              options={{headerShown: false}}
-            />
-            <RootStack.Screen
-              name="PreLogin2"
-              component={PreLogin2}
-              options={{headerShown: false}}
-            />
-            <RootStack.Screen
-              name="Login"
-              component={Login}
-              options={{headerShown: false}}
-            />
+            {atPreLogin1 ? (
+              <RootStack.Screen
+                name="PreLogin1"
+                component={PreLogin1}
+                options={{headerShown: false}}
+              />
+            ) : atPreLogin2 ? (
+              <RootStack.Screen
+                name="PreLogin2"
+                component={PreLogin2}
+                options={{headerShown: false}}
+              />
+            ) : (
+              <RootStack.Screen
+                name="Login"
+                component={Login}
+                options={{headerShown: false}}
+                pa
+              />
+            )}
           </RootStack.Group>
-          
         ) : (
           // Auth screens
             <RootStack.Screen
@@ -159,128 +88,221 @@ function App() {
 }
 
 const AppWrapper = () => {
-  // News
-  global.news_UEL = useSelector(state => state.news.news_UEL);
-  // Database
-  global.database_app = useSelector(state => state.database.db_app);
-  global.database_uel = useSelector(state => state.database.db_uel);
-  // User
-  global.loggedIn = useSelector(state => state.user.loggedIn);
-  global.currentUser = useSelector(state => state.user.currentUser);
+  const checkToken = async () => {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.log(fcmToken);
+    }
+  };
   const dispatch = useDispatch();
-  const cheerio = require('cheerio');
-  async function loadGraphicCards(searchUrl = `https://uel.edu.vn/tin-tuc`, page = 1) {
-    const baseURL = `https://uel.edu.vn`;
-    const response = await fetch(searchUrl);   // fetch page
-    const htmlString = await response.text();  // get response text
-    const $ = cheerio.load(htmlString);           // parse HTML string
-    $(".PageColumns").remove();
-    $("#ctl08_ctl01_RadListView1_ClientState").remove();
-    $(".nd_news > div").each(function (i, div) {
-      let title = $("h4 > a", div).text();
-      let time = $("h4 > span", div).text();
-      let imageURL = baseURL + $("img", div).attr("src");
-      let link = baseURL + $("h4 > a", div).attr("href");
-      dispatch(setNews_UEL({ title: title, time: time, imageURL: imageURL,link: link }));
+  const [checkInternet, setCheckInternet] = useState(null);
+  const db_uel = useSelector(state => state.database.db_uel);
+  const loggedIn = useSelector(state => state.user.loggedIn);
+  const currentUser = useSelector(state => state.user.currentUser);
+  const getNetworkState = () => {
+    NetInfo.fetch().then(state => {
+      if (!state.isWifiEnabled && Platform.OS === 'android') {
+        Alert.alert('Warning', 'Please turn on your wifi and try again');
+      }
+      if (!state.isConnected) {
+        Alert.alert('Warning', `Please connect to a network`);
+      }
+      if (!state.isInternetReachable) {
+        Alert.alert(
+          'Warning',
+          'The internet cannot be reached by this network',
+        );
+      }
     });
   };
-  function onAuthStateChanged(account) {
-    if (account) {
-      if (account.email.search(/@st.uel.edu.vn/i) == -1) {
-        alert('Vui lòng sử mail email trường cấp');
-        signOut();
-      }
-      else {
-        let i = 0;
-        for (let element of database_uel) {
-          if (element.data.email == account.email) {
-            i = 1;
-            dispatch(setCurrentUser(element));
-            dispatch(setCurrentUserProfileImage(account.photoURL));
-            dispatch(setLoggedIn(true));
-            break;
-          }
-        }
-        if (i == 0) {
-          alert('Tài khoản không tồn tại');
-          signOut();
-        }
-      }
+
+  // Bootstrap sequence function
+  async function bootstrap() {
+    const initialNotification = await notifee.getInitialNotification();
+
+    if (initialNotification) {
+      console.log(
+        'Notification caused application to open',
+        initialNotification.notification,
+      );
+      console.log(
+        'Press action used to open the app',
+        initialNotification.pressAction,
+      );
     }
+  }
+  const asyncAppFn = async () => {
+    await firebase
+      .app()
+      .database(
+        'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
+      )
+      .ref('/users')
+      .on(
+        'value',
+        snapshot => {
+          var holder = [];
+          snapshot.forEach(childSnapshot => {
+            let childKey = childSnapshot.key;
+            let childData = childSnapshot.val();
+            holder = [...holder, {key: childKey, data: childData}];
+          });
+          dispatch(setDB_App(holder));
+        },
+        error => {
+          console.error(error);
+        },
+      );
   };
-  const signOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      auth()
-        .signOut()
-        .then(() => {
-          dispatch(setLoggedIn(false));
-          dispatch(setCurrentUser({}));
-        });
-    } catch (error) {
-      console.error(error);
-    }
+  const wait = duration => {
+    return new Promise(resolve => setTimeout(resolve, duration));
+  };
+  const getUELDatabase = useQuery({
+    queryKey: ['db_uel'],
+    queryFn: () => wait(1000).then(() => post_data('all_students')),
+    refetchInterval: 60000,
+    retry: true,
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+    enabled: checkInternet === true
+  });
+  const sendNotification = async () => {
+    let notificationData = {
+      title: 'First Notification',
+      body: 'Notification Body',
+      token:
+        'dF4y6UuESueMXtdUsopIKJ:APA91bGHyfMC0D089MHmTRe1KdwODtdBWwB497ZELv_aZU__4x8I4EOLc58KTPxTNvUvUfwkIzocp1FU7wm9cUEWD2Le3-Y1DQRmTTxy6CcArx0k8jO10jw6W5QcCdTK_0UvUBQPCYNv',
+    };
+    await NotificationService.sendSingleDeviceNotification(notificationData);
+  };
+
+  const sendMultiNotification = async () => {
+    let notificationData = {
+      title: 'First Multi Device Notification',
+      body: 'Notification Body',
+      token: [
+        'dF4y6UuESueMXtdUsopIKJ:APA91bGHyfMC0D089MHmTRe1KdwODtdBWwB497ZELv_aZU__4x8I4EOLc58KTPxTNvUvUfwkIzocp1FU7wm9cUEWD2Le3-Y1DQRmTTxy6CcArx0k8jO10jw6W5QcCdTK_0UvUBQPCYNv',
+      ],
+    };
+    await NotificationService.sendMultiDeviceNotification(notificationData);
+  };
+  async function DisplayNotification(remoteMessage) {
+    // Create a channel
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+    // Display a notification
+    await notifee.displayNotification({
+      title: remoteMessage?.data?.title,
+      body: `${remoteMessage?.data?.body}`,
+      android: {
+        channelId,
+        smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+        style: {
+          type: AndroidStyle.BIGTEXT,
+          text: `${remoteMessage?.data?.body}`,
+        },
+      },
+    });
+    setTimeout(async () => {
+      await asyncAppFn();
+    }, 2000);
+  }
+  const requestPermission = async () => {
+    const authStatus = await messaging().requestPermission();
   };
   useEffect(() => {
-    if (global.news_UEL.length == 0) {
-      loadGraphicCards();
-    }
-    if (global.database_app.length == 0) {
-      firebase
-        .app()
-        .database(
-          'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
-        )
-        .ref('/users')
-        .once(
-          'value',
-          snapshot => {
-            snapshot.forEach(childSnapshot => {
-              let childKey = childSnapshot.key;
-              let childData = childSnapshot.val();
-              dispatch(getDatabaseAccount({ key: childKey, data: childData }));
-            });
-          },
-          error => {
-            console.error(error);
-          },
-        );
-    };
-
-    if (global.database_uel.length == 0) {
-      firebase
-        .app()
-        .database(
-          'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
-        )
-        .ref('/students')
-        .once(
-          'value',
-          snapshot => {
-            snapshot.forEach(childSnapshot => {
-              let childKey = childSnapshot.key;
-              let childData = childSnapshot.val();
-              dispatch(getStudent({ key: childKey, data: childData }));
-            });
-          },
-          error => {
-            console.error(error);
-          },
-        );
-    }
-
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    // unsubscribe on unmount
-    return subscriber;
+    RNBootSplash.hide({fade: true});
+    // Subscribe
+    const unsubscribe = NetInfo.addEventListener(state => {
+      if (state.isInternetReachable) {
+        setCheckInternet(prevValue => true);
+      } else {
+        setCheckInternet(prevValue => false);
+      }
+    });
+    // Unsubscribe
+    return unsubscribe;
   }, []);
+  useEffect(() => {
+    if (checkInternet === null) return;
+    // No Internet Connection
+    if (!checkInternet) {
+      Alert.alert(
+        'Please connect to a network or check your Internet Connection',
+      );
+    }
+    // Internet is reachable
+    else {
+      // checkToken();
+      asyncAppFn();
+    }
+  }, [checkInternet]);
+  useEffect(() => {
+    if (getUELDatabase.isError) {
+      console.log(getUELDatabase.error);
+      return;
+    }
+    if (getUELDatabase.isFetched) {
+      dispatch(setDB_UEL(getUELDatabase.data));
+    }
+  }, [getUELDatabase.fetchStatus]);
+  useEffect(() => {
+    requestPermission();
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      // console.log('remoteMessage', JSON.stringify(remoteMessage))
+      DisplayNotification(remoteMessage);
+      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+    return unsubscribe;
+  }, []);
+  useEffect(() => {
+    console.log("db_uel changed");
+    if(loggedIn == true && currentUser !== {}) {
+      let index = db_uel.findIndex(x => x.email === currentUser.email)
+      dispatch(setCurrentUser(db_uel[index]))
+    }
+  },[db_uel])
+  // useEffect(() => {
+  //   return notifee.onForegroundEvent(({ type, detail }) => {
+  //     switch (type) {
+  //       case EventType.DISMISSED:
+  //         // console.log('User dismissed notification', detail.notification);
+  //         break;
+  //       case EventType.PRESS:
+  //         // console.log('User pressed notification', detail.notification);
+  //         break;
+  //       case EventType.ACTION_PRESS:
+  //         // console.log('User action pressed notification', detail.notification);
+  //         break;
+  //     }
+  //   });
+  // }, [])
+
+  // useEffect(() => {
+  //   bootstrap()
+  //     .then(() => {
+  //       setLoading(false)
+  //     })
+  //     .catch(console.error);
+  // }, []);
+
+  // if (loading) {
+  //   return null;
+  // }
+  // const useEffectOnlyOnUpdate = (callback, dependencies) => {
+  //   const didMount = React.useRef(false);
+  //   React.useEffect(() => {
+  //     if (didMount.current) {
+  //       callback(dependencies);
+  //     } else {
+  //       didMount.current = true;
+  //     }
+  //   }, [callback, dependencies]);
+  // };
+  // useEffectOnlyOnUpdate((dependencies) => {
+  // }, []);
 
   return <App />;
 };
-
-const styles = StyleSheet.create({
-  navBottom_container: {
-    padding: 5,
-  },
-});
 export default AppWrapper;

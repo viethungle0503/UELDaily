@@ -32,7 +32,8 @@ format.bracket_spacing=false
 module.file_ext=.js
 module.file_ext=.json
 module.file_ext=.ios.js
-
+module.file_ext=.native.js
+module.file_ext=.android.js
 munge_underscores=true
 
 module.name_mapper='^react-native/\(.*\)$' -> '<PROJECT_ROOT>/node_modules/react-native/\1'
@@ -63,4 +64,4 @@ untyped-import
 untyped-type-import
 
 [version]
-^0.182.0
+^0.183.1

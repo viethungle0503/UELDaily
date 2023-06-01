@@ -1,473 +1,515 @@
 import {
-    Image,
-    View,
-    Text,
-    StyleSheet,
-    Button,
-    TouchableOpacity,
-    ScrollView,
-  
-  } from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+  Image,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Modal,
+  SectionList,
+  SafeAreaView,
+  ImageBackground
+
+} from 'react-native';
+import { useState, useRef } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-export default function ScoreBoard({navigation}) {
-    return(
-    <View style={styles.body}>
+import { useEffect, useCallback } from 'react';
+import DropDownPicker from 'react-native-dropdown-picker';
+import {
+  setScoreBoard,
+  setActivityScore
+} from '../../redux_toolkit/userSlice';
+import styles from './HomeScreenStyles/screen_ScoreBoard_style';
+import strings from '../Language';
+import { useSelector, useDispatch } from 'react-redux';
+import post_data from '../UEL';
+import { groupBy, roundHalf } from '../GlobalFunction';
+import NullDataScreen from '../../components/nullDataScreen';
+
+export default function ScoreBoard({ navigation }) {
+  const [scoreBoardHolder, setScoreBoardHolder] = useState([]);
+  const [activityScoreHolder, setActivityScoreHolder] = useState([]);
+  const currentUser = useSelector(state => state.user.currentUser);
+  const activityScore = useSelector(state => state.user.activityScore);
+  const scoreBoard = useSelector(state => state.user.scoreBoard);
+  const dispatch = useDispatch();
+  const [openYear, setOpenYear] = useState(false);
+  const [valueYear, setValueYear] = useState(null);
+  const [itemsYear, setItemsYear] = useState([
+    { label: 'Tất cả', value: '0' },
+    { label: strings.first_year, value: '1' },
+    { label: strings.second_year, value: '2' },
+    { label: strings.third_year, value: '3' },
+    { label: strings.fourth_year, value: '4' },
+  ]);
+  const onYearOpen = useCallback(() => {
+    setOpenSemester(false);
+  }, []);
+  const [openSemester, setOpenSemester] = useState(false);
+  const [valueSemester, setValueSemester] = useState(null);
+  const [itemsSemester, setItemsSemester] = useState([
+    { label: 'Tất cả', value: '0' },
+    { label: strings.first_semester, value: '1' },
+    { label: strings.second_semester, value: '2' },
+    { label: strings.summer_semester, value: '3' },
+  ]);
+  const onSemesterOpen = useCallback(() => {
+    setOpenYear(false);
+  }, []);
+  const [year, setYear] = useState(0)
+  const [semester, setSemester] = useState(0);
+  // Score & Credits
+  const [mediumScore, setMediumScore] = useState(0);
+  const [passedCredit, setPassedCredit] = useState(0);
+  const [credit, setCredit] = useState(0);
+  // Modal
+  const [open, setOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState();
+  const [modalContent, setModalContent] = useState();
+  useEffect(() => {
+    if (scoreBoard[0].title == "Hello") {
+      post_data("scoreboard", currentUser.id).then((response) => {
+        var groupByYear = groupBy(response, item => item.startYear);
+        var sectionArray = [];
+        groupByYear.forEach((groupedYear) => {
+          var groupBySemester = groupBy(groupedYear, item => item.semester);
+          groupBySemester.forEach((value, key, map) => {
+            let semester = groupBySemester.get(key)[0].semester;
+            let startYear = groupBySemester.get(key)[0].startYear;
+            let endYear = groupBySemester.get(key)[0].endYear;
+            let title = `Học kỳ ${semester} năm học ${startYear} - ${endYear}`
+            sectionArray = [...sectionArray, { title: title, data: value }];
+          });
+        });
+        setScoreBoardHolder(sectionArray);
+        dispatch(setScoreBoard(sectionArray));
+      });
+      if (activityScore.length == 0) {
+        post_data("activityscore", currentUser.id).then((response) => {
+          dispatch(setActivityScore(response));
+          setActivityScoreHolder(response);
+        });
+      }
+
+    }
+    else {
+      setScoreBoardHolder(scoreBoard);
+    }
+
+  }, [])
+  function changeView(xyear = 0, xsemester = 0) {
+    setScoreBoardHolder(scoreBoard);
+    setActivityScoreHolder(activityScore);
+    if (xyear != 0) {
+      xyear = parseFloat(xyear) + parseFloat(currentUser.yearAdmission);
+      setScoreBoardHolder(item => item.filter(x => x.data[0].endYear == xyear));
+      setActivityScoreHolder(item => item.filter(x => x.endYear == xyear));
+    }
+    if (xsemester != 0) {
+      setScoreBoardHolder(item => item.filter(x => x.data[0].semester == xsemester));
+      setActivityScoreHolder(item => item.filter(x => x.semester == xsemester));
+    }
+  };
+  var creditHolder = 0;
+  var passedCreditHolder = 0;
+  var mediumScoreHolder = 0;
+  useEffect(() => {
+    scoreBoardHolder.forEach((section) => {
+      section.data.forEach((item) => {
+        let attendence = (item.attendence != undefined) ? item.attendence : null;
+        let percentAttendence = (item.percentAttendence != undefined) ? item.percentAttendence : null;
+        let midterm = (item.midterm != undefined) ? item.midterm : null;
+        let percentMidterm = (item.percentMidterm != undefined) ? item.percentMidterm : null;
+        let final = (item.final != undefined) ? item.final : null;
+        let percentFinal = (item.percentFinal != undefined) ? item.percentFinal : null;
+        let overallScore = parseFloat(attendence * percentAttendence) + parseFloat(midterm * percentMidterm) + parseFloat(final * percentFinal);
+        overallScore = roundHalf(overallScore);
+        creditHolder += item.credit;
+        if (overallScore >= 5) passedCreditHolder += item.credit
+        mediumScoreHolder += parseFloat(overallScore * item.credit);
+      })
+    })
+    setCredit(creditHolder);
+    setPassedCredit(passedCreditHolder);
+    if (creditHolder != 0) {
+      setMediumScore((mediumScoreHolder / creditHolder).toFixed(2));
+    }
+    else setMediumScore(0);
+    creditHolder = 0;
+    passedCreditHolder = 0;
+    mediumScoreHolder = 0;
+  }, [scoreBoardHolder]);
+  return (
+    <SafeAreaView style={styles.body} onPress={() => {
+      if (openSemester) {
+        setOpenSemester(false)
+      }
+      if (openYear) {
+        setOpenYear(false);
+      }
+    }}>
+      <ScrollView>
+        <Modal
+          onRequestClose={() => setOpen(false)}
+          visible={open}
+          transparent={true}
+          animationType='slide'
+        >
+          <View style={styles.modalBackground} >
+            <View style={styles.modalContainer}>
+              {/* icon xanh */}
+              <View style={styles.modalIconContainer}>
+                <MaterialCommunityIcons
+                  style={styles.modalIcon}
+                  name={'clipboard-text-outline'}
+                  size={35}
+                  color={'#FFF'}
+                />
+              </View>
+
+              {modalTitle}
+              {modalContent}
+
+              <TouchableOpacity
+                style={styles.modalFooter_ButtonClose}
+                onPress={() => setOpen(false)}>
+                <Text style={styles.modalFooter_ButtonCloseText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={{ alignItems: 'center' }}>
+          </View>
+
+        </Modal>
+
+        {/* Selection */}
         <View style={styles.fixItem}>
-            <View style={styles.scoreHeader_Sort}>
-                
-                <TouchableOpacity style={styles.btnSort}>
-                    <Text style={styles.btnSort_Text}>Năm học</Text>
-                    <Image
-                        style={styles.examIcon}
-                        source={require('../../assets/btnSortIcon.png')}
-                    />
-                </TouchableOpacity>
-    
-                <TouchableOpacity style={styles.btnSort}>
-                    <Text style={styles.btnSort_Text}>Học kỳ</Text>
-                    <Image
-                        style={styles.examIcon}
-                        source={require('../../assets/btnSortIcon.png')}
-                    />
-                </TouchableOpacity>
-            </View>
+          <View style={styles.scoreHeader_Sort}>
+            <DropDownPicker
+              open={openYear}
+              value={valueYear}
+              items={itemsYear}
+              setOpen={setOpenYear}
+              setValue={setValueYear}
+              setItems={setItemsYear}
+              defaultNull
+              labelStyle={styles.btnSort_Text}
+              placeholder={strings.year}
+              placeholderStyle={styles.btnSort_Text}
+              style={styles.btnSort}
+              containerStyle={styles.btnSortContainer}
+              onChangeValue={(itemValue) => {
+                setYear(itemValue);
+                changeView(itemValue, semester);
+              }}
+              dropDownMaxHeight={240}
+              dropDownContainerStyle={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
+              closeOnBackPressed={true}
+              onOpen={onYearOpen}
+              ArrowDownIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconDown.png')}
+                  />
+                );
+              }}
+              ArrowUpIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconUp.png')}
+                  />
+                );
+              }}
+            />
+
+            <DropDownPicker
+              open={openSemester}
+              value={valueSemester}
+              items={itemsSemester}
+              setOpen={setOpenSemester}
+              setValue={setValueSemester}
+              setItems={setItemsSemester}
+              defaultNull
+              labelStyle={styles.btnSort_Text}
+              placeholder={strings.semester}
+              placeholderStyle={styles.btnSort_Text}
+              style={styles.btnSort}
+              containerStyle={styles.btnSortContainer}
+              onChangeValue={(itemValue) => {
+                setSemester(itemValue);
+                changeView(year, itemValue);
+              }}
+              closeOnBackPressed={true}
+              onOpen={onSemesterOpen}
+              ArrowDownIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconDown.png')}
+                  />
+                );
+              }}
+              ArrowUpIconComponent={() => {
+                return (
+                  <Image
+                    style={styles.examIcon}
+                    source={require('../../assets/btnSortIconUp.png')}
+                  />
+                );
+              }}
+            />
+          </View>
         </View>
+        {/* Selection */}
 
-        <ScrollView style={styles.container}>
-            <View style={styles.dashboard}>
-                <Text style={styles.dashboardHeader}>
-                    Điểm trung bình toàn khóa
+        {/* Main Content */}
+
+        <View style={styles.dashboard}>
+          <Text style={styles.dashboardHeader}>
+            {(year != 0 && semester != 0) ? (strings.Overall_Semester) :
+              (year != 0 && semester == 0) ? (strings.Overall_Year) :
+                (year == 0 && semester != 0) ? (strings.Compare_the_same_period) : (strings.Overall_GPA)}
+          </Text>
+          <View style={styles.dashboardItemView}>
+            {/* Credit */}
+            <View
+              style={[
+                styles.dashboardItem,
+                {
+                  backgroundColor: '#F7CAB7',
+                },
+              ]}>
+              <Text style={styles.dashboardItem_IndicatorName}>
+                {(year != 0 && semester != 0 && semester != 3) ? (strings.Activity_Score) :
+                  (strings.passed_credits)}
+              </Text>
+
+              <View style={styles.dashboardItem_IndicatorResultView}>
+                <Image
+                  style={styles.dashboardItem_IndicatorImage}
+                  source={require('../../assets/scoreboard_tinchi.png')}
+                />
+                <Text style={styles.dashboardItem_IndicatorResult}>
+                  {(year != 0 && semester != 0 && semester != 3) ? (activityScoreHolder[0] != undefined ? (activityScoreHolder[0].score) : (null)) : ((credit != 0) ? (`${passedCredit}/${credit}`) : ("Trống"))}
                 </Text>
-
-                <View style={styles.dashboardItemView}>
-                    <View style={[styles.dashboardItem, 
-                        {
-                            backgroundColor: '#F7CAB7'
-                        }
-                    ]}>
-                        <Text style={styles.dashboardItem_IndicatorName}>Số tín chỉ đã đậu</Text>
-                        
-                        <View style={styles.dashboardItem_IndicatorResultView}>
-                            <Image
-                                style={styles.dashboardItem_IndicatorImage}
-                                source={require('../../assets/scoreboard_tinchi.png')}
-                            />
-                            <Text style={styles.dashboardItem_IndicatorResult}>72/72tc</Text>
-
-                        </View>
-
-                    </View>
-                    <View style={[styles.dashboardItem, 
-                        {
-                            backgroundColor: '#E3ECFF'
-                        }
-                    ]}>
-                        <Text style={styles.dashboardItem_IndicatorName}>Điểm trung bình</Text>
-                        
-                        <View style={styles.dashboardItem_IndicatorResultView}>
-                            <Image
-                                style={styles.dashboardItem_IndicatorImage}
-                                source={require('../../assets/scoreboard_GPA.png')}
-                            />
-                            <Text style={styles.dashboardItem_IndicatorResult}>7.99/10</Text>
-
-                        </View>
-
-                    </View>
-                    <View style={[styles.dashboardItem, 
-                        {
-                            backgroundColor: '#DEFFD3'
-                        }
-                    ]}>
-                        <Text style={styles.dashboardItem_IndicatorName}>Xếp loại học lực</Text>
-                        
-                        <View style={styles.dashboardItem_IndicatorResultView}>
-                            <Image
-                                style={styles.dashboardItem_IndicatorImage}
-                                source={require('../../assets/scoreboard_tinchi.png')}
-                            />
-                            <Text style={styles.dashboardItem_IndicatorResult}>Khá</Text>
-                        </View>
-                    </View>
-                </View>
+              </View>
             </View>
-      
-            <View style={styles.list}>
-                <Text style={styles.listSemester}>Học kỳ 1/ 2021 - 2022</Text>
-                
-                <View style={styles.listItem}>
-                    <View style={styles.listItem_Markup}></View>
-                    
-                    <Text style={styles.listItem_SubjectName}>
-                    Phân tích thiết kế HTTT quản lý - 221IS4204 (3TC) 
-                    </Text>
+            {/* Credit */}
 
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>8.0 (A)</Text>
-                    </View>
+            {/* Medium Score */}
+            <View
+              style={[
+                styles.dashboardItem,
+                {
+                  backgroundColor: '#E3ECFF',
+                },
+              ]}>
+              <Text style={styles.dashboardItem_IndicatorName}>
+                {strings.GPA}
+              </Text>
 
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>Đạt</Text>
-                    </View>
-
-                    <TouchableOpacity style={styles.listItem_ViewDetail}>
-                        <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-                        <MaterialCommunityIcons
-                            name={'arrow-right-thin'}
-                            size={22}
-                            color={'#fff'}
-                        />
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.listItem}>
-                    <View style={styles.listItem_Markup}></View>
-                    
-                    <Text style={styles.listItem_SubjectName}>
-                    Phân tích thiết kế HTTT quản lý - 221IS4204 (3TC) 
-                    </Text>
-
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>8.0 (A)</Text>
-                    </View>
-
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>Đạt</Text>
-                    </View>
-
-                    <TouchableOpacity style={styles.listItem_ViewDetail}>
-                        <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-                        <MaterialCommunityIcons
-                            name={'arrow-right-thin'}
-                            size={22}
-                            color={'#fff'}
-                        />
-                    </TouchableOpacity>
-                </View>
-            
-                <View style={styles.listItem}>
-                    <View style={styles.listItem_Markup}></View>
-                    
-                    <Text style={styles.listItem_SubjectName}>
-                    Phân tích thiết kế HTTT quản lý - 221IS4204 (3TC) 
-                    </Text>
-
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>8.0 (A)</Text>
-                    </View>
-
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>Đạt</Text>
-                    </View>
-
-                    <TouchableOpacity style={styles.listItem_ViewDetail}>
-                        <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-                        <MaterialCommunityIcons
-                            name={'arrow-right-thin'}
-                            size={22}
-                            color={'#fff'}
-                        />
-                    </TouchableOpacity>
-                </View>
-            
-                <View style={styles.listItem}>
-                    <View style={styles.listItem_Markup}></View>
-                    
-                    <Text style={styles.listItem_SubjectName}>
-                    Phân tích thiết kế HTTT quản lý - 221IS4204 (3TC) 
-                    </Text>
-
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>8.0 (A)</Text>
-                    </View>
-
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>Đạt</Text>
-                    </View>
-
-                    <TouchableOpacity style={styles.listItem_ViewDetail}>
-                        <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-                        <MaterialCommunityIcons
-                            name={'arrow-right-thin'}
-                            size={22}
-                            color={'#fff'}
-                        />
-                    </TouchableOpacity>
-                </View>
-            
-                <View style={styles.listItem}>
-                    <View style={styles.listItem_Markup}></View>
-                    
-                    <Text style={styles.listItem_SubjectName}>
-                    Phân tích thiết kế HTTT quản lý - 221IS4204 (3TC) 
-                    </Text>
-
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>8.0 (A)</Text>
-                    </View>
-
-                    <View style={styles.listItem_Content}>
-                        <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
-                        <Text style={styles.listItem_ContentData}>Đạt</Text>
-                    </View>
-
-                    <TouchableOpacity style={styles.listItem_ViewDetail}>
-                        <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
-                        <MaterialCommunityIcons
-                            name={'arrow-right-thin'}
-                            size={22}
-                            color={'#fff'}
-                        />
-                    </TouchableOpacity>
-                </View>
+              <View style={styles.dashboardItem_IndicatorResultView}>
+                <Image
+                  style={styles.dashboardItem_IndicatorImage}
+                  source={require('../../assets/scoreboard_GPA.png')}
+                />
+                <Text style={styles.dashboardItem_IndicatorResult}>
+                  {(passedCredit != 0) ? (
+                    `${mediumScore}/10`
+                  ) : ("Trống")}
+                </Text>
+              </View>
             </View>
-        </ScrollView>
-    </View>
-    )
-};
+            {/* Medium Score */}
 
-const styles = StyleSheet.create({
-    body: {
-      flex: 1,
-      flexDirection: 'column',
-      backgroundColor: '#fff',
-    },
-    fixItem: {
-        paddingTop: 15,
-      position: 'relative',
-      top: 0,
-    },
-    examIcon: {
-        width: 16,
-        height: 16,
-    },
+            {/* academic capacity */}
+            <View
+              style={[
+                styles.dashboardItem,
+                {
+                  backgroundColor: '#DEFFD3',
+                },
+              ]}>
+              <Text style={styles.dashboardItem_IndicatorName}>
+                {strings.classification}
+              </Text>
 
-    container:{
-        flex: 1
-    },
+              <View style={styles.dashboardItem_IndicatorResultView}>
+                <Image
+                  style={styles.dashboardItem_IndicatorImage}
+                  source={require('../../assets/scoreboard_tinchi.png')}
+                />
+                <Text style={styles.dashboardItem_IndicatorResult}>
+                  {
+                    (credit != 0) ? (
+                      (mediumScore > 9) ? "Xuất sắc" :
+                        (mediumScore > 8) ? "Giỏi" :
+                          (mediumScore > 7) ? "Khá" :
+                            (mediumScore > 6) ? "TB - Khá" :
+                              (mediumScore > 5) ? "TB" : "Yếu"
+                    ) : "Trống"
+                  }
+                </Text>
+              </View>
+            </View>
+            {/* academic capacity */}
+          </View>
+        </View>
+        {/* Main Content */}
+        <SectionList
+          initialNumToRender={5}
+          sections={scoreBoardHolder}
+          ListEmptyComponent={() => {
+            return (
+              <SafeAreaView style={{
+                minHeight: 500,
+              }}>
+                <View style={{
+                  alignItems: 'center',
+                }}>
+                  <Text style={{
+                    width: '60%',
+                    color: '#252525',
+                    fontSize: 17,
+                    fontWeight: 'bold',
+                    paddingBottom: 10
+                  }}>
+                    Không có dữ liệu ở thời điểm này !!!
+                  </Text>
+                </View>
+                <ImageBackground source={require('../../assets/null.png')}
+                  resizeMode="contain"
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                >
+                </ImageBackground>
+              </SafeAreaView>
+            )
+          }}
+          keyExtractor={(item, index) => item + index}
+          renderItem={({ item }) => {
+            function settingModal() {
+              const title = (() => (
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalHeaderText}>{item.courseName}</Text>
+                </View>
+              ));
+              const content = (() => {
+                const section = () => {
+                  return (
+                    <>
+                      {
+                        (item.attendence != undefined) ? (
+                          <View style={styles.modalDetail_RowData}>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>
+                              Điểm quá trình</Text>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>{item.attendence}</Text>
+                          </View>
+                        ) : (
+                          <></>
+                        )
+                      }
+                      {
+                        (item.midterm != undefined) ? (
+                          <View style={styles.modalDetail_RowData}>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>
+                              Điểm thi giữa học phần</Text>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>
+                              {item.midterm}</Text>
+                          </View>
+                        ) : (
+                          <></>
+                        )
+                      }
+                      {
+                        (item.final != undefined) ? (
+                          <View style={styles.modalDetail_RowData}>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colContent]}>
+                              Điểm thi kết thúc học phần</Text>
+                            <Text style={[styles.modalDetail_RowDataText, styles.modalDetail_colPayAmount]}>
+                              {item.final}</Text>
+                          </View>
+                        ) : (
+                          <></>
+                        )
+                      }
+                    </>
 
-    dashboard:{
-        flex: 3,
-        justifyContent: 'space-evenly',
-    },
+                  )
+                }
+                return (
+                  <View style={styles.modalDetail}>
+                    <View style={styles.modalDetail_Header}>
+                      <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colContent]}>
+                        Điểm thành phần
+                      </Text>
+                      <Text style={[styles.modalDetail_HeaderText, styles.modalDetail_colPayAmount]}>
+                        Thang 10
+                      </Text>
+                    </View>
+                    {section()}
+                  </View>
+                )
+              });
+              setModalTitle(title);
+              setModalContent(content);
+              setOpen(true);
+            };
+            let attendence = (item.attendence != undefined) ? item.attendence : null;
+            let percentAttendence = (item.percentAttendence != undefined) ? item.percentAttendence : null;
+            let midterm = (item.midterm != undefined) ? item.midterm : null;
+            let percentMidterm = (item.percentMidterm != undefined) ? item.percentMidterm : null;
+            let final = (item.final != undefined) ? item.final : null;
+            let percentFinal = (item.percentFinal != undefined) ? item.percentFinal : null;
+            let overallScore = parseFloat(attendence * percentAttendence) + parseFloat(midterm * percentMidterm) + parseFloat(final * percentFinal);
+            overallScore = roundHalf(overallScore);
+            return (
+              <TouchableOpacity
+                style={[styles.listItem, (overallScore >= 5) ?
+                  { shadowColor: 'rgba(0, 101, 255, 0.4)', }
+                  : { shadowColor: 'rgba(255, 150, 124, 0.7)', }]}
+                onPress={() => settingModal()}>
 
-    list: {
-        flex: 6,
-    },
-
-    // dashboard
-    dashboardHeader: {
-        marginVertical: 20, 
-        marginHorizontal: 24,
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: '#252525'
-
-    },
-    dashboardItemView: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        marginLeft: 18,
-        marginRight: 8
-    },
-    dashboardItem:{
-        flex: 1,
-        marginRight: 10,
-
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        paddingVertical: 15,
-        justifyContent: 'space-evenly',
-
-        shadowColor: 'rgb(0, 101, 255)',
-        shadowOffset: {
-            width: 0,
-            height: 0.1,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 20,
-    
-        elevation: 2,
-    },
-    dashboardItem_IndicatorName: {
-        fontSize: 16,
-        color: '#252525'
-
-    },
-    dashboardItem_IndicatorResultView: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    dashboardItem_IndicatorImage: {
-      width: 16,
-      height: 16,
-      marginRight: 6
-    },
-    dashboardItem_IndicatorResult: {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: '#252525'
-    },
-    
-    // dashboard
-
-    //list
-    listSemester:{
-        marginHorizontal: 24,
-        marginVertical: 20,
-        color:'#0065FF',
-        fontWeight: 'bold',
-        fontSize: 16
-    },
-    listItem: {
-        position: 'relative',
-      backgroundColor: '#fff',
-      borderRadius: 5,
-      paddingHorizontal: 15,
-      paddingVertical: 10,
-  
-      marginBottom: 10,
-      marginHorizontal: 18,
-  
-      shadowColor: 'rgb(0, 101, 255)',
-      shadowOffset: {
-        width: 0,
-        height: 0.1,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 20,
-  
-      elevation: 2,
-    },
-    listItem_Markup: {
-      // viền màu cam
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      left: 0,
-      width: 6,
-      backgroundColor: '#E3ECFF',
-      borderBottomLeftRadius: 5,
-      borderTopLeftRadius: 5,
-    },
-    listItem_SubjectName: {
-      fontWeight: 'bold',
-      fontSize: 15,
-      color: '#080B09',
-  
-      marginBottom: 5,
-    },
-    listItem_Content: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      fontSize: 15,
-    },
-    listItem_ContentTitle: {
-      color: '#938F8F',
-    },
-    listItem_ContentData: {
-      color: '#000000',
-    },
-    listItem_ViewDetail:{
-        position: 'absolute',
-        bottom: 8,
-        right: 16,
-
-        backgroundColor: '#0065FF',
-        shadowColor: 'rgba(0, 101, 255, 0.25)',
-        shadowOffset: {
-            width: 0,
-            height: 0.1,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 20,
-    
-        elevation: 2,
-
-        borderRadius: 8,
-
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        paddingHorizontal: 10,
-        paddingVertical: 1
+                <View style={[styles.listItem_Markup, (overallScore >= 5) ? { backgroundColor: '#E3ECFF' } : { backgroundColor: '#FF967C' }]}></View>
+                <Text style={styles.listItem_SubjectName}>
+                  {item.courseName}
+                </Text><View style={styles.listItem_Content}>
+                  <Text style={styles.listItem_ContentTitle}>Điểm số:&nbsp;</Text>
+                  <Text style={styles.listItem_ContentData}>{overallScore}</Text>
+                </View>
+                <View style={styles.listItem_Content}>
+                  <Text style={styles.listItem_ContentTitle}>Kết quả:&nbsp;</Text>
+                  <Text style={styles.listItem_ContentData}>{((overallScore) >= 5) ? "Đạt" : "Chưa đạt"}</Text>
+                </View>
+                {/* <TouchableOpacity style={styles.listItem_ViewDetail}
+                onPress={() => settingModal()}>
+                <Text style={styles.listItem_ViewDetail_Text}>Chi tiết</Text>
+                <MaterialCommunityIcons
+                  name={'arrow-right-thin'}
+                  size={22}
+                  color={'#fff'}
+                />
+              </TouchableOpacity> */}
+              </TouchableOpacity>
+            )
+          }}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.listSemester}>{title}</Text>
+          )}
+        />
 
 
-    },
-    listItem_ViewDetail_Text:{
-        color: '#fff',
-        fontSize: 13
-    },
-  
-    col: {
-      display: 'flex',
-      flexDirection: 'column',
-      // alignItems: 'flex-start',
-      justifyContent: 'space-around',
-    },
-    row: {
-      display: 'flex',
-      // flexWrap: 'wrap',
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignContent: 'flex-start',
-      marginTop: 12,
-      marginRight: 10,
-      // overflow: 'hidden'
-    },
-    // lichthiHeader: {
-    //   display: 'flex',
-    //   flexDirection: 'row',
-    //   alignItems: 'center',
-    // },
-    // lichthiHeader_Text: {
-    //   fontSize: 20,
-    //   fontWeight: 'bold',
-    //   color: '#252525',
-    //   paddingVertical: 5,
-    // },
-    scoreHeader_Sort: {
-      display: 'flex',
-      flexDirection: 'row',
-  
-      justifyContent: 'flex-end',
-    },
-    btnSort: {
-      borderColor: '#0065FF',
-      borderRadius: 8,
-  
-      borderWidth: 1,
-      borderStyle: 'solid',
-      backgroundColor: 'transparent',
-      paddingHorizontal: 12,
-      paddingVertical: 5,
-      marginLeft: 10,
-  
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    btnSort_Text: {
-      color: '#0065FF',
-      paddingRight: 7,
-    },
-  
-    effect: {
-      position: 'absolute',
-      right: 0,
-      top: 0,
-  
-      zIndex: 2,
-    },
-  });
-  
+      </ScrollView>
+    </SafeAreaView>
+
+
+  );
+}
+
+
+
+
