@@ -41,13 +41,13 @@ export default function StudentCard({navigation}) {
       </View>
 
       <View style={styles.modalContent}>
-        <View
+        {/* <View
           style={{
             borderBottomColor: 'red',
             // borderBottomWidth: StyleSheet.hairlineWidth,
             borderBottomWidth: 5,
             alignSelf: 'stretch',
-          }}></View>
+          }}></View> */}
         <Text
           style={{
             textTransform: 'uppercase',
@@ -84,13 +84,17 @@ export default function StudentCard({navigation}) {
           currentUser.email.indexOf('@st.uel.edu.vn') - 1,
           1,
         )}`}</Text>
-        <View
+        <Image
+          source={require('../../assets/barcode.png')}
+          style={{width: 200, height: 35, marginTop:20}}
+        />
+        {/* <View
           style={{
             borderBottomColor: 'red',
             // borderBottomWidth: StyleSheet.hairlineWidth,
             borderBottomWidth: 5,
             alignSelf: 'stretch',
-          }}></View>
+          }}></View> */}
       </View>
     </ScrollView>
   );

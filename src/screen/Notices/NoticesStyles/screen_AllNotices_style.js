@@ -19,7 +19,7 @@ export default StyleSheet.create({
     // paddingBottom: 200,
     backgroundColor: '#F7F9FE',
     borderRadius: 10,
-    marginBottom: 50
+    marginBottom: 50,
   },
   notiItem: {
     flex: 1,
@@ -169,7 +169,6 @@ export default StyleSheet.create({
     marginHorizontal: 15,
     marginTop: 15,
     padding: 20,
-
   },
 
   modalHeader_TitleText: {
@@ -199,9 +198,7 @@ export default StyleSheet.create({
     color: '#252525',
   },
 
-  modalContent: {
-   
-  },
+  modalContent: {},
   modalContentText: {
     color: '#252525',
     fontSize: 17,
@@ -210,18 +207,18 @@ export default StyleSheet.create({
     textAlign: 'justify',
     // marginTop: 8
   },
-  userAvatar:{
+  userAvatar: {
     width: 45,
-    height:45,
+    height: 45,
     aspectRatio: 1,
     borderRadius: 100,
-  },
-  btnResponseEmail:{
-    width: 25, 
-    height: 25
-  },
 
-
+    marginRight: 5,
+  },
+  btnResponseEmail: {
+    width: 25,
+    height: 25,
+  },
 
   btnResponse: {
     paddingHorizontal: 35,

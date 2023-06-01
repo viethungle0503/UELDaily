@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   View,
@@ -9,8 +9,8 @@ import {
   Alert,
   ImageBackground,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {useSelector, useDispatch} from 'react-redux';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {
   setLoggedIn,
   setCurrentUser,
@@ -35,35 +35,35 @@ import notifee, {
   AndroidStyle,
 } from '@notifee/react-native';
 
-export default function ProfileDisplay({ navigation }) {
+export default function ProfileDisplay({navigation}) {
   const loggedIn = useSelector(state => state.user.loggedIn);
   const currentUser = useSelector(state => state.user.currentUser);
   const profileImage = useSelector(state => state.user.profileImage);
   function showAlert() {
     Alert.alert(
-      "Thông báo",
+      'Thông báo',
       // "Tính năng này chưa được phát triển, đang đợi chị Ngân, chị Ngọc, chị Huyền và anh Bình cho biết thêm thông tin @@",
-      "Tính năng này hiện chưa được cập nhật thông tin",
+      'Tính năng này hiện chưa được cập nhật thông tin',
       [
         {
-          text: "Cancel",
-          onPress: () => Alert.alert("Cancel Pressed"),
-          style: "cancel",
+          text: 'Cancel',
+          onPress: () => Alert.alert('Cancel Pressed'),
+          style: 'cancel',
         },
-        { text: "OK", onPress: () => Alert.alert("OK Pressed") }
+        {text: 'OK', onPress: () => Alert.alert('OK Pressed')},
       ],
       {
         cancelable: true,
         onDismiss: () =>
           Alert.alert(
-            "This alert was dismissed by tapping outside of the alert dialog."
+            'This alert was dismissed by tapping outside of the alert dialog.',
           ),
-      }
+      },
     );
   }
   async function onDisplayNotification() {
     // Request permissions (required for iOS)
-    await notifee.requestPermission()
+    await notifee.requestPermission();
 
     // Create a channel (required for Android)
     const channelId = await notifee.createChannel({
@@ -82,15 +82,18 @@ export default function ProfileDisplay({ navigation }) {
         color: AndroidColor.RED,
         // color: '#E8210C', // red
         // color: '#4caf50',
-        style: { type: AndroidStyle.BIGTEXT, text: 'Large volume of text shown in the expanded state' },
+        style: {
+          type: AndroidStyle.BIGTEXT,
+          text: 'Large volume of text shown in the expanded state',
+        },
         actions: [
           {
             title: '<b>Dance</b> &#128111;',
-            pressAction: { id: 'dance' },
+            pressAction: {id: 'dance'},
           },
           {
             title: '<p style="color: #f44336;"><b>Cry</b> &#128557;</p>',
-            pressAction: { id: 'cry' },
+            pressAction: {id: 'cry'},
           },
         ],
       },
@@ -98,13 +101,17 @@ export default function ProfileDisplay({ navigation }) {
   }
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const [openLanguageMenu, setopenLanguageMenu] = React.useState(false);
-  const [VNLanguage, setVNLanguage] = React.useState((currentLanguage == "vn") ? true : false);
+  const [VNLanguage, setVNLanguage] = React.useState(
+    currentLanguage == 'vn' ? true : false,
+  );
   const chooseVNLanguage = () => {
     setVNLanguage(!VNLanguage);
     setENLanguage(!ENLanguage);
   };
 
-  const [ENLanguage, setENLanguage] = React.useState((currentLanguage == "en") ? true : false);
+  const [ENLanguage, setENLanguage] = React.useState(
+    currentLanguage == 'en' ? true : false,
+  );
   const chooseENLanguage = () => {
     setENLanguage(!ENLanguage);
     setVNLanguage(!VNLanguage);
@@ -112,24 +119,27 @@ export default function ProfileDisplay({ navigation }) {
   const dispatch = useDispatch();
   const confirmSignout = () => {
     Alert.alert(
-      "Thông báo",
-      "Bạn có chắc chắn muốn đăng xuất?",
+      'Thông báo',
+      'Bạn có chắc chắn muốn đăng xuất?',
       [
         {
-          text: "Cancel",
-          onPress: () => { return },
-          style: "cancel",
+          text: 'Cancel',
+          onPress: () => {
+            return;
+          },
+          style: 'cancel',
         },
-        { text: "OK", onPress: () => signOut() }
+        {text: 'OK', onPress: () => signOut()},
       ],
       {
         cancelable: true,
-        onDismiss: () => { return },
-      }
+        onDismiss: () => {
+          return;
+        },
+      },
     );
-  }
+  };
   const signOut = async () => {
-
     try {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
@@ -139,32 +149,30 @@ export default function ProfileDisplay({ navigation }) {
           setTimeout(() => {
             dispatch(setLoggedIn(false));
             dispatch(setCurrentUser({}));
-            dispatch(setProfileImage(""))
+            dispatch(setProfileImage(''));
             dispatch(setUnreadNotice(0));
             dispatch(setSchedule({}));
-            dispatch(setScoreBoard([{ title: "Hello", data: [] }]));
+            dispatch(setScoreBoard([{title: 'Hello', data: []}]));
             dispatch(setTestSchedule([]));
             dispatch(setModules([]));
             dispatch(setLateModules([]));
             dispatch(setTuition([]));
-            dispatch(setActivityScore([]))
-          }, 250)
-
+            dispatch(setActivityScore([]));
+          }, 250);
         });
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
-    if (currentLanguage == "vn") {
+    if (currentLanguage == 'vn') {
       setVNLanguage(true);
-      setENLanguage(false)
-    }
-    else {
+      setENLanguage(false);
+    } else {
       setVNLanguage(false);
-      setENLanguage(true)
+      setENLanguage(true);
     }
-  }, [currentLanguage])
+  }, [currentLanguage]);
 
   return (
     <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
@@ -177,11 +185,11 @@ export default function ProfileDisplay({ navigation }) {
             <View style={styles.studentAvatarContainer}>
               <Image
                 style={styles.studentAvatar}
-                source={{ uri: profileImage }}
+                source={{uri: profileImage}}
               />
             </View>
 
-            {(currentUser != {}) ? (
+            {currentUser != {} ? (
               <Text style={styles.studentName}>
                 {currentUser.lastName + ' ' + currentUser.firstName}
               </Text>
@@ -194,16 +202,17 @@ export default function ProfileDisplay({ navigation }) {
           <Text style={styles.accountHeading}>{strings.account}</Text>
         </TouchableOpacity>
 
-
         <TouchableOpacity
           style={styles.accountListItem}
-          onPress={() => navigation.navigate("PersonalInformation")}>
+          onPress={() => navigation.navigate('PersonalInformation')}>
           <View style={styles.row}>
             <Image
               source={require('../../assets/account_user.png')}
               style={styles.accountListItem_IconTitle}
             />
-            <Text style={styles.accountText}>{strings.student_information}</Text>
+            <Text style={styles.accountText}>
+              {strings.student_information}
+            </Text>
           </View>
 
           <View style={styles.row}>
@@ -216,14 +225,16 @@ export default function ProfileDisplay({ navigation }) {
 
         <TouchableOpacity
           style={styles.accountListItem}
-          onPress={() => navigation.navigate("StudentCard")}>
+          onPress={() => navigation.navigate('StudentCard')}>
           <View style={styles.row}>
             <Image
               source={require('../../assets/account_thesinhvien.png')}
               style={styles.accountListItem_IconTitle}
             />
             {/* <Text style={styles.accountText}>{strings.student_information}</Text> */}
-            <Text style={styles.accountText}>Thẻ sinh viên điện tử</Text>
+            <Text style={styles.accountText}>
+              {strings.electronic_student_card}
+            </Text>
           </View>
 
           <View style={styles.row}>
@@ -233,28 +244,6 @@ export default function ProfileDisplay({ navigation }) {
             />
           </View>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.accountListItem}
-          onPress={() => navigation.navigate("PersonalCard")}>
-          <View style={styles.row}>
-            <Image
-              source={require('../../assets/account_thesinhvien.png')}
-              style={styles.accountListItem_IconTitle}
-            />
-            {/* <Text style={styles.accountText}>{strings.student_information}</Text> */}
-            <Text style={styles.accountText}>Thẻ sinh viên điện tử trống</Text>
-          </View>
-
-          <View style={styles.row}>
-            <Image
-              source={require('../../assets/account_btnOpen.png')}
-              style={styles.accountListItem_IconOpen}
-            />
-          </View>
-        </TouchableOpacity>
-
-
       </View>
 
       {/* cài đặt section */}
@@ -273,7 +262,9 @@ export default function ProfileDisplay({ navigation }) {
           </View>
 
           <View style={styles.row}>
-            <Text style={styles.accountDataText}>{(currentLanguage == "vn") ? "Tiếng Việt" : "English"}</Text>
+            <Text style={styles.accountDataText}>
+              {currentLanguage == 'vn' ? 'Tiếng Việt' : 'English'}
+            </Text>
 
             <Image
               source={require('../../assets/account_btnOpen.png')}
@@ -282,25 +273,29 @@ export default function ProfileDisplay({ navigation }) {
           </View>
         </TouchableOpacity>
 
-        <Modal visible={openLanguageMenu} transparent={true} onRequestClose={() => setopenLanguageMenu(false)}>
-          <View
-            style={styles.langBackground}>
+        <Modal
+          visible={openLanguageMenu}
+          transparent={true}
+          onRequestClose={() => setopenLanguageMenu(false)}>
+          <View style={styles.langBackground}>
             <View style={styles.langContainer}>
-              <Text style={styles.accountHeading}>{strings.select_language}</Text>
+              <Text style={styles.accountHeading}>
+                {strings.select_language}
+              </Text>
 
               <TouchableOpacity
                 onPress={chooseVNLanguage}
                 style={
                   VNLanguage
                     ? [
-                      styles.langNation_Vie,
-                      {
-                        backgroundColor: 'rgb(210, 230, 255)',
-                        borderColor: '#0065FF',
-                        borderWidth: 1,
-                        borderRadius: 5,
-                      },
-                    ]
+                        styles.langNation_Vie,
+                        {
+                          backgroundColor: 'rgb(210, 230, 255)',
+                          borderColor: '#0065FF',
+                          borderWidth: 1,
+                          borderRadius: 5,
+                        },
+                      ]
                     : styles.langNation_Vie
                 }>
                 <View style={styles.row}>
@@ -314,11 +309,11 @@ export default function ProfileDisplay({ navigation }) {
                   style={
                     VNLanguage
                       ? [
-                        styles.langSelectNationIcon,
-                        {
-                          opacity: 1,
-                        },
-                      ]
+                          styles.langSelectNationIcon,
+                          {
+                            opacity: 1,
+                          },
+                        ]
                       : styles.langSelectNationIcon
                   }
                   source={require('../../assets/account_lang_check.png')}
@@ -330,14 +325,14 @@ export default function ProfileDisplay({ navigation }) {
                 style={
                   ENLanguage
                     ? [
-                      styles.langNation_Eng,
-                      {
-                        backgroundColor: 'rgb(210, 230, 255)',
-                        borderColor: '#0065FF',
-                        borderWidth: 1,
-                        borderRadius: 5,
-                      },
-                    ]
+                        styles.langNation_Eng,
+                        {
+                          backgroundColor: 'rgb(210, 230, 255)',
+                          borderColor: '#0065FF',
+                          borderWidth: 1,
+                          borderRadius: 5,
+                        },
+                      ]
                     : styles.langNation_Eng
                 }>
                 <View style={styles.row}>
@@ -353,11 +348,11 @@ export default function ProfileDisplay({ navigation }) {
                   style={
                     ENLanguage
                       ? [
-                        styles.langSelectNationIcon,
-                        {
-                          opacity: 1,
-                        },
-                      ]
+                          styles.langSelectNationIcon,
+                          {
+                            opacity: 1,
+                          },
+                        ]
                       : styles.langSelectNationIcon
                   }
                   source={require('../../assets/account_lang_check.png')}
@@ -369,22 +364,21 @@ export default function ProfileDisplay({ navigation }) {
                 onPress={() => {
                   setopenLanguageMenu(false);
                   if (VNLanguage == true) {
-                    strings.setLanguage('vn')
-                    dispatch(setCurrentLanguage("vn"));
+                    strings.setLanguage('vn');
+                    dispatch(setCurrentLanguage('vn'));
                   }
                   if (ENLanguage == true) {
-                    strings.setLanguage('en')
-                    dispatch(setCurrentLanguage("en"));
+                    strings.setLanguage('en');
+                    dispatch(setCurrentLanguage('en'));
                   }
                 }}>
-                <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '600' }}>
+                <Text style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
                   {strings.confirm}
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
-
       </View>
       {/* cài đặt section */}
       <View style={styles.accountPolicyContainer}>
@@ -393,22 +387,22 @@ export default function ProfileDisplay({ navigation }) {
         <TouchableOpacity
           style={styles.accountListItem}
           // onPress={() => showAlert()}
-          onPress={() => navigation.navigate('NullDataScreen')}
-        >
+          onPress={() => navigation.navigate('NullDataScreen')}>
           <View style={styles.row}>
             <Image
               source={require('../../assets/account_hoidap.png')}
               style={styles.accountListItem_IconTitle}
             />
-            <Text style={styles.policy_accountText}>{strings.QuestionAndAnswer}</Text>
+            <Text style={styles.policy_accountText}>
+              {strings.QuestionAndAnswer}
+            </Text>
           </View>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.accountListItem}
           // onPress={() => showAlert()}
-          onPress={() => navigation.navigate('NullDataScreen')}
-        >
+          onPress={() => navigation.navigate('NullDataScreen')}>
           <View style={styles.row}>
             <Image
               source={require('../../assets/account_quydinh.png')}
@@ -440,4 +434,3 @@ export default function ProfileDisplay({ navigation }) {
     </ScrollView>
   );
 }
-

@@ -11,7 +11,8 @@ const moodlewsrestformat = 'moodlewsrestformat=' + 'json';
 
 async function get_web_service_token() {
   const username = "username=" + "thanhbinh.bent@gmail.com";
-  const password = "password=" + "Maiyeuuel2223@";
+  // const password = "password=" + "Maiyeuuel2223@";
+  const password = "password=" + "MaiyeuUel123@";
   const service = "service=" + "moodle_react_native_app";
   const data = [username, password, service];
   const link = loginUrl.concat("?", data.join('&'));

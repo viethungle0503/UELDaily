@@ -47,6 +47,9 @@ export default StyleSheet.create({
     right: 0,
     justifyContent: 'center', //Centered vertically
     alignItems: 'center', //Centered horizontally
+    marginBottom: 10,
+    marginTop:50,
+    justifyContent: 'center',
   },
   modalContentItem: {
     backgroundColor: '#FFF',
