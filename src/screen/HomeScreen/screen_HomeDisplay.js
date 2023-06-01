@@ -2,302 +2,321 @@ import {
   Image,
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Modal,
+  FlatList,
+  SafeAreaView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {render, WebView} from 'react-native-webview';
+import React, { useEffect, useState } from 'react';
+import styles from './HomeScreenStyles/screen_HomeDisplay_style';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentLanguage, setLoggedIn } from '../../redux_toolkit/userSlice';
+import strings from '../Language';
+import { setNews_UEL } from '../../redux_toolkit/newsSlice';
+import { loadGraphicCards } from '../GlobalFunction';
+import { Alert } from 'react-native';
 
 export default function HomeDisplay({ navigation }) {
-  const news = news_UEL.map((item, index) =>(
-    <TouchableOpacity style={styles.row} key={index} onPress={() => {
-      navigation.navigate('NewsDetail',{link: item.link})
-    }}>
-      <Image
-        style={styles.hoatdongImage}
-        source={{uri: item.imageURL}}
-      />
-      <View>
-        <Text style={styles.hoatdongTitle}>
-          {item.title}
-        </Text>
-        <View style={styles.row}>
-          <Image source={require('../../assets/clock.png')} />
-          <Text style={styles.hoatdongTitle}> {item.time}</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  ));
-  return (
-    <ScrollView style={styles.body}>
-      {loggedIn && (
-        <View style={styles.studentwelcome}>
-          <Image style={styles.studentAvatar} source={{ uri: currentUser.data.profileImage }} />
-          <View>
-            {currentUser ? (
-              <Text style={styles.studentName}>
-                {currentUser.data.lastName + ` ${currentUser.data.firstName}`}
-              </Text>
-            ) : null}
-            <Text>{currentUser.key}</Text>
-          </View>
-          <TouchableOpacity style={styles.btnLanguage}>
-            <MaterialCommunityIcons
-              style={styles.svgLanguage}
-              name={'web'}
-              size={25}
+  const dispatch = useDispatch()
+  const currentUser = useSelector(state => state.user.currentUser);
+  const loggedIn = useSelector(state => state.user.loggedIn);
+  const profileImage = useSelector(state => state.user.profileImage);
+  const currentLanguage = useSelector(state => state.user.currentLanguage);
+  const news_UEL = useSelector(state => state.news.news_UEL);
+  const [openLanguageMenu, setopenLanguageMenu] = useState(false);
+  const [VNLanguage, setVNLanguage] = useState((currentLanguage == "vn") ? true : false);
+  const chooseVNLanguage = () => {
+    setVNLanguage(!VNLanguage);
+    setENLanguage(!ENLanguage);
+  };
+
+  const [ENLanguage, setENLanguage] = useState(!VNLanguage);
+  const chooseENLanguage = () => {
+    setENLanguage(!ENLanguage);
+    setVNLanguage(!VNLanguage);
+  };
+  const renderHeader = () => {
+    return (
+      <SafeAreaView style={styles.body} showsVerticalScrollIndicator={false}>
+        {loggedIn && (
+          <View style={styles.studentwelcome}>
+
+            <Image
+              style={styles.studentAvatar}
+              source={{ uri: profileImage }}
             />
-            
-          </TouchableOpacity>
+            <View>
+              {(currentUser != {}) ? (
+                <Text style={styles.studentName}>
+                  {currentUser.lastName + ` ${currentUser.firstName}`}
+                </Text>
+              ) : null}
+              <Text>{currentUser.id}</Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.btnLanguage}
+              onPress={() => setopenLanguageMenu(true)}>
+
+              <MaterialCommunityIcons
+                style={styles.svgLanguage}
+                name={'web'}
+                size={25}
+              />
+
+            </TouchableOpacity>
+
+
+            <Image
+              style={styles.effect}
+              source={require('../../assets/effectRound.png')}
+            />
+          </View>
+        )}
+        <View style={styles.tienich}>
+          <View style={styles.tienichHeader}>
+            <Text style={styles.tienichText}>{strings.utilities}</Text>
+            <TouchableOpacity style={styles.btnAllTienich} 
+            onPress={() => {
+              Alert.alert("Thông báo","Các tính năng khác cần có để sử dụng tính năng này");
+            }}>
+              <MaterialCommunityIcons name={'tune-variant'} size={14} style={{color:'black'}}/>
+              <Text style={{ color: 'black', marginLeft: 5 }}>{strings.all}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.col}>
+            <View style={styles.tienichIcon}>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('Schedule')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/tkbIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.schedule}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('ScoreBoard')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/xemdiemIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.scoreboard}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('Exam')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/lichthiIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.exam}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.tienichIcon}>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('Homework')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/baitapIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.homework}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('Tuition')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/hocphiIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.tuition}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.tienichIcon_Item}
+                onPress={() => navigation.navigate('Ctxh')}>
+                <Image
+                  style={styles.tienichIcon__ItemImg}
+                  source={require('../../assets/ctxhIcon.png')}
+                />
+                <Text style={styles.tienichIcon__ItemText}>{strings.ctxh}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      )}
-      <Image
-        style={styles.effect}
-        source={require('../../assets/effectRound.png')}
+        <View style={styles.shape}></View>
+        <Text style={styles.hoatdongHeader}>{strings.recent_activity}</Text>
+        {/* <View style={styles.hoatdong}>
+        </View> */}
+      </SafeAreaView>
+    )
+  }
+  if (strings.getInterfaceLanguage().substring(3, 5).toLowerCase() != currentLanguage) {
+    strings.setLanguage(currentLanguage);
+  };
+  useEffect(() => {
+    strings.setLanguage(currentLanguage);
+    if (currentLanguage == "vn") {
+      setVNLanguage(true);
+      setENLanguage(false)
+    }
+    else {
+      setVNLanguage(false);
+      setENLanguage(true)
+    }
+  }, [currentLanguage]);
+  useEffect(() => {
+    if (news_UEL.length == 0) {
+      loadGraphicCards("https://uel.edu.vn/tin-tuc").then((returnValue) => {
+        dispatch(setNews_UEL(returnValue));
+      })
+    }
+    // dispatch(setLoggedIn(false));
+  }, [])
+  return (
+    <SafeAreaView style={{
+      marginBottom: 50
+    }}>
+      <FlatList  
+        keyExtractor={(item, index) => (item + index).toString()}
+        showsVerticalScrollIndicator={false}
+        data={news_UEL}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              style={styles.row}
+              onPress={() => {
+                navigation.navigate('NewsDetail', { link: item.link });
+              }}>
+              <Image style={styles.hoatdongImage} source={{ uri: item.imageURL }} />
+              <View style={styles.contentMain}>
+                <Text
+                  style={styles.hoatdongTitle}
+                  numberOfLines={3}
+                  ellipsizeMode="tail">
+                  {item.title}
+                </Text>
+                <View style={styles.timeBlock}>
+                  <Image
+                    style={styles.iconTime}
+                    source={require('../../assets/clock.png')}
+                  />
+                  <Text style={styles.hoatdongTime}>{item.time.slice(1, 11)}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )
+        }}
+        ListHeaderComponent={renderHeader}
       />
-      <View style={styles.tienich}>
-        <View style={styles.tienichHeader}>
-          <Text style={styles.tienichText}>Tiện ích</Text>
-          <TouchableOpacity style={styles.btnAllTienich}>
-            <MaterialCommunityIcons name={'tune-variant'} size={12} />
-            <Text style={{ color: 'black', marginLeft: 5 }}>Tất cả</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.col}>
-          <View style={styles.tienichIcon}>
+      <Modal visible={openLanguageMenu} transparent={true} onRequestClose={() => setopenLanguageMenu(false)}>
+        <View
+          style={styles.langBackground}>
+          <View style={styles.langContainer}>
+            <Text style={styles.modalHeading}>{strings.select_language}</Text>
             <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Schedule')}>
+              onPress={chooseVNLanguage}
+              style={
+                VNLanguage
+                  ? [
+                    styles.langNation_Vie,
+                    {
+                      backgroundColor: 'rgb(210, 230, 255)',
+                      borderColor: '#0065FF',
+                      borderWidth: 1,
+                      borderRadius: 5,
+                    },
+                  ]
+                  : styles.langNation_Vie
+              }>
+              <View style={styles.langNationContainer}>
+                <Image
+                  source={require('../../assets/account_lang_vie.png')}
+                  style={styles.langNationIcon}
+                />
+                <Text style={styles.modalText}>{strings.vietnamese}</Text>
+              </View>
+
               <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/tkbIcon.png')}
+                style={
+                  VNLanguage
+                    ? [
+                      styles.langSelectNationIcon,
+                      {
+                        opacity: 1,
+                      },
+                    ]
+                    : styles.langSelectNationIcon
+                }
+                source={require('../../assets/account_lang_check.png')}
               />
-              <Text style={styles.tienichIcon__ItemText}>Thời khóa biểu</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('ScoreBoard')}>
+              onPress={chooseENLanguage}
+              style={
+                ENLanguage
+                  ? [
+                    styles.langNation_Eng,
+                    {
+                      backgroundColor: 'rgb(210, 230, 255)',
+                      borderColor: '#0065FF',
+                      borderWidth: 1,
+                      borderRadius: 5,
+                    },
+                  ]
+                  : styles.langNation_Eng
+              }>
+              <View style={styles.langNationContainer}>
+                <Image
+                  source={require('../../assets/account_lang_eng.png')}
+                  style={styles.langNationIcon}
+                />
+
+                <Text style={styles.modalText}>{strings.english}</Text>
+              </View>
+
               <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/xemdiemIcon.png')}
+                style={
+                  ENLanguage
+                    ? [
+                      styles.langSelectNationIcon,
+                      {
+                        opacity: 1,
+                      },
+                    ]
+                    : styles.langSelectNationIcon
+                }
+                source={require('../../assets/account_lang_check.png')}
               />
-              <Text style={styles.tienichIcon__ItemText}>Xem điểm</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Exam')}>
-              <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/lichthiIcon.png')}
-              />
-              <Text style={styles.tienichIcon__ItemText}>Lịch thi</Text>
+              style={styles.langFooter_ButtonClose}
+              onPress={() => {
+                setopenLanguageMenu(false);
+                if (VNLanguage == true) {
+                  strings.setLanguage('vn')
+                  dispatch(setCurrentLanguage("vn"));
+                }
+                if (ENLanguage == true) {
+                  strings.setLanguage('en')
+                  dispatch(setCurrentLanguage("en"));
+                }
+              }}>
+              <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '600' }}>
+                {strings.confirm}
+              </Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.tienichIcon}>
-            <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Homework')}>
-              <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/baitapIcon.png')}
-              />
-              <Text style={styles.tienichIcon__ItemText}>Bài tập</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Tuition')}>
-              <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/hocphiIcon.png')}
-              />
-              <Text style={styles.tienichIcon__ItemText}>Học phí</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.tienichIcon_Item}
-              onPress={() => navigation.navigate('Ctxh')}>
-              <Image
-                style={styles.tienichIcon__ItemImg}
-                source={require('../../assets/ctxhIcon.png')}
-              />
-              <Text style={styles.tienichIcon__ItemText}>Ngày CTXH</Text>
-            </TouchableOpacity>
-          </View>
         </View>
-      </View>
-      <View>
-        <Text style={styles.hoatdongHeader}>Hoạt động gần đây</Text>
-        <View style={styles.hoatdong}>
-          {news}
-        </View>
-      </View>
-    </ScrollView>
+      </Modal>
+    </SafeAreaView>
+
   );
 }
 
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'column',
-  },
 
-  col: {
-    display: 'flex',
-    flexDirection: 'column',
-    // alignItems: 'flex-start',
-    justifyContent: 'space-around',
-  },
-  row: {
-    display: 'flex',
-    // flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'flex-start',
-    marginTop: 12,
-    marginRight: 10,
-    // overflow: 'hidden'
-  },
-
-  studentwelcome: {
-    height: 140,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    flex: 1,
-    zIndex: 1,
-    padding: 30,
-    position: 'relative',
-    backgroundColor: '#D0E0FF',
-  },
-  studentName: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    color: '#252525',
-  },
-  studentAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 100,
-    marginRight: 10,
-  },
-  btnLanguage: {
-    position: 'absolute',
-    right: 30,
-    top: 35,
-    zIndex: 2,
-  },
-  svgLanguage: {
-    color: 'black',
-  },
-  effect: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-
-    zIndex: 2,
-  },
-
-  tienich: {
-    flex: 2,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingTop: 32,
-    paddingBottom: 20,
-    paddingHorizontal: 30,
-    backgroundColor: '#fff',
-    zIndex: 3,
-    marginTop: -50,
-  },
-  tienichHeader: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  tienichIcon__ItemImg: {
-    height: 32,
-    width: 32,
-  },
-  tienichIcon: {
-    display: 'flex',
-    flexDirection: 'row',
-    // marginHorizontal: 10,
-    // justifyContent: 'center',
-    marginVertical: 15,
-    // marginHorizontal: 5,
-    marginBottom: 0,
-    // width: 100,
-    textAlign: 'center',
-    alignContent: 'center',
-    justifyContent: 'space-between',
-  },
-  tienichIcon_Item: {
-    display: 'flex',
-    // justifyContent: 'center',
-    alignItems: 'center',
-    width: 100,
-  },
-  tienichIcon__Item: {
-    // display: 'flex',
-  },
-  tienichIcon__ItemIcon: {
-    display: 'flex',
-    justifyContent: 'center',
-    // width: '100%',
-    textAlignVertical: 'center',
-  },
-  tienichIcon__ItemText: {
-    fontSize: 18,
-    textAlign: 'center',
-    // flexWrap: 'wrap',
-    textAlignVertical: 'top',
-    color: '#000000',
-  },
-  btnAllTienich: {
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    borderColor: '#D9D9D9',
-    backgroundColor: '#fff',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-
-    display: 'flex',
-    // flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-  tienichText: {
-    // color: 'black',
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#252525',
-  },
-
-  hoatdong: {
-    flex: 4,
-    backgroundColor: '#FFF',
-    marginTop: 10,
-    paddingTop: 30,
-    paddingLeft: 30,
-    paddingRight: 110,
-    paddingBottom: 30,
-  },
-  hoatdongHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#252525',
-    paddingVertical: 3,
-  },
-  hoatdongTitle: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#252525',
-  },
-  hoatdongImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 4,
-    marginRight: 10, //cách hình
-  },
-});

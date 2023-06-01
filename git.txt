@@ -2,6 +2,13 @@ git clone https://github.com/vatrixxonnis/UELDaily.git
 
 cd "nameofproject"
 
+cd android
+
+.\gradlew clean
+
+cd ..
+
+npm cache clean --force
 
 
 
@@ -21,7 +28,7 @@ Once it's successfully finished
 npm install --save react-native-vector-icons
 
 npm i --save @fortawesome/fontawesome-svg-core
-
+cd
 
 //> Task :app:installDebug FAILED Skipping device 'emulator-5554' (emulator-5554): Device is OFFLINE.
 Wipe data
