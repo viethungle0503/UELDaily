@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const databaseSlice = createSlice({
   name: 'database',
   initialState: {
-    db_app: [],
+    db_app: null,
     db_uel: [],
     db_departments: [],
   },
@@ -21,18 +21,12 @@ export const databaseSlice = createSlice({
     },
     setDB_Departments: (state, action) => {
       state.db_departments = action.payload;
-    },
-    setSeenTrue: (state, action) => {
-      state.db_app[action.payload[0]].data.notices[action.payload[1]].seen = true;
-    },
-    deleteNotification: (state, action) => {
-      state.db_app[action.payload[0]].data.notices = state.db_app[action.payload[0]].data.notices.filter(x => x?.id != action.payload[1]);
-    },
+    }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setDB_App, setDB_UEL, setDB_Departments, setSeenTrue, deleteNotification } = databaseSlice.actions;
+export const { setDB_App, setDB_UEL, setDB_Departments} = databaseSlice.actions;
 
 export default databaseSlice.reducer;
 

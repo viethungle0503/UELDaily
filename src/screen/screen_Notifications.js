@@ -1,18 +1,14 @@
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import strings from './Language';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
 // import component
-import AllNotices from './Notices/screen_AllNotices';
-import WarningNotices from './Notices/screen_WarningNotices';
-import UpdateNotices from './Notices/screen_UpdateNotices';
-
+import NotificationTab from '../components/NotificationTab';
 const Tab = createMaterialTopTabNavigator();
 
-export default function Notifications({ navigation }) {
+export default function Notifications({navigation}) {
   const currentLanguage = useSelector(state => state.user.currentLanguage);
-  useEffect(() => {
-  }, [currentLanguage])
+  useEffect(() => {}, [currentLanguage]);
   return (
     <Tab.Navigator
       initialRouteName="AllNotices"
@@ -33,24 +29,26 @@ export default function Notifications({ navigation }) {
       }}>
       <Tab.Screen
         name="AllNotices"
-        component={AllNotices}
+        component={NotificationTab}
         options={{
           tabBarLabel: strings.all,
           upperCaseLabel: false,
           headerShown: false,
         }}
+        initialParams={{pageType: 'all'}}
       />
       <Tab.Screen
         name="WarningNotices"
-        component={WarningNotices}
-        options={{ tabBarLabel: strings.remind, headerShown: false }}
+        component={NotificationTab}
+        options={{tabBarLabel: strings.remind, headerShown: false}}
+        initialParams={{pageType: 'warning'}}
       />
       <Tab.Screen
         name="UpdateNotices"
-        component={UpdateNotices}
-        options={{ tabBarLabel: strings.update, headerShown: false }}
+        component={NotificationTab}
+        options={{tabBarLabel: strings.update, headerShown: false}}
+        initialParams={{pageType: 'update'}}
       />
     </Tab.Navigator>
   );
 }
-

@@ -91,6 +91,7 @@ const strings = new LocalizedStrings({
         paid: "Đã thanh toán",
         owed: "Còn nợ",
         unpaid:"Chưa thanh toán",
+        unknown: "Không xác định",
     },
     en: {
         home: "Home",
@@ -183,6 +184,7 @@ const strings = new LocalizedStrings({
         paid: "Paid",
         owed: "Owed",
         unpaid:"Unpaid",
+        unknown: "Unknown",
     },
 
 });

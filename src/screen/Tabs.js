@@ -1,10 +1,8 @@
-import {
-  Text,
-} from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {Text} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import strings from './Language';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {useEffect} from 'react';
 // Font Materials
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // Screen
@@ -12,8 +10,7 @@ import Home from './screen_Home';
 import News from './screen_News';
 import Notifications from './screen_Notifications';
 import Profile from './screen_Profile';
-import { setUnreadNotice } from '../redux_toolkit/userSlice';
-
+import {setUnreadNotice} from '../redux_toolkit/userSlice';
 
 const Tab = createBottomTabNavigator();
 export default function Tabs() {
@@ -22,16 +19,12 @@ export default function Tabs() {
   const currentUser = useSelector(state => state.user.currentUser);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const unreadNotice = useSelector(state => state.user.unreadNotice);
-  useEffect(() => {
-  }, [currentLanguage, unreadNotice]);
+  useEffect(() => {}, [currentLanguage, unreadNotice]);
 
   useEffect(() => {
-    var trueUser = db_app.find(
-      x => x.data.email == currentUser.email,
-    );
-    var tabBarBadge = 0;
-    if (trueUser !== undefined) {
-      trueUser.data.notices.forEach(value => {
+    if (db_app !== null) {
+      let tabBarBadge = 0;
+      db_app.data.notices.forEach(value => {
         if (value !== null) {
           if (value.seen == false) {
             tabBarBadge += 1;
@@ -39,14 +32,14 @@ export default function Tabs() {
         }
       });
       dispatch(setUnreadNotice(tabBarBadge));
-    };
-  }, [db_app])
+    }
+  }, [db_app]);
 
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={({ route }) => ({
-        tabBarLabel: ({ focused, size, tintColor }) => {
+      screenOptions={({route}) => ({
+        tabBarLabel: ({focused, size, tintColor}) => {
           let labelName;
           if (route.name === 'Home') {
             labelName = strings.home;
@@ -77,7 +70,7 @@ export default function Tabs() {
             </Text>
           );
         },
-        tabBarIcon: ({ focused, size, color }) => {
+        tabBarIcon: ({focused, size, color}) => {
           let iconName;
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
@@ -102,8 +95,8 @@ export default function Tabs() {
           bottom: 0,
           alignItems: 'center',
           height: 50,
-          color: 'red'
-        }
+          color: 'red',
+        },
       })}>
       <Tab.Screen name="Home" component={Home} options={{}} />
       <Tab.Screen name="News" component={News} options={{}} />
@@ -111,7 +104,7 @@ export default function Tabs() {
         name="Notifications"
         component={Notifications}
         options={{
-          tabBarBadge: (unreadNotice != 0) ? unreadNotice : null,
+          tabBarBadge: unreadNotice != 0 ? unreadNotice : null,
         }}
       />
       <Tab.Screen name="Profile" component={Profile} options={{}} />
