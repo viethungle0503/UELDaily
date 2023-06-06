@@ -9,11 +9,8 @@ import PreLogin2 from './screen/screen_PreLogin2';
 import Tabs from './screen/Tabs';
 // Redux
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  setDB_App,
-  setDB_UEL,
-} from './redux_toolkit/databaseSlice';
-import { setCurrentUser } from './redux_toolkit/userSlice';
+import {setDB_App, setDB_UEL} from './redux_toolkit/databaseSlice';
+import {setCurrentUser} from './redux_toolkit/userSlice';
 // Firebase
 import {firebase} from '@react-native-firebase/database';
 // Main
@@ -26,7 +23,6 @@ import notifee, {
   AndroidStyle,
   EventType,
 } from '@notifee/react-native';
-import NotificationService from './NotificationService';
 import RNBootSplash from 'react-native-bootsplash';
 import {
   View,
@@ -39,6 +35,7 @@ import {
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
+import useUpdateEffect from './screen/CustomeHook';
 const RootStack = createStackNavigator();
 
 function App() {
@@ -73,14 +70,11 @@ function App() {
           </RootStack.Group>
         ) : (
           // Auth screens
-            <RootStack.Screen
-              name="UEL Daily"
-              component={Tabs}
-              options={{headerShown: false}}
-            />
-            
-
-          
+          <RootStack.Screen
+            name="UEL Daily"
+            component={Tabs}
+            options={{headerShown: false}}
+          />
         )}
       </RootStack.Navigator>
     </NavigationContainer>
@@ -131,23 +125,27 @@ const AppWrapper = () => {
       );
     }
   }
-  const asyncAppFn = async () => {
+
+  const getPersonalAppData = async () => {
     await firebase
       .app()
       .database(
         'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
       )
       .ref('/users')
+      .orderByChild('id')
+      .equalTo(currentUser.id)
       .on(
         'value',
         snapshot => {
-          var holder = [];
-          snapshot.forEach(childSnapshot => {
-            let childKey = childSnapshot.key;
-            let childData = childSnapshot.val();
-            holder = [...holder, {key: childKey, data: childData}];
-          });
-          dispatch(setDB_App(holder));
+          if(snapshot.exists()) {
+            dispatch(
+              setDB_App({
+                key: Object.keys(snapshot.val())[0],
+                data: Object.values(snapshot.val())[0],
+              }),
+            );
+          }
         },
         error => {
           console.error(error);
@@ -160,31 +158,12 @@ const AppWrapper = () => {
   const getUELDatabase = useQuery({
     queryKey: ['db_uel'],
     queryFn: () => wait(1000).then(() => post_data('all_students')),
-    refetchInterval: 60000,
+    refetchInterval: false,
     retry: true,
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-    enabled: checkInternet === true
+    enabled: checkInternet === true,
   });
-  const sendNotification = async () => {
-    let notificationData = {
-      title: 'First Notification',
-      body: 'Notification Body',
-      token:
-        'dF4y6UuESueMXtdUsopIKJ:APA91bGHyfMC0D089MHmTRe1KdwODtdBWwB497ZELv_aZU__4x8I4EOLc58KTPxTNvUvUfwkIzocp1FU7wm9cUEWD2Le3-Y1DQRmTTxy6CcArx0k8jO10jw6W5QcCdTK_0UvUBQPCYNv',
-    };
-    await NotificationService.sendSingleDeviceNotification(notificationData);
-  };
 
-  const sendMultiNotification = async () => {
-    let notificationData = {
-      title: 'First Multi Device Notification',
-      body: 'Notification Body',
-      token: [
-        'dF4y6UuESueMXtdUsopIKJ:APA91bGHyfMC0D089MHmTRe1KdwODtdBWwB497ZELv_aZU__4x8I4EOLc58KTPxTNvUvUfwkIzocp1FU7wm9cUEWD2Le3-Y1DQRmTTxy6CcArx0k8jO10jw6W5QcCdTK_0UvUBQPCYNv',
-      ],
-    };
-    await NotificationService.sendMultiDeviceNotification(notificationData);
-  };
   async function DisplayNotification(remoteMessage) {
     // Create a channel
     const channelId = await notifee.createChannel({
@@ -204,9 +183,6 @@ const AppWrapper = () => {
         },
       },
     });
-    setTimeout(async () => {
-      await asyncAppFn();
-    }, 2000);
   }
   const requestPermission = async () => {
     const authStatus = await messaging().requestPermission();
@@ -235,7 +211,6 @@ const AppWrapper = () => {
     // Internet is reachable
     else {
       // checkToken();
-      asyncAppFn();
     }
   }, [checkInternet]);
   useEffect(() => {
@@ -257,12 +232,10 @@ const AppWrapper = () => {
     return unsubscribe;
   }, []);
   useEffect(() => {
-    console.log("db_uel changed");
-    if(loggedIn == true && currentUser !== {}) {
-      let index = db_uel.findIndex(x => x.email === currentUser.email)
-      dispatch(setCurrentUser(db_uel[index]))
+    if (currentUser !== null) {
+      getPersonalAppData();
     }
-  },[db_uel])
+  }, [currentUser]);
   // useEffect(() => {
   //   return notifee.onForegroundEvent(({ type, detail }) => {
   //     switch (type) {
@@ -290,19 +263,6 @@ const AppWrapper = () => {
   // if (loading) {
   //   return null;
   // }
-  // const useEffectOnlyOnUpdate = (callback, dependencies) => {
-  //   const didMount = React.useRef(false);
-  //   React.useEffect(() => {
-  //     if (didMount.current) {
-  //       callback(dependencies);
-  //     } else {
-  //       didMount.current = true;
-  //     }
-  //   }, [callback, dependencies]);
-  // };
-  // useEffectOnlyOnUpdate((dependencies) => {
-  // }, []);
-
   return <App />;
 };
 export default AppWrapper;

@@ -4,7 +4,7 @@ export const userSlice = createSlice({
     name: 'user',
     initialState: {
         loggedIn: false,
-        currentUser: {},
+        currentUser: null,
         scoreBoard: [{ title: "Hello", data: [] }],
         testSchedule: [],
         activityScore: [],

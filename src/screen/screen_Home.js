@@ -14,38 +14,12 @@ import messaging from '@react-native-firebase/messaging';
 import notifee, { EventType } from '@notifee/react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
-import { setDB_App } from '../redux_toolkit/databaseSlice';
 
 const HomeStack = createStackNavigator();
 
 export default function Home({ navigation }) {
   const dispatch = useDispatch();
   const currentUser = useSelector(state => state.user.currentUser);
-  const asyncAppFn = async () => {
-    // if (db_app.length == 0) {
-    await firebase
-      .app()
-      .database(
-        'https://ueldaily-hubing-default-rtdb.asia-southeast1.firebasedatabase.app/',
-      )
-      .ref('/users')
-      .once(
-        'value',
-        snapshot => {
-          var holder = [];
-          snapshot.forEach(childSnapshot => {
-            let childKey = childSnapshot.key;
-            let childData = childSnapshot.val();
-            holder = [...holder, { key: childKey, data: childData }];
-          });
-          dispatch(setDB_App(holder));
-        },
-        error => {
-          console.error(error);
-        },
-      );
-    // }
-  };
   const asyncGetToken = async () => {
     await firebase
       .app()
@@ -79,11 +53,6 @@ export default function Home({ navigation }) {
   };
   useEffect(() => {
     asyncGetToken();
-    // console.log("do i have to run?");
-    if(currentUser != null) {
-      // console.log("Vừa khởi động lại");
-      asyncAppFn();
-    }
   },[])
   return (
     <HomeStack.Navigator>

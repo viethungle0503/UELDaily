@@ -34,6 +34,7 @@ import notifee, {
   AndroidColor,
   AndroidStyle,
 } from '@notifee/react-native';
+import { setDB_App } from '../../redux_toolkit/databaseSlice';
 
 export default function ProfileDisplay({navigation}) {
   const loggedIn = useSelector(state => state.user.loggedIn);
@@ -148,7 +149,7 @@ export default function ProfileDisplay({navigation}) {
         .then(() => {
           setTimeout(() => {
             dispatch(setLoggedIn(false));
-            dispatch(setCurrentUser({}));
+            dispatch(setCurrentUser(null));
             dispatch(setProfileImage(''));
             dispatch(setUnreadNotice(0));
             dispatch(setSchedule({}));
@@ -158,6 +159,7 @@ export default function ProfileDisplay({navigation}) {
             dispatch(setLateModules([]));
             dispatch(setTuition([]));
             dispatch(setActivityScore([]));
+            dispatch(setDB_App(null));
           }, 250);
         });
     } catch (error) {

@@ -24,7 +24,6 @@ import {
 
 export default function Login({navigation}) {
   const db_uel = useSelector(state => state.database.db_uel);
-  const db_app = useSelector(state => state.database.db_app);
   const loggedIn = useSelector(state => state.user.loggedIn);
   const dispatch = useDispatch();
   function onAuthStateChanged(account) {

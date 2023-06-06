@@ -34,6 +34,16 @@ export default StyleSheet.create({
     elevation: 2,
     position: 'relative',
   },
+  fadeItem: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 5,
+    zIndex: 1,
+  },
   notiItem_Icon: {
     flex: 1,
     paddingTop: 2,
