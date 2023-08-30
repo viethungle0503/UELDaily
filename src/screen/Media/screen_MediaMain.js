@@ -21,19 +21,19 @@ export default function MediaMain({ navigation }) {
     let today = new Date();
     var element = news_Departments?.find(x => x.identifier == item.data.newsLink)
     let postTime = element?.data[0].time;
-    postTime = postTime?.substr(1, 10).replaceAll('/', '-');
-    postTime = `${postTime?.substr(6, 4)}-${postTime?.substr(3, 2)}-${postTime?.substr(0, 2)}`;
-    if (postTime != "--") {
+    if (postTime.length > 0) {
       postDay = new Date(postTime)
+      return <Text style={styles.mediaLastestTime}>{dateDiffInDays(today, postDay)}</Text>
     }
-    return <Text style={styles.mediaLastestTime}>{dateDiffInDays(today, postDay)}</Text>
+    return <Text style={styles.mediaLastestTime}>{strings.unknown}</Text>
+    
   };
   const highlight = (item) => {
     var element = news_Departments?.find(x => x.identifier == item.data.newsLink)
     return <Text
       numberOfLines={1}
       ellipsizeMode="tail" style={styles.mediaLastestNews}>
-      {`${element?.data[0].title.substr(0, 40)}...`}
+      {`${element?.data[0]?.title.substr(0, 40)}...`}
     </Text>;
   };
   useEffect(() => {
