@@ -9,24 +9,26 @@ import {
   SafeAreaView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './HomeScreenStyles/screen_HomeDisplay_style';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentLanguage, setLoggedIn } from '../../redux_toolkit/userSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {setCurrentLanguage, setLoggedIn} from '../../redux_toolkit/userSlice';
 import strings from '../Language';
-import { setNews_UEL } from '../../redux_toolkit/newsSlice';
-import { loadGraphicCards } from '../GlobalFunction';
-import { Alert } from 'react-native';
+import {setNews_UEL} from '../../redux_toolkit/newsSlice';
+import {Alert} from 'react-native';
+import axios from 'axios';
 
-export default function HomeDisplay({ navigation }) {
-  const dispatch = useDispatch()
+export default function HomeDisplay({navigation}) {
+  const dispatch = useDispatch();
   const currentUser = useSelector(state => state.user.currentUser);
   const loggedIn = useSelector(state => state.user.loggedIn);
   const profileImage = useSelector(state => state.user.profileImage);
   const currentLanguage = useSelector(state => state.user.currentLanguage);
   const news_UEL = useSelector(state => state.news.news_UEL);
   const [openLanguageMenu, setopenLanguageMenu] = useState(false);
-  const [VNLanguage, setVNLanguage] = useState((currentLanguage == "vn") ? true : false);
+  const [VNLanguage, setVNLanguage] = useState(
+    currentLanguage == 'vn' ? true : false,
+  );
   const chooseVNLanguage = () => {
     setVNLanguage(!VNLanguage);
     setENLanguage(!ENLanguage);
@@ -42,13 +44,9 @@ export default function HomeDisplay({ navigation }) {
       <SafeAreaView style={styles.body} showsVerticalScrollIndicator={false}>
         {loggedIn && (
           <View style={styles.studentwelcome}>
-
-            <Image
-              style={styles.studentAvatar}
-              source={{ uri: profileImage }}
-            />
+            <Image style={styles.studentAvatar} source={{uri: profileImage}} />
             <View>
-              {(currentUser != {}) ? (
+              {currentUser != {} ? (
                 <Text style={styles.studentName}>
                   {currentUser.lastName + ` ${currentUser.firstName}`}
                 </Text>
@@ -59,15 +57,12 @@ export default function HomeDisplay({ navigation }) {
             <TouchableOpacity
               style={styles.btnLanguage}
               onPress={() => setopenLanguageMenu(true)}>
-
               <MaterialCommunityIcons
                 style={styles.svgLanguage}
                 name={'web'}
                 size={25}
               />
-
             </TouchableOpacity>
-
 
             <Image
               style={styles.effect}
@@ -78,12 +73,20 @@ export default function HomeDisplay({ navigation }) {
         <View style={styles.tienich}>
           <View style={styles.tienichHeader}>
             <Text style={styles.tienichText}>{strings.utilities}</Text>
-            <TouchableOpacity style={styles.btnAllTienich} 
-            onPress={() => {
-              Alert.alert("Thông báo","Các tính năng khác cần có để sử dụng tính năng này");
-            }}>
-              <MaterialCommunityIcons name={'tune-variant'} size={14} style={{color:'black'}}/>
-              <Text style={{ color: 'black', marginLeft: 5 }}>{strings.all}</Text>
+            <TouchableOpacity
+              style={styles.btnAllTienich}
+              onPress={() => {
+                Alert.alert(
+                  'Thông báo',
+                  'Các tính năng khác cần có để sử dụng tính năng này',
+                );
+              }}>
+              <MaterialCommunityIcons
+                name={'tune-variant'}
+                size={14}
+                style={{color: 'black'}}
+              />
+              <Text style={{color: 'black', marginLeft: 5}}>{strings.all}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.col}>
@@ -95,7 +98,9 @@ export default function HomeDisplay({ navigation }) {
                   style={styles.tienichIcon__ItemImg}
                   source={require('../../assets/tkbIcon.png')}
                 />
-                <Text style={styles.tienichIcon__ItemText}>{strings.schedule}</Text>
+                <Text style={styles.tienichIcon__ItemText}>
+                  {strings.schedule}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.tienichIcon_Item}
@@ -104,7 +109,9 @@ export default function HomeDisplay({ navigation }) {
                   style={styles.tienichIcon__ItemImg}
                   source={require('../../assets/xemdiemIcon.png')}
                 />
-                <Text style={styles.tienichIcon__ItemText}>{strings.scoreboard}</Text>
+                <Text style={styles.tienichIcon__ItemText}>
+                  {strings.scoreboard}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.tienichIcon_Item}
@@ -124,7 +131,9 @@ export default function HomeDisplay({ navigation }) {
                   style={styles.tienichIcon__ItemImg}
                   source={require('../../assets/baitapIcon.png')}
                 />
-                <Text style={styles.tienichIcon__ItemText}>{strings.homework}</Text>
+                <Text style={styles.tienichIcon__ItemText}>
+                  {strings.homework}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.tienichIcon_Item}
@@ -133,7 +142,9 @@ export default function HomeDisplay({ navigation }) {
                   style={styles.tienichIcon__ItemImg}
                   source={require('../../assets/hocphiIcon.png')}
                 />
-                <Text style={styles.tienichIcon__ItemText}>{strings.tuition}</Text>
+                <Text style={styles.tienichIcon__ItemText}>
+                  {strings.tuition}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.tienichIcon_Item}
@@ -152,46 +163,57 @@ export default function HomeDisplay({ navigation }) {
         {/* <View style={styles.hoatdong}>
         </View> */}
       </SafeAreaView>
-    )
-  }
-  if (strings.getInterfaceLanguage().substring(3, 5).toLowerCase() != currentLanguage) {
-    strings.setLanguage(currentLanguage);
+    );
   };
+  if (
+    strings.getInterfaceLanguage().substring(3, 5).toLowerCase() !=
+    currentLanguage
+  ) {
+    strings.setLanguage(currentLanguage);
+  }
   useEffect(() => {
     strings.setLanguage(currentLanguage);
-    if (currentLanguage == "vn") {
+    if (currentLanguage == 'vn') {
       setVNLanguage(true);
-      setENLanguage(false)
-    }
-    else {
+      setENLanguage(false);
+    } else {
       setVNLanguage(false);
-      setENLanguage(true)
+      setENLanguage(true);
     }
   }, [currentLanguage]);
-  useEffect(() => {
-    if (news_UEL.length == 0) {
-      loadGraphicCards("https://uel.edu.vn/tin-tuc").then((returnValue) => {
-        dispatch(setNews_UEL(returnValue));
+  const getNews = async () => {
+    axios
+      .get('http://192.168.1.11:3100/ueldaily/cheerio')
+      .then(res => {
+        setNews_UEL(res.data);
       })
-    }
-    // dispatch(setLoggedIn(false));
-  }, [])
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  useEffect(() => {
+    getNews();
+  }, []);
   return (
-    <SafeAreaView style={{
-      marginBottom: 50
-    }}>
-      <FlatList  
+    <SafeAreaView
+      style={{
+        marginBottom: 50,
+      }}>
+      <FlatList
         keyExtractor={(item, index) => (item + index).toString()}
         showsVerticalScrollIndicator={false}
         data={news_UEL}
-        renderItem={({ item }) => {
+        renderItem={({item}) => {
           return (
             <TouchableOpacity
               style={styles.row}
               onPress={() => {
-                navigation.navigate('NewsDetail', { link: item.link });
+                navigation.navigate('NewsDetail', {link: item.link});
               }}>
-              <Image style={styles.hoatdongImage} source={{ uri: item.imageURL }} />
+              <Image
+                style={styles.hoatdongImage}
+                source={{uri: item.imageURL}}
+              />
               <View style={styles.contentMain}>
                 <Text
                   style={styles.hoatdongTitle}
@@ -204,17 +226,19 @@ export default function HomeDisplay({ navigation }) {
                     style={styles.iconTime}
                     source={require('../../assets/clock.png')}
                   />
-                  <Text style={styles.hoatdongTime}>{item.time.slice(1, 11)}</Text>
+                  <Text style={styles.hoatdongTime}>{item.time}</Text>
                 </View>
               </View>
             </TouchableOpacity>
-          )
+          );
         }}
         ListHeaderComponent={renderHeader}
       />
-      <Modal visible={openLanguageMenu} transparent={true} onRequestClose={() => setopenLanguageMenu(false)}>
-        <View
-          style={styles.langBackground}>
+      <Modal
+        visible={openLanguageMenu}
+        transparent={true}
+        onRequestClose={() => setopenLanguageMenu(false)}>
+        <View style={styles.langBackground}>
           <View style={styles.langContainer}>
             <Text style={styles.modalHeading}>{strings.select_language}</Text>
             <TouchableOpacity
@@ -222,14 +246,14 @@ export default function HomeDisplay({ navigation }) {
               style={
                 VNLanguage
                   ? [
-                    styles.langNation_Vie,
-                    {
-                      backgroundColor: 'rgb(210, 230, 255)',
-                      borderColor: '#0065FF',
-                      borderWidth: 1,
-                      borderRadius: 5,
-                    },
-                  ]
+                      styles.langNation_Vie,
+                      {
+                        backgroundColor: 'rgb(210, 230, 255)',
+                        borderColor: '#0065FF',
+                        borderWidth: 1,
+                        borderRadius: 5,
+                      },
+                    ]
                   : styles.langNation_Vie
               }>
               <View style={styles.langNationContainer}>
@@ -244,11 +268,11 @@ export default function HomeDisplay({ navigation }) {
                 style={
                   VNLanguage
                     ? [
-                      styles.langSelectNationIcon,
-                      {
-                        opacity: 1,
-                      },
-                    ]
+                        styles.langSelectNationIcon,
+                        {
+                          opacity: 1,
+                        },
+                      ]
                     : styles.langSelectNationIcon
                 }
                 source={require('../../assets/account_lang_check.png')}
@@ -260,14 +284,14 @@ export default function HomeDisplay({ navigation }) {
               style={
                 ENLanguage
                   ? [
-                    styles.langNation_Eng,
-                    {
-                      backgroundColor: 'rgb(210, 230, 255)',
-                      borderColor: '#0065FF',
-                      borderWidth: 1,
-                      borderRadius: 5,
-                    },
-                  ]
+                      styles.langNation_Eng,
+                      {
+                        backgroundColor: 'rgb(210, 230, 255)',
+                        borderColor: '#0065FF',
+                        borderWidth: 1,
+                        borderRadius: 5,
+                      },
+                    ]
                   : styles.langNation_Eng
               }>
               <View style={styles.langNationContainer}>
@@ -283,11 +307,11 @@ export default function HomeDisplay({ navigation }) {
                 style={
                   ENLanguage
                     ? [
-                      styles.langSelectNationIcon,
-                      {
-                        opacity: 1,
-                      },
-                    ]
+                        styles.langSelectNationIcon,
+                        {
+                          opacity: 1,
+                        },
+                      ]
                     : styles.langSelectNationIcon
                 }
                 source={require('../../assets/account_lang_check.png')}
@@ -299,15 +323,15 @@ export default function HomeDisplay({ navigation }) {
               onPress={() => {
                 setopenLanguageMenu(false);
                 if (VNLanguage == true) {
-                  strings.setLanguage('vn')
-                  dispatch(setCurrentLanguage("vn"));
+                  strings.setLanguage('vn');
+                  dispatch(setCurrentLanguage('vn'));
                 }
                 if (ENLanguage == true) {
-                  strings.setLanguage('en')
-                  dispatch(setCurrentLanguage("en"));
+                  strings.setLanguage('en');
+                  dispatch(setCurrentLanguage('en'));
                 }
               }}>
-              <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '600' }}>
+              <Text style={{color: '#FFF', fontSize: 16, fontWeight: '600'}}>
                 {strings.confirm}
               </Text>
             </TouchableOpacity>
@@ -315,8 +339,5 @@ export default function HomeDisplay({ navigation }) {
         </View>
       </Modal>
     </SafeAreaView>
-
   );
 }
-
-

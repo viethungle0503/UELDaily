@@ -3,8 +3,8 @@
  */
 // @flow
 import 'react-native-gesture-handler';
-import { AppRegistry } from 'react-native';
-import { name as appName } from './app.json';
+import {AppRegistry} from 'react-native';
+import {name as appName} from './app.json';
 import Setup from './src/Setup';
 import notifee, {
   AndroidImportance,
@@ -13,7 +13,7 @@ import notifee, {
   AndroidStyle,
   EventType,
 } from '@notifee/react-native';
-import { firebase } from '@react-native-firebase/database';
+import {firebase} from '@react-native-firebase/database';
 import messaging from '@react-native-firebase/messaging';
 import React from 'react';
 /* polyfills */
@@ -31,16 +31,16 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
     android: {
       channelId,
       smallIcon: 'ic_launcher',
-      style: { type: AndroidStyle.BIGTEXT, text: `${remoteMessage?.data?.body}` },
+      style: {type: AndroidStyle.BIGTEXT, text: `${remoteMessage?.data?.body}`},
       pressAction: {
-        launchActivity: "default",
-        id: "default"
-      }
+        launchActivity: 'default',
+        id: 'default',
+      },
     },
   });
 });
-notifee.onBackgroundEvent(async ({ type, detail }) => {
-  const { notification, pressAction } = detail;
+notifee.onBackgroundEvent(async ({type, detail}) => {
+  const {notification, pressAction} = detail;
   // console.log("Background service")
   switch (type) {
     case EventType.PRESS:
@@ -60,9 +60,9 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
     await notifee.cancelNotification(notification.id);
   }
 });
-notifee.onForegroundEvent(async ({ type, detail }) => {
+notifee.onForegroundEvent(async ({type, detail}) => {
   // console.log("ForegroundEvent Detected");
-  const { notification } = detail;
+  const {notification} = detail;
   switch (type) {
     case EventType.DISMISSED:
       // console.log('User dismissed notification', detail.notification);
@@ -82,7 +82,7 @@ const getFCMToken = () => {
     });
 };
 
-function HeadlessCheck({ isHeadless }) {
+function HeadlessCheck({isHeadless}) {
   if (isHeadless) {
     // App has been launched in the background by iOS, ignore
     return null;

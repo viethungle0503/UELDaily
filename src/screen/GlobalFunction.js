@@ -96,30 +96,6 @@ function oldDateDiffInDays(itemCreTime) {
   }
 }
 
-async function loadGraphicCards(searchUrl) {
-  var detailNewsHolder = [];
-  const cheerio = require('cheerio');
-  const baseURL = searchUrl.slice(0, searchUrl.lastIndexOf("/"));
-  const response = await fetchRetry(searchUrl).catch(function (error) {
-    console.log('There has been a problem with your fetch operation: ' + error.message);
-    // ADD THIS THROW error
-    throw error;
-  });; // fetch page
-  const htmlString = await response.text(); // get response text
-  const $ = cheerio.load(htmlString); // parse HTML string
-  $('.PageColumns').remove();
-  $('#ctl08_ctl01_RadListView1_ClientState').remove();
-  $('#ctl08_ctl01_RadListView1').remove();
-  $('.nd_news > div').each(function (i, div) {
-    let title = $('h4 > a', div).text();
-    let time = $('h4 > span', div).text();
-    let imageURL = baseURL + $('img', div).attr('src');
-    let link = baseURL + $('h4 > a', div).attr('href');
-    detailNewsHolder.push({ title: title, time: time, imageURL: imageURL, link: link })
-  });
-  return detailNewsHolder;
-};
-
 // Retry Fetch
 function wait(delay){
   return new Promise((resolve) => setTimeout(resolve, delay));
@@ -143,7 +119,6 @@ export {
   groupBy,
   dateDiffInDays,
   oldDateDiffInDays,
-  loadGraphicCards,
 }
 
 
